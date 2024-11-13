@@ -29,6 +29,21 @@
  * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 
+// maintenance
+if (Configure::read('App.maintenance')) {
+	if($_SERVER['REMOTE_ADDR'] != "127.0.0.1") {
+		Router::connect('/*', array('controller' => 'maintenance', 'action' => 'index', 'maintenance'));
+	}
+}
+
+//dev pages
+if($_SERVER['REMOTE_ADDR'] == "127.0.0.1") {
+	Router::connect('/dev', array('controller' => 'info', 'action' => 'about'));
+}
+else {
+	Router::connect('/dev', array('controller' => 'errors', 'action' => 'error404', 'errors'));
+}
+
 //top level pages
 /**
  * Here, we are connecting '/' (base path) to controller called 'Pages',
@@ -38,7 +53,6 @@
 Router::connect('/', array('controller' => 'home', 'action' => 'index', 'home'));
 Router::connect('/notifications', array('controller' => 'notifications', 'action' => 'index', 'home'));
 Router::connect('/oldnotifications', array('controller' => 'oldnotifications', 'action' => 'index', 'home'));
-Router::connect('/download', array('controller' => 'redirect', 'action' => 'download'));
 Router::connect('/password_recovery', array('controller' => 'users', 'action' => 'password_recovery'));
 Router::connect('/login', array('controller' => 'users', 'action' => 'login'));
 Router::connect('/multiaccountwarn', array('controller' => 'users', 'action' => 'multiaccountwarn'));
@@ -47,6 +61,7 @@ Router::connect('/logout', array('controller' => 'users', 'action' => 'logout'))
 Router::connect('/tags', array('controller' => 'tags', 'action' => 'index'));
 Router::connect('/administration', array('controller' => 'administration', 'action' => 'index'));
 Router::connect('/galleries', array('controller' => 'galleries', 'action' => 'index'));
+Router::connect('/500', array('controller' => 'maintenance', 'action' => 'index', 'maintenance'));
 Router::connect('/sitemap_(.*)_(.*).xml', array('controller' => 'sitemaps', 'action' => 'get'));
 Router::connect('/sitemap_(.*)_(.*).xml.gz', array('controller' => 'sitemaps', 'action' => 'get'));
 Router::connect('/sitemap.xml', array('controller' => 'sitemaps', 'action' => 'index'));
@@ -54,11 +69,15 @@ Router::connect('/sitemap.xml.gz', array('controller' => 'sitemaps', 'action' =>
 Router::connect('/robots.txt', array('controller' => 'sitemaps', 'action' => 'robots'));
 //Router::connect('/experimental', array('controller' => 'experimental', 'action' => 'optinout'));
 //Router::connect('/track/*', array('controller' => 'experimental', 'action' => 'track'));
+
 // Routes the language controller
 Router::connect('/lang/*', array('controller' => 'p28n', 'action' => 'change'));
 
 // Routes the language controller
 Router::connect('/country/*', array('controller' => 'home', 'action' => 'country'));
+
+// Easter egg
+Router::connect('/users/pookie', array('controller' => 'redirect', 'action' => 'huxvap'));
 
 // User pages
 Router::connect('/users/flag_list', array('controller' => 'users', 'action' => 'flag_list'));
@@ -120,13 +139,37 @@ Router::connect('/projects/:username/:id', array('controller' => 'projects', 'ac
 													   'pass' => array('username','id'),
 														array('id' => '([0-9]+)','username'=>'([A-Za-z0-9-_]+)')  
 													)
+													
 				);
+				/*
+Router::connect('/experimental/:username/:id', array('controller' => 'experimental', 'action' => 'viewproject'),
+													array(
+													   'pass' => array('username','id'),
+														array('id' => '([0-9]+)','username'=>'([A-Za-z0-9-_]+)')  
+													)
+
+				);
+				*/
 Router::connect('/projects/:username/:id/:action', array('controller' => 'projects', 'action' => $Action),
 													array(
 													   'pass' => array('username','id'),
 													   array('id' => '([0-9]+)','username'=>'([A-Za-z0-9-_]+)')
 													)
 				);
+
+// Redirects
+Router::connect('/download', array('controller' => 'redirect', 'action' => 'download'));
+Router::connect('/donate', array('controller' => 'redirect', 'action' => 'donate'));
+Router::connect('/terms', array('controller' => 'redirect', 'action' => 'terms'));
+Router::connect('/privacy', array('controller' => 'redirect', 'action' => 'privacy'));
+Router::connect('/about', array('controller' => 'redirect', 'action' => 'about'));
+
+// info.scratch.mit.edu
+Router::connect('/info/Scratch_1.4_Download', array('controller' => 'info', 'action' => 's14download'));
+Router::connect('/info/Donate', array('controller' => 'info', 'action' => 'donate'));
+Router::connect('/info/Community_Guidelines', array('controller' => 'info', 'action' => 'terms'));
+Router::connect('/info/Privacy_Policy', array('controller' => 'info', 'action' => 'privacy'));
+Router::connect('/info/About_Scratch', array('controller' => 'info', 'action' => 'about'));
 
 //Then we connect url '/test' to our test controller. This is helpful in developement.
 Router::connect('/tests', array('controller' => 'tests', 'action' => 'index'));

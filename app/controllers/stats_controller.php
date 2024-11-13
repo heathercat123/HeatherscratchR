@@ -905,7 +905,7 @@ class StatsController extends AppController {
 		ini_set('memory_limit','500M');
 		$users = $this->User->findAll('villager=0', 'id,username,created,gender,byear,bmonth,country,role','created asc');
 		// connect to forums db	
-		$dbh = mysql_connect('localhost', 'root', '')  or die("Unable to connect to mysql");
+		$dbh = mysql_connect('192.168.2.27', 'root', '')  or die("Unable to connect to mysql");
 		$selected = mysql_select_db('betaforums',$dbh) or die("Could not select $db_name");
 		echo "username,id,create,gender,byear,bmonth,country,role,projects,pcomments,gcomment,favorites,downloads,flags,loveits,saves,shares,relationships,tags,galleries,galleriesowned,views,fuser,fposts,ftopics\n";
 		foreach($users as $user) {

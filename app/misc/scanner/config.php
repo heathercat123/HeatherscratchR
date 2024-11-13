@@ -1,10 +1,10 @@
 <?php
-define('SERVER', 'localhost');
+define('SERVER', '192.168.2.27');
 define('USER', 'root');
 define('PASS', '');
-define('DATABASE', 'scratchr_dev');
-define('APP', '/var/www/scratch/app/');
+define('DATABASE', 'scratchr');
+define('APP', '/xampp/htdocs/app/');
 define('JAVA_PATH', 'java');
-define('PROJECT_PATH', '/var/www/scratch/app/webroot/static/projects/');
+define('PROJECT_PATH', '/xampp/htdocs/app/webroot/static/projects/');
 define('EMAIL', 'user@example.com');
 ?>

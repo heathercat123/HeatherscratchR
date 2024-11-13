@@ -1,0 +1,647 @@
+#searchbar-info input.search {
+	max-width: 70px;
+	width: 70px;
+	height: 22px;
+	padding-top: 0px;
+	padding-bottom: 3px;
+	margin-left: 2px;
+	padding-left: 4px;
+	margin-top: 2px;
+}
+
+
+/** ABOUT
+---------------------------------
+*  default.css is used to establish general rules and User interface Styles
+
+   BROWSER RESET
+---------------------------------
+*  For a more complete reset, go to http://developer.yahoo.com/yui/reset/
+*/
+
+/* * { margin: 0; padding: 0; } */
+
+/** Clear Floats Without Structural Markup: 
+---------------------------------
+*  http://www.positioniseverything.net/easyclearing.html
+*/
+
+.clearfix:after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+  direction: ltr !important;
+}
+
+.clearfix { display: inline-block; }
+
+/* Hides from IE-mac \*/
+* html .clearfix { height: 1%; }
+.clearfix { display: block; }
+/* End hide from IE-mac */
+
+
+/* clear classes for content 
+---------------------------------*/
+
+.clearleft { clear: left; }
+.clearright { clear: right; }
+.clearboth { clear: both; }
+
+/* Float classes for images */
+
+.floatleft { float: left; margin: 0 10px 5px 0 !important; }
+.floatright { float: right; margin: 0 0 5px 10px !important; }
+.floatleft .caption { font-size: 10px; font-weight: bold; text-transform: uppercase; padding-top: 5px; }
+
+
+/** "Skip to Main Content" link
+---------------------------------
+*  This link useful for both visually impaired people and those with mobility impairments
+*  who cannot use a mouse.
+*/
+
+#skip-nav { display: none; }
+
+#skip-nav a, #skip-nav a:hover, #skip-nav a:visited {
+  position: absolute;
+  left: 0;
+  top: -500px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+#skip-nav a:active, #skip-nav a:focus {
+  position: static;
+  width: auto;
+  height: auto;
+}
+
+/** Prevent overflowing content **/
+/*
+#header,
+#footer,*/
+#content,
+#sidebar-left,
+#sidebar-right,
+ {
+  overflow: visible;
+  word-wrap: break-word; 
+}
+
+#content {
+  background: transparent url(https://web.archive.org/web/20110331152539im_/http://scratch.mit.edu/img/bg_fullwidth.png) no-repeat scroll 0 0;
+  padding-top: 20px;
+
+}
+
+/* bug fix with views 2 edit links */
+
+div.view div.views-admin-links {
+	width:auto;
+}
+
+/** User interface styles 
+---------------------------- */
+
+.resizable-textarea textarea {
+	font-size:14px!important;
+}
+.messages {
+	padding: 10px;
+	margin: 10px 0;
+	border: 1px solid #04a107;
+	color: #04a107;
+	background-color: #edffed;
+}
+
+/** Rollover edit links for blocks
+----------------------------*/
+
+div.block {
+  position: relative;
+}
+div.block div.edit {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 40;
+  border: 1px solid #eee;
+  padding: 0 2px;
+  font-size: 11px;
+  background-color: #fff;
+}
+div.block:hover div.edit {
+  display: block;
+}
+
+/** WIREFRAMES STYLE
+------------------------------------*/
+
+.with-wireframes #header,
+.with-wireframes #content-top,
+.with-wireframes #content-top>*,
+.with-wireframes #content-header,
+.with-wireframes #content-header>*,
+.with-wireframes #content-area,
+.with-wireframes #content-area>*,
+.with-wireframes #content-bottom,
+.with-wireframes #content-bottom>*,
+.with-wireframes #primary,
+.with-wireframes #secondary,
+.with-wireframes #sidebar-left-inner,
+.with-wireframes #sidebar-right-inner,
+.with-wireframes .block{
+  padding: 2px;
+  border: 1px solid #bbb;
+}
+.with-wireframes .node {
+  border-bottom: 1px solid #bbb;
+  margin-bottom:10px;
+}
+.with-wireframes .block {
+  margin-bottom:3px;
+}
+.with-wireframes #content-top,
+.with-wireframes #content-header,
+.with-wireframes #content-area,
+.with-wireframes #content-bottom {
+  margin:0 3px 3px;
+}
+.with-wireframes #footer {
+  margin-top: 3px;
+  padding: 2px;
+  border: 1px solid #ccc;
+}
+
+/** CUSTOM EVELYN
+-------------------------------------*/
+/*
+.block-locale {
+  float: left;
+  display: inline;
+}
+
+div #block-locale-0 {
+  margin-top: -79px;
+  margin-left: 756px;
+}
+
+div #block-locale-0 h3 {
+  color: #E7EBF7;
+  font-size: 14px;
+  font-weight: bold;
+}
+*/
+
+/** AMOS - tables have horizontal lines above them fix:
+http://drupal.org/node/287598 ----*/
+}
+tbody {
+border-top: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#sidebar-left,
+#sidebar-right,
+ {
+  overflow: visible;
+  word-wrap: break-word; 
+}
+
+.with-wireframes #sidebar-left-inner,
+.with-wireframes #sidebar-right-inner,
+.with-wireframes .block{
+  padding: 2px;
+  border: 1px solid #bbb;
+  }
+
+
+
+
+
+
+
+/** Layout
+---------------------------------
+*  Using a negative margin technique, adapted from ZEN. The page is loaded by this order:
+*  
+*  1. Header
+*  2. Content
+*  3. Navigation menus
+*  4. Sidebar Left
+*  5. Sideabr Right
+*	
+*/
+
+#page {
+	width: 900px; /* edit to change the width of the page */
+	margin: 0 auto; /* remove 'auto' and the width to switch to a fluid width */
+}
+
+/** Sidebars width
+---------------------------------
+*  Changing the width of the sidebars is dead easy, just change the
+*  values below corresponding to the sidebar you want to modify.
+*  Make sure you keep negative values as negative values.
+*  For example, if I want to increase the width of the left sidebar
+*  to 300px, I would have to change each '190' to '300'.
+*/
+
+/*.two-sidebars .center,
+.sidebar-left .center {
+  margin-left: 190px;     
+} /* LEFT value */
+#sidebar-first {
+  width:190px;           /* LEFT value */
+  margin-right: -190px;   /* negative LEFT value */
+  background-color: none;
+}
+.two-sidebars .center,
+.sidebar-right .center {
+  margin-right: 100px;    /* RIGHT value */
+}
+#sidebar-second {
+  width: 200px;           /* RIGHT value */
+}
+
+/** Columns inner
+---------------------------------
+*  You can change the padding inside the columns without changing the
+*  width of them by just usinbg the INNER div of each column
+*/
+
+.inner {                             
+	padding: 0px;                     
+}                                   
+
+/** Navigation styles
+---------------------------------
+*  The navigation is loaded after the content, so we need to make space
+*  for it, equal to its height, so if you change the height of the navigation,
+*  remember to adapt the margin top of the content and sidebars.
+*/
+
+/*.with-navigation #content,
+.with-navigation .sidebar {
+  margin-top: 40px;        
+}*//* Navigation Height */
+#navigation {
+  height: 40px;            /* Navigation Height */
+}
+
+
+/** LAYOUT RULES
+---------------------------------
+*  do not change if you're not sure you know what you're doing
+*/
+
+#content {
+  float: left;
+  width: 750px;
+  /*margin-right: -100%;*/
+  padding: 0;
+  padding-right: 20px;
+  padding-left: 20px;
+  /*amos changes to get content shadow / page in right place.*/
+  position: relative;
+  top: 15px;
+  left: 0px;
+}                                   
+.sidebar {                          
+  float: right;                       
+}                                   
+#sidebar-second {
+  float: right;
+}
+#navigation {                        
+  float: left;                       
+  margin-left: 0;
+  margin-right: -100%;
+  padding: 0;
+  width: 100%;
+  display: none;
+}
+
+/* header */
+
+#header #header-region {
+  overflow: hidden;
+}
+
+/* footer */
+
+#footer {
+  position: relative;
+  left: 0px;
+  padding:0 10px;
+  text-align:center;
+  text-indent: -20px;
+  width:100%;
+  top: 21px;
+}
+
+/* Layout Helpers */
+
+/*#header,
+#footer,*/
+#main #content .mission,
+#main #content .breadcrumb,
+#main #content .node {
+  clear: both;
+}
+
+h1{
+	color: #111111;
+	font-size: 1.5em;
+	font-weight: bold;
+	line-height: 1.5em;
+	margin: 0;
+	padding: 0;
+	text-align: left;
+      padding-top: 10px;
+      padding-bottom: 10px;
+}
+
+h2{
+	color: #222222;
+	font-size: 20px;
+	font-weight: bold;
+	line-height: 1.3em;
+	margin: 6px 0 0 0;
+	padding: 0px;
+}
+
+h3{
+	color: #333333;
+	font-size: 18px;
+	font-weight: normal;
+	margin: 20px 0 10px 0;
+	padding: 0;
+}
+
+h4{
+	font-size: 16px;
+	margin: 0;
+	padding: 0 0 5px 0px;
+}
+
+h5{
+	font-size: 14px;
+	margin: 0;
+	padding: 0 0 5px 0;
+}
+
+h6{
+	font-size: 1em;
+	margin: 0 10px;
+	padding: 0;
+}
+.breadcrumb {display: none}
+
+#content-area ul {
+margin-left: -20px;
+margin-top: 0;
+margin-bottom: 0;
+}
+
+#block-locale-0 ul {
+margin-left: -27px;
+margin-top: 15px;
+}
+
+a {
+  text-decoration: none;
+}
+
+#footer a:link {
+  text-decoration: underline;
+}
+
+#content-area ul li {
+
+line-height:1.5;
+/*
+margin-left:10px;
+*/
+padding-left:10px;
+list-style-position: outside;
+list-style-type: disc;
+}
+
+#content-area ol li {
+line-height:1.5;
+margin-left:5px;
+padding-left:5px;
+list-style-position:inside;
+}
+
+
+/* UI improvments  */
+
+#edit-title{
+	font-size: 24px;
+}
+#system-themes-form img{
+	width:100px;
+}
+.form-item .description{
+	font-style:italic;
+	line-height:1.2em;
+	font-size:0.8em;
+	margin-top:5px;
+	color:#777;
+}
+#edit-delete{
+	color:#c00;
+}
+
+
+/* Fix for horizontal lines above tables 
+http://drupal.org/node/554632
+*/
+tbody {
+border-top: 0px solid #ccc;
+}
+
+
+
+/*--------------------------------------------------------------------------------*/
+/* CUSTOM DRUPAL STYLES BY EVELYN */
+/*--------------------------------------------------------------------------------*/
+
+.block-locale-0 {
+	float: right;
+}
+
+
+/* wiki changes again */
+
+fieldset.search {padding: 0px;}
+html body div.body div.page div.pageTitle {font-weight: bold; font-size: 16px; margin-bottom: 0px; border: none; 
+padding-top: 15px; padding-left: 0px;margin-left: 0px; margin-right: 0px;}
+h1#title {border-bottom: none; font-family: "Trebuchet MS","Luxi Sans",Verdana,Arial,Helvetica,sans-serif;font-weight: 
+bold; font-size: 20px; margin-bottom: 0px; border: none; padding-left: 0px; padding-top: 0px; margin-left: 0px; 
+margin-right: 0px;}
+.howfirst {margin-left: 0px;}
+.howto {margin-left: 4px;width: 242px; padding-right:0px;}
+font-family:"Trebuchet MS","Luxi Sans",Verdana,Helvetica,Arial,sans-serif; font-size: 12px; line-height: auto;}
+div.custom4 {display: none; height: 0px;}
+div#comments {display: none; height: 0px;}
+div.pageInfo {display: none; height: 0px}
+#topic a, #pageText a, p.modified a {
+     color: #00F;
+     text-decoration: none;
+}
+#topic a:hover, #pageText a:hover, p.modified a:hover {
+     color: #00F;
+     text-decoration: none;
+}
+td.download, th.download {
+     padding-top: 0px;
+     padding-left: 15px;
+     padding-right: 15px;
+     vertical-align:top;
+}
+
+/* Edits for custom login - Amos */
+.block #user-login-form { text-align: left; }
+.block #user-login-form #edit-name-wrapper { float: left; margin-right: 10px; }
+.block #user-login-form #edit-pass-wrapper { float: left; margin-right: 10px; }
+.block #user-login-form #edit-submit { float: left; margin-top: 25px; }
+.block #user-login-form .item-list { clear: both; text-align: left; list-style: none; list-style-type: none;}
+
+/* Language switcher changes */
+#block-locale-0 {
+	list-style-type: none;
+	background-color: #FFF;
+}
+#block-locale-0 ul li {list-style:none;}
+#block-locale-0 ul li.active {display:none;}
+/* Scratch We Do Menu class */
+#block-menu-menu-scratchwedo *
+{
+display: inline;
+}
+
+/* Be nice to make the active link bigger
+#block-menu-menu-scratchwedo ul li.active{
+{
+font-size: larger;
+}
+*/
+
+/* Scratch Tours */
+/* Tour Intro Page */
+.tour_row{
+	position:relative;
+	height: 102px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	}
+
+.tour_image {
+	position:absolute;
+	left: 0px;
+	top: 0px;
+}
+
+.tour_image img {
+	border:1px solid #666666;
+}
+
+.tour_tagline {
+	position:absolute;
+	left: 200px;
+	top: 40px;
+	font-size: 11pt;
+}
+
+
+/* Tour project page */
+#tour_proj_page {
+	position: relative;
+	height: 435px;
+}
+
+
+#tour_proj_title {
+	position:relative;
+	text-align:center;
+	right: 130px;
+}
+
+#tour_applet {
+	float: left;
+	margin-left: 0px;
+	margin-right: 18px;
+}
+
+#tour_text {
+	float: left;
+	width: 245px;
+
+}
+
+#tour_tagline {
+	text-align:center;
+	font-weight:bold;
+	font-size:11pt;
+}
+
+#tour_description{
+	position:relative;
+	text-align:left;
+}
+
+/* Tour Project page Nav */
+#tour_nav{
+	position: absolute;
+	top: 398px;
+	left: 0px;
+	height: 25px;
+	width: 490px;
+	margin-top: 10px;
+	margin-bottom: 15px;
+	}
+
+#tour_prev{
+	position: absolute;
+	top: 10;
+	left: 0;
+	}
+
+#tour_home{
+	position: absolute;
+	top: 10;
+	left: 224px;
+	}
+
+#tour_next{
+	position: absolute;
+	top: 10;
+	left: 445px;
+	}

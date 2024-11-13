@@ -12,6 +12,7 @@ Class HomeController extends AppController {
 	 * Overrides AppController::beforeFilter()
      */
     function beforeFilter() { 
+		parent::beforeFilter();
 		$this->set('content_status', $this->getContentStatus());
 		
 		

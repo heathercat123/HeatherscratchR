@@ -101,11 +101,14 @@ class ExperimentalController extends AppController
         function viewproject($creatorname= null, $projectid = null) {
             $this->pageTitle = 'Scratch Experimental Viewer';
             $this->layout = 'empty';
+			/*
             $userid = $this->getLoggedInUserID();
+			*/
 
-            if (!($userid) or !($projectid) or !($creatorname)) {
+            if (!($projectid) or !($creatorname)) {
                 $this->redirect('/'); // XXX: Should an error be set ?
             }
+			/*
 
             $is_opted_in = $this->_is_opted_in($userid);
 
@@ -129,6 +132,7 @@ class ExperimentalController extends AppController
                 // Redundant, since is_opted_in() should have redirected earlier
                 $this->redirect('/');
             }
+			*/
         }
 
         function track($projectid = null, $userid = null, $actionname = null) {

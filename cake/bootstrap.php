@@ -29,6 +29,7 @@
 if (!defined('PHP5')) {
 	define ('PHP5', (phpversion() >= 5));
 }
+error_reporting(E_ERROR);
 /**
  * Configuration, directory layout and standard libraries
  */

@@ -41,7 +41,7 @@ Class ServicesController extends AppController {
         INVALID_REQUEST => "invalid request - project might be larger than 10MB",
         INVALID_USER => "invalid user",
 		UNSUPPORTED_SERVICE => "service not yet available",
-		INVALID_PROJECT => "project cannot be uploaded again"
+		INVALID_PROJECT => "project cannot be uploaded again",
     );
 
     function beforeFilter() {
@@ -66,7 +66,7 @@ Class ServicesController extends AppController {
                     $this->debug = true;
                 }
             }*/
-            if(!empty($this->params['url']['debug'])) {
+            if(!empty($this->params['url']['debug']) or true) {
             	$this->debug = true;
             }
             else {

@@ -3,6 +3,10 @@ class RedirectController extends Controller {
 var $components = array('Cookie','Session');
 var $uses =array();
 
+function huxvap(){
+	$this->redirect('/users/HuxVAP');
+}
+
 function about(){
 	$browser_lang = $this->_get_browser_lang();
 	$this->redirect('http://' . SUPPORT_URL . '/' . trim($browser_lang) . 'About_Scratch');
@@ -101,4 +105,5 @@ function url(){
 }
 
 }
+
 ?>

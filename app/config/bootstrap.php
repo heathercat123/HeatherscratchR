@@ -15,6 +15,8 @@ then skip declarations:
 $this->params['webservices']
 *------------------------------------*/
 
+Configure::write('App.maintenance', false);
+
 /**
  * home page configs
  */
@@ -97,7 +99,6 @@ $this->params['webservices']
  define("APPEALS_CONTACT_EMAIL", "appeals@scratch.mit.edu");
  //Used in  users password recovery reply email id.
  define("REPLY_TO_PASSWORD_RECOVERY", "help@scratch.mit.edu");
-
 
 
 
@@ -255,16 +256,16 @@ $this->params['webservices']
 /**
  * Resource URLs
  */
-define ('INFO_URL', 'http://info.scratch.mit.edu'); 
-define ('INFO_ABOUT_ADMINS_URL', 'http://info.scratch.mit.edu/Scratch_Team'); 
-define ('TOPLEVEL_URL', 'http://scratch.mit.edu');
-define ('WIKI_URL', 'http://wiki.scratch.mit.edu');
-define ('ABOUT_SCRATCH_URL', 'info.scratch.mit.edu');
-define ('SUPPORT_URL', 'info.scratch.mit.edu');
-define ('FRONPAGE_FAQ_URL', 'http://info.scratch.mit.edu/Support/FAQ/Scratch_Website_FAQ/How_the_Scratch_front_page_works');
-define ('FAQ_QUESTIONS_URL', 'http://info.scratch.mit.edu/Support/FAQ/Scratch_Website_FAQ#Questions');
-define ('TOS_URL', 'http://info.scratch.mit.edu/Community_Guidelines');
-define ('CM_URL', 'http://info.scratch.mit.edu/Community_Moderators');
+define ('INFO_URL', 'http://publications-a.gl.at.ply.gg:15886/info'); 
+define ('INFO_ABOUT_ADMINS_URL', 'http://publications-a.gl.at.ply.gg:15886/info/Scratch_Team'); 
+define ('TOPLEVEL_URL', 'http://publications-a.gl.at.ply.gg:15886/');
+define ('WIKI_URL', 'http://publications-a.gl.at.ply.gg:15886/wiki');
+define ('ABOUT_SCRATCH_URL', 'http://publications-a.gl.at.ply.gg:15886/info');
+define ('SUPPORT_URL', 'publications-a.gl.at.ply.gg:15886/info');
+define ('FRONPAGE_FAQ_URL', 'publications-a.gl.at.ply.gg:15886/info/Support/FAQ/Scratch_Website_FAQ/How_the_Scratch_front_page_works');
+define ('FAQ_QUESTIONS_URL', 'http://publications-a.gl.at.ply.gg:15886/info/Support/FAQ/Scratch_Website_FAQ#Questions');
+define ('TOS_URL', 'http://publications-a.gl.at.ply.gg:15886/info/Community_Guidelines');
+define ('CM_URL', 'http://publications-a.gl.at.ply.gg:15886/info/Community_Moderators');
 define ('RESOURCE_URL', 'static/');
 define ('HREF_RESOURCE_PROJECT', 'static/projects/');
 define ('HREF_RESOURCE_MINI_THUMBS', 'static/projects/');
@@ -322,7 +323,7 @@ define('CACHE_DURATION', '4 days');
 /**
  * Memcache constants
  */
-define("MEMCACHE_SERVER", 'scratchdb.media.mit.edu'); //memcache server, 
+define("MEMCACHE_SERVER", 'localhost'); //memcache server, 
 define("MEMCACHE_PORT", 11211); //memcache port
 define("HOMEL_PAGE_TTL", 60); //for home page
 define("HOMEL_NEW_PROJECTS_TTL", 5);
@@ -400,7 +401,7 @@ define('FILTERED_HOST', 'filtered.scratch.mit.edu');
 /***
 * Define Java path
 **/
-define('JAVA_PATH', '/usr/java/latest/bin/java');
+define('JAVA_PATH', 'C:\Program Files\Java\jre1.8.0_431\bin');
 
 /***
 *Prompt CAPTCHA after number of failed attempt to login

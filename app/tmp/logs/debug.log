@@ -1,0 +1,3 @@
+2024-10-26 20:43:28 Debug: Notice (8): Undefined variable: cm in [APP\views\helpers\util.php, line 23]
+2024-10-26 20:43:28 Debug: Notice (8): Undefined variable: stop in [APP\views\elements\header_default.thtml, line 139]
+2024-10-26 20:43:28 Debug: Notice (8): Undefined offset: 0 in [APP\views\elements\survey_prompt.ctp, line 64]
