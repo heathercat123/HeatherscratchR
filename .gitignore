@@ -5,3 +5,4 @@
 /app/webroot/static/icons
 /app/webroot/static/projects
 /app/config/database.php
+/app/tmp
