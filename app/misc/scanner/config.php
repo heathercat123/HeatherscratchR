@@ -1,5 +1,5 @@
 <?php
-define('SERVER', '192.168.2.27');
+define('SERVER', 'localhost');
 define('USER', 'root');
 define('PASS', '');
 define('DATABASE', 'scratchr');
