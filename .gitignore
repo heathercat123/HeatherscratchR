@@ -9,6 +9,9 @@
 /app/webroot/forums
 /app/webroot/tbgforums
 
+# Can be found at https://app.assembla.com/spaces/locales4scratch/
+/app/locale
+
 # By default, there should be only the default icons and no projects
 # The default icons are located at /app/webroot/static/rename2icons
 /app/webroot/static/icons
