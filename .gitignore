@@ -1,8 +1,25 @@
+# Contains Mediawiki 1.15 with the ScratchWikiSkin.
+# It can be found here: https://github.com/InternationalScratchWiki/ScratchWikiSkin-1.x
 /app/webroot/w
-/app/webroot/dev
+
+# Can be found at https://app.assembla.com/spaces/scratchstats/
+/app/webroot/stats
+
+# Can be found at https://app.assembla.com/spaces/scratchforums/
 /app/webroot/forums
 /app/webroot/tbgforums
+
+# By default, there should be only the default icons and no projects
+# The default icons are located at /app/webroot/static/rename2icons
 /app/webroot/static/icons
 /app/webroot/static/projects
-/app/config/database.php
+
+# The temp folder
 /app/tmp
+
+# Contains database info
+# To set it up, rename database.php.default and set up the values
+/app/config/database.php
+
+# Dev contains some WIP stuff that'll be added to the repo later
+/app/webroot/dev
