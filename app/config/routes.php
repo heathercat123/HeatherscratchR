@@ -165,14 +165,11 @@ Router::connect('/privacy', array('controller' => 'redirect', 'action' => 'priva
 Router::connect('/about', array('controller' => 'redirect', 'action' => 'about'));
 
 // info.scratch.mit.edu
-// localhost uses a WIP more accurate drupal version of the site
-if($_SERVER['REMOTE_ADDR'] != "127.0.0.1") {
 Router::connect('/info/Scratch_1.4_Download', array('controller' => 'info', 'action' => 's14download'));
 Router::connect('/info/Donate', array('controller' => 'info', 'action' => 'donate'));
 Router::connect('/info/Community_Guidelines', array('controller' => 'info', 'action' => 'terms'));
 Router::connect('/info/Privacy_Policy', array('controller' => 'info', 'action' => 'privacy'));
 Router::connect('/info/About_Scratch', array('controller' => 'info', 'action' => 'about'));
-}
 
 //Then we connect url '/test' to our test controller. This is helpful in developement.
 Router::connect('/tests', array('controller' => 'tests', 'action' => 'index'));
