@@ -5,6 +5,9 @@
 # Can be found at https://app.assembla.com/spaces/scratchstats/
 /app/webroot/stats
 
+# Can be found at https://app.assembla.com/spaces/locale4scratchr/
+/app/locale
+
 # Can be found at https://app.assembla.com/spaces/scratchforums/
 /app/webroot/forums
 /app/webroot/tbgforums
