@@ -17,4 +17,5 @@ For an exact list of modified file, see [here](https://github.com/heathercat123/
 There are currently two installation guides. One is made by Andrés (andresmh), one is by me.
 - [WIP new guide by me](https://github.com/heathercat123/HeatherscratchR/blob/master/how%20to%20scratchr.txt). Use this one!
 - [Old INSTALL.TXT by Andrés](https://github.com/heathercat123/HeatherscratchR/blob/master/INSTALL.txt). One step is mentionned in the new guide, but other than that, don't use this guide!
+
 For now, the installation instructions don't include how to get the forums, the tbg forums, the wiki or the stats.
