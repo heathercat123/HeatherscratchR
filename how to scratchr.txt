@@ -3,11 +3,11 @@
 	In the installer, just press next until it's done
 
 2. Get ScratchR:
-	- Download ScratchR
+	- Install GIT from https://git-scm.com/
 	- Rename C:\XAMPP\htdocs\ to C:\XAMPP\htdocs.bak\
 	- Create a new folder called "htdocs"
-	- Create a folder called "scratchr" inside of htdocs
-	- Copy-paste all of ScratchR's files there
+	- If you want normal ScratchR: Run "git svn clone https://subversion.assembla.com/svn/scratchr/" from that folder
+	- If you want HeatherscratchR: Run "git clone https://github.com/heathercat123/HeatherscratchR.git scratchr" from that folder
 	In the next steps, if I mention anything under \app, it's inside C:\XAMPP\htdocs\scratchr\app
 
 3. Get and run memcached:
@@ -23,7 +23,7 @@
 5. Get eAccelerator:
 	- Download eAccelerator
 	- Compile in TS mode on Visual Studio 2008 with the PHP 5.3.8 sources
-	- Replace C:\XAMPP\php\ext\php_eaccelerator_ts.dll by the newly compled file
+	- Replace C:\XAMPP\php\ext\php_eaccelerator_ts.dll with the newly compled file
 	- Search for "eaccelerator" in C:\XAMPP\PHP\PHP.ini then uncomment the line
 
 6. Create the database:
