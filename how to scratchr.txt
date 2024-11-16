@@ -1,0 +1,150 @@
+1. Install XAMPP 1.7.7:
+	You can get it from here: https://sourceforge.net/projects/xampp/files/XAMPP%20Windows/1.7.7/xampp-win32-1.7.7-VC9-installer.exe/download
+	In the installer, just press next until it's done
+
+2. Get ScratchR:
+	- Download ScratchR
+	- Rename C:\XAMPP\htdocs\ to C:\XAMPP\htdocs.bak\
+	- Create a new folder called "htdocs"
+	- Create a folder called "scratchr" inside of htdocs
+	- Copy-paste all of ScratchR's files there
+	In the next steps, if I mention anything under \app, it's inside C:\XAMPP\htdocs\scratchr\app
+
+3. Get and run memcached:
+	- Download memcached-windows from https://github.com/jefyt/memcached-windows/releases/latest
+	- Extract it then run "memcached -d"
+
+4. Get and enable php_pecl_memcache:
+	- Download the 5.3 Tread Safe version from https://pecl.php.net/package/memcache/3.0.8/windows
+	- Extract it and copy php_memcache.dll to C:\XAMPP\PHP\EXT\
+	- Add this to C:\XAMPP\PHP\php.ini, below [PECL]:
+		extension=php_memcache.dll
+
+5. Get eAccelerator:
+	- Download eAccelerator
+	- Compile in TS mode on Visual Studio 2008 with the PHP 5.3.8 sources
+	- Replace C:\XAMPP\php\ext\php_eaccelerator_ts.dll by the newly compled file
+	- Search for "eaccelerator" in C:\XAMPP\PHP\PHP.ini then uncomment the line
+
+6. Create the database:
+	- Open up the XAMPP control panel located in C:\xampp\xampp-control.exe if the installer didn't do it for you already
+	- Start MySQL
+	- Open up mysql (stored in C:\XAMPP\mysql\bin) with the arguments "mysql -u root"
+	- Run "CREATE DATABASE scratchr;"
+		You can replace "scratchr" by anything you want, it'll be the name of the database
+	- You can now exit by running "exit;"
+
+7. Set up the database using step 4 of INSTALL.txt, just discard the -p and note that name_of_database is the same as above (scratchr).
+	To get the updates in the right order, you have to separate them by year in different folders then sort them by name.
+	Also, ignore any duplicates errors
+
+8. Set up the database access info:
+	- Copy \app\config\database.php.default to \app\config\database.php
+	- Fill out the database access info
+		By default, on XAMPP, the login is "root" and the password is empty
+		For the database name, set it to, well, the database name (scratchr)
+		Don't change anything else than "login", "password" and "database" unless you know what you're doing!
+		Basically, it should look like this:
+			'driver' => 'mysql',
+			'persistent' => false,
+			'host' => 'localhost',
+			'login' => 'root',
+			'password' => '',
+			'database' => 'scratchr',
+			'prefix' => '',
+		Also, you only need to set the '$default' database
+
+9. Set the memcache server to localhost:
+	- Search for "MEMCACHE_SERVER" in \app\config\bootstrap.php
+	- Replace 'scratchdb.media.mit.edu' by 'localhost'
+
+10. Clear /app/tmp:
+		- If it exists, delete it
+		- Create a new empty \app\tmp
+
+11. Configure Apache to point to \app\webroot:
+		- Open C:\XAMPP\APACHE\CONF\httpd.conf in a text editor
+		- Search for "DocumentRoot"
+		- Replace "C:/xampp/htdocs" by "C:/xampp/htdocs/scratchr/app/webroot"
+
+12. Set up a VirtualHost:
+	- Open C:\XAMPP\APACHE\CONF\EXTRA\httpd-vhosts.conf in a text editor
+	- Add this at the end:
+<VirtualHost 127.0.0.1>
+	ServerName scratch.local
+	ServerAlias www.scratch.local
+	DocumentRoot C:/xampp/htdocs/scratchr/app/webroot/
+		<Directory />
+				Options FollowSymLinks
+				AllowOverride All
+			RewriteEngine   On
+			Options -Multiviews  FollowSymLinks
+		RewriteCond %{REQUEST_FILENAME} !-f
+		RewriteRule ^static/projects/.+/([0-9]+)_(sm|med).png$ static/icons/project/default_$2.jpg [QSA,L]
+
+		RewriteCond %{REQUEST_FILENAME} !-f
+		RewriteRule ^static/projects/.+/([0-9]+).sb$ static/misc/default.sb [QSA,L]
+
+		RewriteCond %{REQUEST_FILENAME} !-f
+		RewriteRule ^static/icons/gallery/(.*)$ static/icons/gallery/default.jpg [QSA,L]
+
+		RewriteCond %{REQUEST_FILENAME} !-f
+		RewriteRule ^static/icons/buddy/([0-9]*)_(sm|med).jpg$ static/icons/buddy/default_$2.jpg [QSA,L]
+
+		RewriteCond %{REQUEST_FILENAME} !-f
+		RewriteRule ^static/icons/buddy/([0-9]*)_(sm|med).png$ static/icons/buddy/default_$2.jpg [QSA,L]
+
+		RewriteCond %{REQUEST_FILENAME} !-d
+		RewriteCond %{REQUEST_FILENAME} !-f
+		RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
+		RewriteRule .*\.svn/.* - [F]
+	</Directory>
+</VirtualHost>
+
+13. Go back to your XAMPP Control Panel from step 6 and start Apache
+
+14. Open a web browser and go to http://localhost/
+		If you can see the Scratch homepage, skip to step 15
+		If you, however, see a blank page with text, it's debugging time!
+			- If you get "OMG. Scratch could not connect to memcached", make sure php_memcache is enabled in php.ini and that memcached is running. More info at step 3 and 4.
+			- If you don't have any OMG errors, try to:
+				- Go into C:\XAMPP\PHP\ in the Command Prompt then run PHP --version. If there's an eAccelerator error, make sure you compiled eAccelerator correctly
+				- If you don't get any errors from php, try setting up the database again. More info at step 7.
+
+15. You might be excited to see the Scratch homepage, but we're not quite done yet.
+    There's a "Strict Standards" error on the of every page! Let's fix it:
+		- Open up C:\XAMPP\HTDOCS\scratchr\cake\bootstrap.php in a text editor
+		- Right after the first "if", add this line:
+			error_reporting(E_ERROR);
+
+16. Reload the page. The error should be gone, but we're still not done yet!
+		- Sign up for an account and then log in
+		- Now, set your pfp to anything other than "scratch code". That's not what I remember the Scratch 1.4 default pfp looking like!
+		- Get an "Can't move upload file to new location" error
+	We have to fix that.
+		- Rename \app\webroot\static\rename2icons to icons
+		- Check that the default pfp works
+		- Try to set your pfp again
+		- Check that it works
+
+17. Add the 404 image:
+		- If you're on HeatherscratchR, you can skip to step 18
+		- Download the image from here: https://web.archive.org/web/20121106052142im_/http://scratch.mit.edu/img/404.png
+		- Save it as /app/webroot/img/404.png
+		- Go to any unexistant page and enjoy the image by DavidTy
+
+18. Set yourself as admin:
+		- Open MySQL again, but this time with the arguments mysql -u root scratchr
+		- Run this command:
+			UPDATE users SET role = 'admin' WHERE username = 'Heathercat123';
+		You have to replace Heathercat123 by your username
+		- Log out then log back in
+
+You can now enjoy the admin-specific stuff, such as http://localhost/administration/
+If you want to manipulate the database further, open http://localhost/phpmyadmin/ and avoid breaking everything!
+To upload projects, go to http://localhost/services/share_project
+
+Everything included in stock ScratchR + the 404 image should now work.
+If you want anything that's not included in stock ScratchR, check out HeatherscratchR: https://github.com/Heathercat123/HeatherscratchR
+
+Scratch On!
