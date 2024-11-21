@@ -1,7 +1,7 @@
 # HeatherscratchR
 Source code for the Scratch 1.4 section of Heatherscratch. This is based on ScratchR by LLK.
 
-It doesn't include the Scratch Forums, the Text-Based Games Forums, the Scratch Wiki or the stats site. How to get them will be added to the install guide one day or another.
+It doesn't include the Scratch Forums, the Text-Based Games Forums, the Scratch Wiki, the stats site or any 2.0-styled page, including the 2.0 Wiki. How to get them will be added to the install guide one day or another.
 
 Differences over the original ScratchR:
 - Parts of the [Scratch Documentation Site](https://web.archive.org/web/20110411054144/http://info.scratch.mit.edu/) were added
