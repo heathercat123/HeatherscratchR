@@ -1,0 +1,93 @@
+<br/><div class="container">
+
+<h3>HeatherscratchR</h3>
+ <dl>
+        <dt><input type="checkbox" checked> Get the base 1.4 site (ScratchR) working</dt>
+        <dd>- It's on assembla</dd>
+		
+		<dt><input type="checkbox" checked> Get the 1.4 forums working</dt>
+		<dd>- It's on assembla</dd>
+		
+		<dt><input type="checkbox" checked> Get the stats site working</dt>
+        <dd>- It's on assembla</dd>
+		
+		<dt><input type="checkbox" 		  > Get Ruffle working but only if Flash isn't installed</dt>
+        <dd>- Both Java and Flash are deprecated, <br/>
+		so using Ruffle with the Flash player would be great.</dd>
+		
+		<dt><input type="checkbox" 		  > Make a more accurate Drupal version of the info site</dt>
+        <dd>- Right now, it uses a CakePHP remake of the info site</dd>
+		<dd>- Real one is made in Drupal</dd>
+		
+		<dt><input type="checkbox" 		  > Remake the blog</dt>
+        <dd>- Real one is made in Blogger how am I supposed to make that work</dd>
+		
+		<dt><input type="checkbox" 		  > Add website styles</dt>
+        <dd>- Users would be able to switch between the 1.3 and 1.4 styles, maybe even more</dd>
+  </dl>
+ </div>
+ <br/><div class="container">
+
+<h3>HeatherscratchR2</h3>
+ <dl>
+        <dt><input type="checkbox" checked> Get the style working</dt>
+        <dd>- CTRL-C CTRL-V goes brrr</dd>
+        
+		<dt><input type="checkbox" checked> Get the homepage working (at least partially)</dt>
+        <dd>- CTRL-C CTRL-V goes brrr</dd>
+        
+		<dt><input type="checkbox" 		  > Get the forums working</dt>
+        <dd>- Before doing anything else, I wanna get the forums working since <br/>
+		it'll require changing django and python versions</dd>
+	    
+		<dt><input type="checkbox" 		  > Get the online editor working</dt>
+        <dd>- What's Scratch 2 without Scratch 2?</dd>
+				
+		<dt><input type="checkbox" 		  > Get Ruffle working but only if Flash isn't installed</dt>
+        <dd>- Same as for HeatherscratchR</dd>
+		
+		<dt><input type="checkbox" 		  > Get a database working</dt>
+        <dd>- The real ScratchR2 uses Mongo + MySQL but idk how to use Mongo and <br/>
+		idk what's the point of having two databases</dd>
+		
+		<dt><input type="checkbox" 		  > Remake the profile page</dt>
+        <dd>- That would be practical! <br/>
+		btw on the real scratchr2, profile and class pages are internally the same</dd>
+	
+		<dt><input type="checkbox" 		  > Remake the site-api</dt>
+        <dd>- Basically, remake <a href="https://en.scratch-wiki.info/wiki/Scratch_API#site-api_Interface_(Deprecated)">this</a></dd>
+		<dd>- It's probably made in Django</bb>
+		
+		<dt><input type="checkbox" 		  > Remake the REST api</dt>
+        <dd>- Basically, remake <a href="https://en.scratch-wiki.info/wiki/Scratch_API#api.scratch.mit.edu_Interface">this</a></dd>
+		<dd>- It's probably made using node-restify</dd>
+		
+		<dt><input type="checkbox" checked> Remake the CDNs</dt>
+        <dd>- Basically, remake <a href="https://cdn.scratch.mit.edu">this</a> and <a href="https://cdn2.scratch.mit.edu">this</a></dd>
+		<dd><s>- It runs nginx, so it's probably made in Django</s></dd>
+		<dd>No it just proxies to <a href="https://scratch.mit.edu">the main site</a>, <a href="https://web.archive.org/web/20130703105305js_/http://cdn.scratch.mit.edu/">Proof</a></dd>
+		
+		<dt><input type="checkbox" 		  > Remake the backpack host</dt>
+        <dd>- Basically, remake <a href="https://backpack.scratch.mit.edu">this</a></dd>
+		<dd>- It runs nginx, so it's probably made in Django</dd>
+		
+		<dt><input type="checkbox" 		  > Add website styles</dt>
+        <dd>- Users would be able to switch between the early 2.0, <br/>
+		late 2.0/pre-purple 3.0 and purple styles, maybe even more</dd>
+  </dl>
+</div>
+  <br/><div class="container">
+<h3>Heatherscratch-WWW</h3>
+ <dl>
+		<dt><input type="checkbox" 		  > Get scratch-www working</dt>
+        <dd>- It's on github</dd>
+		
+		<dt><input type="checkbox" 		  > Plug it into HeatherscratchR2</dt>
+        <dd>- This will require remaking the REST api and site-api</dd>
+
+		<dt><input type="checkbox" 		  > Add website styles</dt>
+        <dd>- Users would be able to switch between the late 2.0/pre-purple 3.0 and <br/>
+		purple styles, maybe even more</dd>
+  </dl>
+  
+ </div>

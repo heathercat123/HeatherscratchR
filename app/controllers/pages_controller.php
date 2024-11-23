@@ -29,6 +29,9 @@ class PagesController extends AppController {
 			if($view == 'scratchboard-purchase') {
 				$pageTitle = ___('Scratch | Scratch Board purchase', true);
 			}
+			if($view == 'checklist') {
+				$pageTitle = ___('Scratch | Checklist', true);
+			}
 		}
 		
 		$this->set('content_status', $this->getContentStatus());
