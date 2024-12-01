@@ -36,11 +36,11 @@
 		<dt><input type="checkbox" checked> Get the homepage working (at least partially)</dt>
         <dd>- CTRL-C CTRL-V goes brrr</dd>
         
-		<dt><input type="checkbox" 		  > Get the forums working</dt>
+		<dt><input type="checkbox" checked> Get the forums working</dt>
         <dd>- Before doing anything else, I wanna get the forums working since <br/>
 		it'll require changing django and python versions</dd>
 	    
-		<dt><input type="checkbox" 		  > Get the online editor working</dt>
+		<dt><input type="checkbox" checked> Get the online editor working</dt>
         <dd>- What's Scratch 2 without Scratch 2?</dd>
 				
 		<dt><input type="checkbox" 		  > Get Ruffle working but only if Flash isn't installed</dt>
@@ -50,7 +50,7 @@
         <dd>- The real ScratchR2 uses Mongo + MySQL but idk how to use Mongo and <br/>
 		idk what's the point of having two databases</dd>
 		
-		<dt><input type="checkbox" 		  > Remake the profile page</dt>
+		<dt><input type="checkbox" checked> Remake the profile page</dt>
         <dd>- That would be practical! <br/>
 		btw on the real scratchr2, profile and class pages are internally the same</dd>
 	
