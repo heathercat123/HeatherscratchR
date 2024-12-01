@@ -8,7 +8,9 @@ class AppController extends Controller {
     var $helpers = array("head",'Time', "Util");
     var $uses = array('UserEvent', 'AdminTag', 'Relationship', 'Project', 'Pcomment', 'Gcomment', 'Gallery', 'GalleryProject', 'GalleryMembership', 'BlockedUser', 'Notification', 'User', 'Announcement', 'BlockedIp', 'FriendRequest');
 	var $components = array('RequestHandler', 'Cookie', 'Session', 'Thumb', 'GeoIp');
-    var $layout = 'scratchr_default';
+	var $layout = 'scratchr_default';
+	
+
     var $sanitize = true;
 
     function __construct() {
@@ -42,6 +44,7 @@ class AppController extends Controller {
 		$this->set('users_permission',$users_permission);
 		$this->set('content_status', $this->getContentStatus());
 		$this->set('client_ip', $this->RequestHandler->getClientIP());
+		$this->set('style', $this->Session->read('User.Style'));
 		
 		/*set name of country depends on cookie set from home/country and home/index*/
 		$ipCountry = $this->getUserCountryFromIP();

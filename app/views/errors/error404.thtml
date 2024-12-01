@@ -1,3 +1,6 @@
+<?php if($style == 2008):?>
+<h1><?php ___('Sorry, no such page...Scratch on!'); ?></h1>
+<?php else:?>
 <?PHP
 $this->pageTitle = '404 - Page Not Found - Our server is Scratch\'ing its head'; 
 ?>
@@ -72,3 +75,4 @@ image by DavidTy
 </p>
 <br />
 <br />
+<?php endif ?>

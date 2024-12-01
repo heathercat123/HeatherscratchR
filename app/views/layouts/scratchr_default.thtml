@@ -27,12 +27,16 @@
 <?php
 //for home page only
 if(Router::url('') == '/'):
-    echo $html->css('global');
+    if($style == 2008):
+		echo $html->css('global_2008');
+	else:
+		echo $html->css('global');
+	endif;
     echo $html->css('languagemenu');
     echo $html->css('thickbox');
     echo $javascript->link('home.js');
 else:
-    echo $html->css('main');
+	echo $html->css('main');
     echo $javascript->link('other.js');
     echo $javascript->link('scriptaculous.js');
 endif;
@@ -57,7 +61,11 @@ endif;
 <!-- |||||| Begin header ||||||| -->
 <?php
 if ($isLoggedIn)
-    echo $this->renderElement('header_loggedin');
+    if($style == 2008):
+		echo $this->renderElement('header_loggedin_2008');
+	else:
+		echo $this->renderElement('header_loggedin');
+	endif;
 else {
     echo $this->renderElement('header_default');
 }

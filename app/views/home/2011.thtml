@@ -54,6 +54,9 @@ width:245px;
     <div id="FeaturedProjects" class="container">
       <h3><?php ___('Featured Projects');?></h3>
 		<?php 
+		/**
+		 * Populate featured projects
+		 */
 		foreach ($featuredprojects as $featured):
 		$pid = $featured['Project']['id'];
 		$ribbon_image = (isset($featured['Project']['ribbon_name'])) ? $featured['Project']['ribbon_name']:null;

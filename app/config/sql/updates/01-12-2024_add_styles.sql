@@ -1,0 +1,1 @@
+ALTER TABLE `users` ADD `Style` ENUM( '2008', '2011' ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT '2011'

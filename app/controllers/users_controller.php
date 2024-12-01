@@ -1493,6 +1493,27 @@ class UsersController extends AppController {
 	}
 
 	/**
+     * sets user style
+     */
+	function setstyle($newstyle) {
+		
+		//$this->exitOnInvalidArgCount(1);
+		$session_user_id = $this->getLoggedInUserID();
+		if (!$session_user_id) {
+		   $this->__err();
+        }
+        
+		$this->User->id = $session_user_id;
+		$user = $this->User->read();
+
+		if (empty($user)) {
+            $this->cakeError('error404');
+		}
+        $this->User->saveField("Style",$newstyle);
+		$this->redirect('/logout');
+	}
+
+	/**
 	* updates user password
 	*/
 	function updatepass($user_id) {

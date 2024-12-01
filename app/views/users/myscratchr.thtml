@@ -167,7 +167,6 @@ function langList($countries) {
 			<?php endif;?>
 		<?php endif;?>
 	  </p>
-
         <!--Thank you mechanism-->
 
         <!--<div id="thankDiv" class="flag"><?php //e($this->renderElement("thank_you",array('isLoggedIn'=>$isLoggedIn,'user_id'=>$user['id'], 'isMe'=>$isMe, 'thanked_count'=>$thanked_count, 'thanks_to_username'=>$thanks_to_username, 'thanks_reciever_id'=>$thanks_reciever_id, 'similar_ip_sender'=>$similar_ip_sender))); ?></div>-->
@@ -191,7 +190,16 @@ function langList($countries) {
 			<input name='user_icon' size="10" type='file'/>
 			<input value="<?php ___('update'); ?>" type="submit" class="button">
 			</form>
-				
+			<?php if($style == 2008):?>
+				<form id="set_style" action="<?php echo $html->url('/users/setstyle/')?>2011" method="post" enctype='multipart/form-data'>
+				<input value="<?php ___('Travel to 2011'); ?>" type="submit" class="button">
+				</form>
+			<?php else:?>
+				<form id="set_style" action="<?php echo $html->url('/users/setstyle/')?>2008" method="post" enctype='multipart/form-data'>
+				<input value="<?php ___('Travel to 2008'); ?>" type="submit" class="button">
+				</form>
+			<?php endif; ?>
+			
 			<?php if($isAdmin):?>
 			<a href="<?php echo $html->url('/notifications/view/')?><?php echo $user_id?>"><?php ___('Past Notiifications:');?></a>&nbsp;<?php echo $notification_count?>
 			<br /><br /><a href="<?php echo $html->url('/administration/viewuser/')?><?php echo $user_id?>"><span class='button2'><?php ___('View Details')?></span></a>

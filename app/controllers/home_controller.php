@@ -9,10 +9,10 @@ Class HomeController extends AppController {
    	
 	/**
      * Called before every controller action
+     * Called before every controller action
 	 * Overrides AppController::beforeFilter()
      */
     function beforeFilter() { 
-		parent::beforeFilter();
 		$this->set('content_status', $this->getContentStatus());
 		
 		
@@ -306,6 +306,10 @@ Class HomeController extends AppController {
 		$this->set('newest_feed_link', $newest_feed_link);
 		$this->set('featured_feed_link', $featured_feed_link);
 		$this->set('ishomepage', true);
+		if($this->Session->read('User.Style') == 2008)
+			{ $this->render('2008'); }
+		else
+			{ $this->render('2011'); }
     }
 	
     //refresh the home page projects from memory

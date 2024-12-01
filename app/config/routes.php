@@ -108,6 +108,7 @@ Router::connect('/users/set_email/*', array('controller' => 'users', 'action' =>
 Router::connect('/users/close_account/*', array('controller' => 'users', 'action' => 'close_account'));
 Router::connect('/users/removefavorites', array('controller' => 'users', 'action' => 'removefavorites'));
 Router::connect('/users/countries/*', array('controller' => 'users', 'action' => 'countries'));
+Router::connect('/users/setstyle/*', array('controller' => 'users', 'action' => 'setstyle'));
 Router::connect('/users/*', array('controller' => 'users', 'action' => 'view'));
 
 

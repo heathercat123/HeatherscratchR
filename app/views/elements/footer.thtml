@@ -3,13 +3,19 @@
 	<?php ___('Your location: ')?><span id="countryName"><?php ___(getCountryNameByCode($cookieCountry)) ?></span>
 	<span id="countryChangeDiv" ><a href="<?php echo $html->url('/country/'.$alterCountry); ?>"><?php ___(getCountryNameByCode( $alterCountry)); ?>&nbsp;<?php  ___('instead?')?></a></span> |
 <?php endif;?>
+
+<?php if($style == 2008):?>
+<a href="/privacy"><?php ___('Privacy Policy')?></a> | 
+<a href="/terms">Terms of Use</a> | 
+<a href="<?php echo $html->url('/contact/us')?>"><?php ___('Contact Us')?> </a>
+<?php else:?>
 <a href="/downloadredirect"><?php ___('Download')?></a> | 
 <a href="/donate"><?php ___('Donate')?></a> | 
 <a href="/privacy"><?php ___('Privacy Policy')?></a> | 
 <a href="/terms"><?php ___('Community Guidelines')?></a> | 
 <a href="/copyright"><?php ___('Copyright Policy')?></a> | 
 <a href="<?php echo $html->url('/contact/us')?>"><?php ___('Contact Us')?> </a>
-
+<?php endif;?>
 <?php
 /*
 	if ($content_status == "all") {
@@ -21,8 +27,9 @@
 ?>
 
 
-
+<?php if($style != 2008):?>
 <div id="ipaddress"> <? if ($client_ip) { echo $client_ip; } else { echo "-"; }; ?> </div>
+<?php endif;?>
 </div>
 </div>
 

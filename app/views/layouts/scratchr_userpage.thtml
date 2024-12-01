@@ -24,7 +24,11 @@ echo $javascript->link('scriptaculous.js');
 echo $javascript->link('scratchr.js?v=1.2');
 echo $javascript->link('jquery.js?v=nov21');
 echo $javascript->link('ajax.js');
-echo $html->css('global');
+if($style == 2008):
+	echo $html->css('global_2008');
+else:
+	echo $html->css('global');
+endif;
 echo $html->css('languagemenu');
 
 ?>
@@ -125,7 +129,11 @@ if (isset($head)) echo $head->print_registered();
 <!-- |||||| Begin header ||||||| -->
 <?php
 if ($isLoggedIn)
-    echo $this->renderElement('header_loggedin');
+    if($style == 2008):
+		echo $this->renderElement('header_loggedin_2008');
+	else:
+		echo $this->renderElement('header_loggedin');
+	endif;
 else {
     echo $this->renderElement('header_default');
 }
