@@ -22,7 +22,7 @@
 		<dt><input type="checkbox" 		  > Remake the blog</dt>
         <dd>- Real one is made in Blogger how am I supposed to make that work</dd>
 		
-		<dt><input type="checkbox" 		  > Add website styles</dt>
+		<dt><input type="checkbox" checked> Add website styles</dt>
         <dd>- Users would be able to switch between the 1.3 and 1.4 styles, maybe even more</dd>
   </dl>
  </div>
