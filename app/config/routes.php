@@ -159,7 +159,7 @@ Router::connect('/projects/:username/:id/:action', array('controller' => 'projec
 				);
 
 // Redirects
-Router::connect('/downloadredirect', array('controller' => 'redirect', 'action' => 'download'));
+Router::connect('/download', array('controller' => 'redirect', 'action' => 'download'));
 Router::connect('/donate', array('controller' => 'redirect', 'action' => 'donate'));
 Router::connect('/terms', array('controller' => 'redirect', 'action' => 'terms'));
 Router::connect('/privacy', array('controller' => 'redirect', 'action' => 'privacy'));

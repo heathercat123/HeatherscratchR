@@ -1,9 +1,11 @@
 # Contains Mediawiki 1.15 with the ScratchWikiSkin-1.x skin.
-# It can be found here: https://github.com/InternationalScratchWiki/ScratchWikiSkin-1.x
+# It can be found here:
+# https://github.com/InternationalScratchWiki/ScratchWikiSkin-1.x
 /app/webroot/w
 
 # Contains Mediawiki 1.22 with the ScratchWikiSkin skin.
-# It can be found here: https://github.com/scratchfoundation/ScratchWikiSkin
+# It can be found here:
+# https://github.com/scratchfoundation/ScratchWikiSkin
 /app/webroot/w2
 
 # Can be found at https://app.assembla.com/spaces/scratchstats/
@@ -30,3 +32,8 @@
 
 # Dev contains some WIP stuff that'll be added to the repo later
 /app/webroot/dev
+
+# The downloads servers
+# They aren't included due to their size, but you can get them from here:
+# https://github.com/heathercat123/ScratchDownload
+/app/webroot/ScratchDownload

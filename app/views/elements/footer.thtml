@@ -9,7 +9,7 @@
 <a href="/terms">Terms of Use</a> | 
 <a href="<?php echo $html->url('/contact/us')?>"><?php ___('Contact Us')?> </a>
 <?php else:?>
-<a href="/downloadredirect"><?php ___('Download')?></a> | 
+<a href="/download"><?php ___('Download')?></a> | 
 <a href="/donate"><?php ___('Donate')?></a> | 
 <a href="/privacy"><?php ___('Privacy Policy')?></a> | 
 <a href="/terms"><?php ___('Community Guidelines')?></a> | 
