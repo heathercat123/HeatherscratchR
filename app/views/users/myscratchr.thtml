@@ -190,6 +190,7 @@ function langList($countries) {
 			<input name='user_icon' size="10" type='file'/>
 			<input value="<?php ___('update'); ?>" type="submit" class="button">
 			</form>
+			<?php if($isMe):?>
 			<?php if($style == 2008):?>
 				<form id="set_style" action="<?php echo $html->url('/users/setstyle/')?>2011" method="post" enctype='multipart/form-data'>
 				<input value="<?php ___('Travel to 2011'); ?>" type="submit" class="button">
@@ -198,6 +199,7 @@ function langList($countries) {
 				<form id="set_style" action="<?php echo $html->url('/users/setstyle/')?>2008" method="post" enctype='multipart/form-data'>
 				<input value="<?php ___('Travel to 2008'); ?>" type="submit" class="button">
 				</form>
+			<?php endif; ?>
 			<?php endif; ?>
 			
 			<?php if($isAdmin):?>
