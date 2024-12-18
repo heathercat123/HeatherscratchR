@@ -9,7 +9,6 @@ Class HomeController extends AppController {
    	
 	/**
      * Called before every controller action
-     * Called before every controller action
 	 * Overrides AppController::beforeFilter()
      */
     function beforeFilter() { 
