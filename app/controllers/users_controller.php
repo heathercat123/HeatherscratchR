@@ -1496,8 +1496,6 @@ class UsersController extends AppController {
      * sets user style
      */
 	function setstyle($newstyle) {
-		
-		//$this->exitOnInvalidArgCount(1);
 		$session_user_id = $this->getLoggedInUserID();
 		if (!$session_user_id) {
 		   $this->__err();
@@ -1510,7 +1508,8 @@ class UsersController extends AppController {
             $this->cakeError('error404');
 		}
         $this->User->saveField("Style",$newstyle);
-		$this->redirect('/logout');
+		$this->Session->write('User.Style', $newstyle);
+		$this->redirect('/users/'.$user['User']['urlname']);
 	}
 
 	/**
