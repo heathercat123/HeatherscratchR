@@ -208,7 +208,7 @@
       <h4><?php ___('Scratch@MIT Conference'); ?></h4>
       <ul class="sidelist">
 				<li><?php ___('Educators, researchers, and other members of the worldwide Scratch community gathered for three days.'); ?>
-      <p class="more"><a href="/conference"><?php ___('See what happened');?></a> </p>
+      <p class="more"><a href="/ScratchDownload/download/conference"><?php ___('See what happened');?></a> </p>
 				</li>
       </ul>
      </div>
