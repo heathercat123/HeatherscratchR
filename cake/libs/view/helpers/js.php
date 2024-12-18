@@ -1,43 +1,36 @@
 <?php
-/* SVN FILE: $Id: js.php 6311 2008-01-02 06:33:52Z phpnut $ */
-
+/* SVN FILE: $Id$ */
 /**
  * Javascript Generator class file.
  *
  * PHP versions 4 and 5
  *
- * CakePHP :  Rapid Development Framework <http://www.cakephp.org/>
- * Copyright 2006-2008, Cake Software Foundation, Inc.
- *								1785 E. Sahara Avenue, Suite 490-204
- *								Las Vegas, Nevada 89104
+ * CakePHP :  Rapid Development Framework (http://cakephp.org)
+ * Copyright 2005-2012, Cake Software Foundation, Inc.
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @filesource
- * @copyright		Copyright 2006-2008, Cake Software Foundation, Inc.
- * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP Project
- * @package			cake
- * @subpackage		cake.cake.libs.view.helpers
- * @since			CakePHP v 1.2
- * @version			$Revision: 6311 $
- * @modifiedby		$LastChangedBy: phpnut $
- * @lastmodified	$Date: 2008-01-01 22:33:52 -0800 (Tue, 01 Jan 2008) $
- * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc.
+ * @link          http://cakefoundation.org/projects/info/cakephp CakePHP Project
+ * @package       cake
+ * @subpackage    cake.cake.libs.view.helpers
+ * @since         CakePHP v 1.2
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
+ * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
-
 /**
  * Javascript Generator helper class for easy use of JavaScript.
  *
  * JsHelper provides an abstract interface for authoring JavaScript with a
  * given client-side library.
  *
- * @package		cake
- * @subpackage	cake.cake.libs.view.helpers
+ * @package       cake
+ * @subpackage    cake.cake.libs.view.helpers
  */
-
 class JsHelper extends Overloadable2 {
-
 	var $base = null;
 	var $webroot = null;
 	var $here = null;
@@ -70,10 +63,10 @@ class JsHelper extends Overloadable2 {
 
 	function call__($method, $params) {
 		if (is_object($this->hook) && method_exists($this->hook, $method)) {
-
+			$this->hook->dispatchMethod($method . '_', $params);
 		}
 		if (method_exists($this, $method . '_')) {
-			return call_user_func_array(array(&$this, $method . '_'), $params);
+			return $this->dispatchMethod($method . '_', $params);
 		}
 	}
 
@@ -81,7 +74,7 @@ class JsHelper extends Overloadable2 {
 		return 'alert("' . $this->escape($message) . '");';
 	}
 
-	function if_($if, $then, $else = null, $elseif = array()) {
+	function if_($if, $then, $else = null, $elseIf = array()) {
 		$len = strlen($if) - 1;
 		if ($if{$len} == ';') {
 			$if{$len} = null;
@@ -89,7 +82,7 @@ class JsHelper extends Overloadable2 {
 
 		$out = 'if (' . $if . ') { ' . $then . ' }';
 
-		foreach ($elseif as $cond => $exec) {
+		foreach ($elseIf as $cond => $exec) {
 			//$out .=
 		}
 
@@ -134,7 +127,7 @@ class JsHelper extends Overloadable2 {
 				$options['requestHeaders'] = array();
 			}
 			if (is_array($options['update'])) {
-				$options['update'] = join(' ', $options['update']);
+				$options['update'] = implode(' ', $options['update']);
 			}
 			$options['requestHeaders']['X-Update'] = $options['update'];
 		} else {
@@ -263,9 +256,9 @@ class JsHelper extends Overloadable2 {
 		}
 
 		if (!$numeric) {
-			$rt = '{' . join(', ', $out) . '}';
+			$rt = '{' . implode(', ', $out) . '}';
 		} else {
-			$rt = '[' . join(', ', $out) . ']';
+			$rt = '[' . implode(', ', $out) . ']';
 		}
 		$rt = $prefix . $rt . $postfix;
 
@@ -278,7 +271,6 @@ class JsHelper extends Overloadable2 {
 }
 
 class JsHelperObject {
-
 	var $__parent = null;
 
 	var $id = null;
@@ -452,8 +444,7 @@ class JsHelperObject {
 			}
 			$options[] = $key . ':' . $val;
 		}
-		return join(', ', $options);
+		return implode(', ', $options);
 	}
 }
-
 ?>

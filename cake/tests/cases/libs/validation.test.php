@@ -1,37 +1,34 @@
 <?php
-/* SVN FILE: $Id: validation.test.php 7296 2008-06-27 09:09:03Z gwoo $ */
+/* SVN FILE: $Id$ */
 /**
- * Short description for file.
+ * ValidationTest file
  *
  * Long description for file
  *
  * PHP versions 4 and 5
  *
  * CakePHP(tm) Tests <https://trac.cakephp.org/wiki/Developement/TestSuite>
- * Copyright 2005-2008, Cake Software Foundation, Inc.
- *								1785 E. Sahara Avenue, Suite 490-204
- *								Las Vegas, Nevada 89104
+ * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  *  Licensed under The Open Group Test Suite License
  *  Redistributions of files must retain the above copyright notice.
  *
- * @filesource
- * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
- * @link				https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
- * @package			cake.tests
- * @subpackage		cake.tests.cases.libs
- * @since			CakePHP(tm) v 1.2.0.4206
- * @version			$Revision: 7296 $
- * @modifiedby		$LastChangedBy: gwoo $
- * @lastmodified	$Date: 2008-06-27 02:09:03 -0700 (Fri, 27 Jun 2008) $
- * @license			http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
+ * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link          https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
+ * @package       cake
+ * @subpackage    cake.tests.cases.libs
+ * @since         CakePHP(tm) v 1.2.0.4206
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
+ * @license       http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
  */
 App::import('Core', 'Validation');
 /**
  * CustomValidator class
- * 
- * @package              cake
- * @subpackage           cake.tests.cases.libs
+ *
+ * @package       cake
+ * @subpackage    cake.tests.cases.libs
  */
 class CustomValidator {
 /**
@@ -45,33 +42,77 @@ class CustomValidator {
 		return preg_match('/^[0-9]{3}$/', $check);
 	}
 }
-
 /**
- * Short description for class.
+ * Test Case for Validation Class
  *
- * @package		cake.tests
- * @subpackage	cake.tests.cases.libs
+ * @package       cake
+ * @subpackage    cake.tests.cases.libs
  */
-class ValidationTestCase extends UnitTestCase {
+class ValidationTest extends CakeTestCase {
 /**
  * Validation property
- * 
+ *
  * @var mixed null
  * @access public
  */
 	var $Validation = null;
 /**
  * setup method
- * 
+ *
  * @access public
  * @return void
  */
-	function setup() {
+	function setUp() {
 		$this->Validation =& Validation::getInstance();
+		$this->_appEncoding = Configure::read('App.encoding');
+	}
+/**
+ * tearDown method
+ *
+ * @access public
+ * @return void
+ */
+	function tearDown() {
+		Configure::write('App.encoding', $this->_appEncoding);
+	}
+/**
+ * testNotEmpty method
+ *
+ * @access public
+ * @return void
+ */
+	function testNotEmpty() {
+		$this->assertTrue(Validation::notEmpty('abcdefg'));
+		$this->assertTrue(Validation::notEmpty('fasdf '));
+		$this->assertTrue(Validation::notEmpty('fooo'.chr(243).'blabla'));
+		$this->assertTrue(Validation::notEmpty('abçďĕʑʘπй'));
+		$this->assertTrue(Validation::notEmpty('José'));
+		$this->assertTrue(Validation::notEmpty('é'));
+		$this->assertTrue(Validation::notEmpty('π'));
+		$this->assertFalse(Validation::notEmpty("\t "));
+		$this->assertFalse(Validation::notEmpty(""));
+
+	}
+/**
+ * testNotEmptyISO88591Encoding method
+ *
+ * @return void
+ * @access public
+ */
+	function testNotEmptyISO88591AppEncoding() {
+		Configure::write('App.encoding', 'ISO-8859-1');
+		$this->assertTrue(Validation::notEmpty('abcdefg'));
+		$this->assertTrue(Validation::notEmpty('fasdf '));
+		$this->assertTrue(Validation::notEmpty('fooo'.chr(243).'blabla'));
+		$this->assertTrue(Validation::notEmpty('abçďĕʑʘπй'));
+		$this->assertTrue(Validation::notEmpty('José'));
+		$this->assertTrue(Validation::notEmpty(utf8_decode('José')));
+		$this->assertFalse(Validation::notEmpty("\t "));
+		$this->assertFalse(Validation::notEmpty(""));
 	}
 /**
  * testAlphaNumeric method
- * 
+ *
  * @access public
  * @return void
  */
@@ -80,6 +121,13 @@ class ValidationTestCase extends UnitTestCase {
 		$this->assertTrue(Validation::alphaNumeric('12234'));
 		$this->assertTrue(Validation::alphaNumeric('1w2e2r3t4y'));
 		$this->assertTrue(Validation::alphaNumeric('0'));
+		$this->assertTrue(Validation::alphaNumeric('abçďĕʑʘπй'));
+		$this->assertTrue(Validation::alphaNumeric('ˇˆๆゞ'));
+		$this->assertTrue(Validation::alphaNumeric('אกあアꀀ豈'));
+		$this->assertTrue(Validation::alphaNumeric('ǅᾈᾨ'));
+		$this->assertTrue(Validation::alphaNumeric('ÆΔΩЖÇ'));
+
+
 		$this->assertFalse(Validation::alphaNumeric('12 234'));
 		$this->assertFalse(Validation::alphaNumeric('dfd 234'));
 		$this->assertFalse(Validation::alphaNumeric("\n"));
@@ -90,7 +138,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testAlphaNumericPassedAsArray method
- * 
+ *
  * @access public
  * @return void
  */
@@ -109,7 +157,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testBetween method
- * 
+ *
  * @access public
  * @return void
  */
@@ -120,7 +168,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testBlank method
- * 
+ *
  * @access public
  * @return void
  */
@@ -135,7 +183,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testBlankAsArray method
- * 
+ *
  * @access public
  * @return void
  */
@@ -150,7 +198,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testcc method
- * 
+ *
  * @access public
  * @return void
  */
@@ -594,7 +642,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testLuhn method
- * 
+ *
  * @access public
  * @return void
  */
@@ -673,7 +721,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testCustomRegexForCc method
- * 
+ *
  * @access public
  * @return void
  */
@@ -684,7 +732,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testCustomRegexForCcWithLuhnCheck method
- * 
+ *
  * @access public
  * @return void
  */
@@ -696,11 +744,13 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testFastCc method
- * 
+ *
  * @access public
  * @return void
  */
 	function testFastCc() {
+		// too short
+		$this->assertFalse(Validation::cc('123456789012'));
 		//American Express
 		$this->assertTrue(Validation::cc('370482756063980'));
 		//Diners Club 14
@@ -722,7 +772,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testAllCc method
- * 
+ *
  * @access public
  * @return void
  */
@@ -772,7 +822,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testAllCcDeep method
- * 
+ *
  * @access public
  * @return void
  */
@@ -822,11 +872,12 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testComparison method
- * 
+ *
  * @access public
  * @return void
  */
 	function testComparison() {
+		$this->assertFalse(Validation::comparison(7, null, 6));
 		$this->assertTrue(Validation::comparison(7, 'is greater', 6));
 		$this->assertTrue(Validation::comparison(7, '>', 6));
 		$this->assertTrue(Validation::comparison(6, 'is less', 7));
@@ -858,7 +909,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testComparisonAsArray method
- * 
+ *
  * @access public
  * @return void
  */
@@ -894,7 +945,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testCustom method
- * 
+ *
  * @access public
  * @return void
  */
@@ -902,10 +953,11 @@ class ValidationTestCase extends UnitTestCase {
 		$this->assertTrue(Validation::custom('12345', '/(?<!\\S)\\d++(?!\\S)/'));
 		$this->assertFalse(Validation::custom('Text', '/(?<!\\S)\\d++(?!\\S)/'));
 		$this->assertFalse(Validation::custom('123.45', '/(?<!\\S)\\d++(?!\\S)/'));
+		$this->assertFalse(Validation::custom('missing regex'));
 	}
 /**
  * testCustomAsArray method
- * 
+ *
  * @access public
  * @return void
  */
@@ -916,7 +968,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testDateDdmmyyyy method
- * 
+ *
  * @access public
  * @return void
  */
@@ -936,7 +988,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testDateDdmmyyyyLeapYear method
- * 
+ *
  * @access public
  * @return void
  */
@@ -952,7 +1004,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testDateDdmmyy method
- * 
+ *
  * @access public
  * @return void
  */
@@ -972,7 +1024,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testDateDdmmyyLeapYear method
- * 
+ *
  * @access public
  * @return void
  */
@@ -988,7 +1040,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testDateDmyy method
- * 
+ *
  * @access public
  * @return void
  */
@@ -1008,7 +1060,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testDateDmyyLeapYear method
- * 
+ *
  * @access public
  * @return void
  */
@@ -1024,7 +1076,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testDateDmyyyy method
- * 
+ *
  * @access public
  * @return void
  */
@@ -1044,7 +1096,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testDateDmyyyyLeapYear method
- * 
+ *
  * @access public
  * @return void
  */
@@ -1060,7 +1112,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testDateMmddyyyy method
- * 
+ *
  * @access public
  * @return void
  */
@@ -1080,7 +1132,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testDateMmddyyyyLeapYear method
- * 
+ *
  * @access public
  * @return void
  */
@@ -1096,7 +1148,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testDateMmddyy method
- * 
+ *
  * @access public
  * @return void
  */
@@ -1116,7 +1168,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testDateMmddyyLeapYear method
- * 
+ *
  * @access public
  * @return void
  */
@@ -1132,7 +1184,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testDateMdyy method
- * 
+ *
  * @access public
  * @return void
  */
@@ -1152,7 +1204,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testDateMdyyLeapYear method
- * 
+ *
  * @access public
  * @return void
  */
@@ -1168,7 +1220,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testDateMdyyyy method
- * 
+ *
  * @access public
  * @return void
  */
@@ -1188,7 +1240,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testDateMdyyyyLeapYear method
- * 
+ *
  * @access public
  * @return void
  */
@@ -1204,7 +1256,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testDateYyyymmdd method
- * 
+ *
  * @access public
  * @return void
  */
@@ -1220,7 +1272,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testDateYyyymmddLeapYear method
- * 
+ *
  * @access public
  * @return void
  */
@@ -1236,7 +1288,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testDateYymmdd method
- * 
+ *
  * @access public
  * @return void
  */
@@ -1256,7 +1308,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testDateYymmddLeapYear method
- * 
+ *
  * @access public
  * @return void
  */
@@ -1272,7 +1324,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testDateDdMMMMyyyy method
- * 
+ *
  * @access public
  * @return void
  */
@@ -1284,7 +1336,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testDateDdMMMMyyyyLeapYear method
- * 
+ *
  * @access public
  * @return void
  */
@@ -1294,7 +1346,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testDateMmmmDdyyyy method
- * 
+ *
  * @access public
  * @return void
  */
@@ -1308,7 +1360,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testDateMmmmDdyyyyLeapYear method
- * 
+ *
  * @access public
  * @return void
  */
@@ -1321,7 +1373,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testDateMy method
- * 
+ *
  * @access public
  * @return void
  */
@@ -1333,7 +1385,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testDateMyNumeric method
- * 
+ *
  * @access public
  * @return void
  */
@@ -1349,7 +1401,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testTime method
- * 
+ *
  * @access public
  * @return void
  */
@@ -1370,7 +1422,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testBoolean method
- * 
+ *
  * @access public
  * @return void
  */
@@ -1389,7 +1441,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testDateCustomRegx method
- * 
+ *
  * @access public
  * @return void
  */
@@ -1399,7 +1451,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testDecimal method
- * 
+ *
  * @access public
  * @return void
  */
@@ -1417,7 +1469,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testDecimalWithPlaces method
- * 
+ *
  * @access public
  * @return void
  */
@@ -1441,7 +1493,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testDecimalCustomRegex method
- * 
+ *
  * @access public
  * @return void
  */
@@ -1451,7 +1503,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testEmail method
- * 
+ *
  * @access public
  * @return void
  */
@@ -1469,6 +1521,8 @@ class ValidationTestCase extends UnitTestCase {
 		$this->assertTrue(Validation::email('abc.efg@12345.co.jp'));
 		$this->assertTrue(Validation::email('abc@g.cn'));
 		$this->assertTrue(Validation::email('abc@x.com'));
+		$this->assertTrue(Validation::email('henrik@sbcglobal.net'));
+		$this->assertTrue(Validation::email('sani@sbcglobal.net'));
 
 		// all ICANN TLDs
 		$this->assertTrue(Validation::email('abc@example.aero'));
@@ -1491,6 +1545,7 @@ class ValidationTestCase extends UnitTestCase {
 		$this->assertTrue(Validation::email('abc@example.pro'));
 		$this->assertTrue(Validation::email('abc@example.tel'));
 		$this->assertTrue(Validation::email('abc@example.travel'));
+		$this->assertTrue(Validation::email('someone@st.t-com.hr'));
 
 		// strange, but technically valid email addresses
 		$this->assertTrue(Validation::email('S=postmaster/OU=rz/P=uni-frankfurt/A=d400/C=de@gateway.d400.de'));
@@ -1523,18 +1578,22 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testEmailDeep method
- * 
+ *
  * @access public
  * @return void
  */
 	function testEmailDeep() {
+		$found = gethostbynamel('example.abcd');
+		if ($this->skipIf($found, 'Your DNS service responds for non-existant domains, skipping deep email checks. %s'))  {
+			return;
+		}
 		$this->assertTrue(Validation::email('abc.efg@cakephp.org', true));
 		$this->assertFalse(Validation::email('abc.efg@caphpkeinvalid.com', true));
 		$this->assertFalse(Validation::email('abc@example.abcd', true));
 	}
 /**
  * testEmailCustomRegex method
- * 
+ *
  * @access public
  * @return void
  */
@@ -1544,7 +1603,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testEqualTo method
- * 
+ *
  * @access public
  * @return void
  */
@@ -1558,7 +1617,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testIp method
- * 
+ *
  * @access public
  * @return void
  */
@@ -1572,7 +1631,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testMaxLength method
- * 
+ *
  * @access public
  * @return void
  */
@@ -1583,7 +1642,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testMinLength method
- * 
+ *
  * @access public
  * @return void
  */
@@ -1594,7 +1653,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testUrl method
- * 
+ *
  * @access public
  * @return void
  */
@@ -1625,10 +1684,19 @@ class ValidationTestCase extends UnitTestCase {
 		$this->assertTrue(Validation::url('http://123456789112345678921234567893123456789412345678951234567896123.com'));
 		$this->assertFalse(Validation::url('http://this-domain-is-too-loooooong-by-icann-rules-maximum-length-is-63.com'));
 		$this->assertTrue(Validation::url('http://www.domain.com/blogs/index.php?blog=6&tempskin=_rss2'));
+		$this->assertTrue(Validation::url('http://www.domain.com/blogs/parenth()eses.php'));
+		$this->assertTrue(Validation::url('http://www.domain.com/index.php?get=params&amp;get2=params'));
+		$this->assertTrue(Validation::url('http://www.domain.com/ndex.php?get=params&amp;get2=params#anchor'));
+		$this->assertFalse(Validation::url('http://www.domain.com/fakeenco%ode'));
+		$this->assertTrue(Validation::url('http://www.domain.com/real%20url%20encodeing'));
+		$this->assertTrue(Validation::url('http://en.wikipedia.org/wiki/Architectural_pattern_(computer_science)'));
+		$this->assertFalse(Validation::url('http://en.(wikipedia).org/'));
+		$this->assertFalse(Validation::url('www.cakephp.org', true));
+		$this->assertTrue(Validation::url('http://www.cakephp.org', true));
 	}
 /**
  * testInList method
- * 
+ *
  * @access public
  * @return void
  */
@@ -1639,7 +1707,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testValidNumber method
- * 
+ *
  * @access public
  * @return void
  */
@@ -1665,7 +1733,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testRange method
- * 
+ *
  * @access public
  * @return void
  */
@@ -1680,7 +1748,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testExtension method
- * 
+ *
  * @access public
  * @return void
  */
@@ -1709,7 +1777,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testMoney method
- * 
+ *
  * @access public
  * @return void
  */
@@ -1740,8 +1808,47 @@ class ValidationTestCase extends UnitTestCase {
 		$this->assertFalse(Validation::money('100.1111€', 'right'));
 	}
 /**
+ * Test Multiple Select Validation
+ *
+ * @access public
+ * @return void
+ **/
+	function testMultiple() {
+		$this->assertTrue(Validation::multiple(array(0, 1, 2, 3)));
+		$this->assertTrue(Validation::multiple(array(50, 32, 22, 0)));
+		$this->assertTrue(Validation::multiple(array('str', 'var', 'enum', 0)));
+		$this->assertFalse(Validation::multiple(''));
+		$this->assertFalse(Validation::multiple(null));
+		$this->assertFalse(Validation::multiple(array()));
+		$this->assertFalse(Validation::multiple(array(0)));
+		$this->assertFalse(Validation::multiple(array('0')));
+
+		$this->assertTrue(Validation::multiple(array(0, 3, 4, 5), array('in' => range(0, 10))));
+		$this->assertFalse(Validation::multiple(array(0, 15, 20, 5), array('in' => range(0, 10))));
+		$this->assertFalse(Validation::multiple(array(0, 5, 10, 11), array('in' => range(0, 10))));
+		$this->assertFalse(Validation::multiple(array('boo', 'foo', 'bar'), array('in' => array('foo', 'bar', 'baz'))));
+
+		$this->assertTrue(Validation::multiple(array(0, 5, 10, 11), array('max' => 3)));
+		$this->assertFalse(Validation::multiple(array(0, 5, 10, 11, 55), array('max' => 3)));
+		$this->assertTrue(Validation::multiple(array('foo', 'bar', 'baz'), array('max' => 3)));
+		$this->assertFalse(Validation::multiple(array('foo', 'bar', 'baz', 'squirrel'), array('max' => 3)));
+
+		$this->assertTrue(Validation::multiple(array(0, 5, 10, 11), array('min' => 3)));
+		$this->assertTrue(Validation::multiple(array(0, 5, 10, 11, 55), array('min' => 3)));
+		$this->assertFalse(Validation::multiple(array('foo', 'bar', 'baz'), array('min' => 5)));
+		$this->assertFalse(Validation::multiple(array('foo', 'bar', 'baz', 'squirrel'), array('min' => 10)));
+
+		$this->assertTrue(Validation::multiple(array(0, 5, 9), array('in' => range(0, 10), 'max' => 5)));
+		$this->assertFalse(Validation::multiple(array(0, 5, 9, 8, 6, 2, 1), array('in' => range(0, 10), 'max' => 5)));
+		$this->assertFalse(Validation::multiple(array(0, 5, 9, 8, 11), array('in' => range(0, 10), 'max' => 5)));
+
+		$this->assertFalse(Validation::multiple(array(0, 5, 9), array('in' => range(0, 10), 'max' => 5, 'min' => 3)));
+		$this->assertFalse(Validation::multiple(array(0, 5, 9, 8, 6, 2, 1), array('in' => range(0, 10), 'max' => 5, 'min' => 2)));
+		$this->assertFalse(Validation::multiple(array(0, 5, 9, 8, 11), array('in' => range(0, 10), 'max' => 5, 'min' => 2)));
+	}
+/**
  * testNumeric method
- * 
+ *
  * @access public
  * @return void
  */
@@ -1757,7 +1864,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testPhone method
- * 
+ *
  * @access public
  * @return void
  */
@@ -1770,7 +1877,16 @@ class ValidationTestCase extends UnitTestCase {
 		$this->assertFalse(Validation::phone('1-(33)-3-444'));
 		$this->assertFalse(Validation::phone('1-(33)-3-44'));
 
-		$this->assertTrue(Validation::phone('(999) 999-9999'));
+		$this->assertFalse(Validation::phone('(055) 999-9999'));
+		$this->assertFalse(Validation::phone('(155) 999-9999'));
+		$this->assertFalse(Validation::phone('(595) 999-9999'));
+		$this->assertFalse(Validation::phone('(555) 099-9999'));
+		$this->assertFalse(Validation::phone('(555) 199-9999'));
+
+		$this->assertTrue(Validation::phone('1 (222) 333 4444'));
+		$this->assertTrue(Validation::phone('+1 (222) 333 4444'));
+		$this->assertTrue(Validation::phone('(222) 333 4444'));
+
 		$this->assertTrue(Validation::phone('1-(333)-333-4444'));
 		$this->assertTrue(Validation::phone('1.(333)-333-4444'));
 		$this->assertTrue(Validation::phone('1.(333).333-4444'));
@@ -1779,7 +1895,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testPostal method
- * 
+ *
  * @access public
  * @return void
  */
@@ -1812,6 +1928,7 @@ class ValidationTestCase extends UnitTestCase {
 		$this->assertFalse(Validation::postal('B2A 2AB', null, 'ca'));
 		$this->assertTrue(Validation::postal('X0A 0A2', null, 'ca'));
 		$this->assertTrue(Validation::postal('G4V 4C3', null, 'ca'));
+		$this->assertTrue(Validation::postal('L4J8D6', null, 'ca'));
 
 		$this->assertFalse(Validation::postal('111', null, 'us'));
 		$this->assertFalse(Validation::postal('1111', null, 'us'));
@@ -1831,7 +1948,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testSsn method
- * 
+ *
  * @access public
  * @return void
  */
@@ -1852,7 +1969,7 @@ class ValidationTestCase extends UnitTestCase {
 	}
 /**
  * testUserDefined method
- * 
+ *
  * @access public
  * @return void
  */

@@ -1,38 +1,40 @@
 <?php
-/* SVN FILE: $Id: dispatcher.test.php 7296 2008-06-27 09:09:03Z gwoo $ */
+/* SVN FILE: $Id$ */
 /**
- * Short description for file.
+ * DispatcherTest file
  *
  * Long description for file
  *
  * PHP versions 4 and 5
  *
  * CakePHP(tm) Tests <https://trac.cakephp.org/wiki/Developement/TestSuite>
- * Copyright 2005-2008, Cake Software Foundation, Inc.
- *								1785 E. Sahara Avenue, Suite 490-204
- *								Las Vegas, Nevada 89104
+ * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  *  Licensed under The Open Group Test Suite License
  *  Redistributions of files must retain the above copyright notice.
  *
- * @filesource
- * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
- * @link				https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
- * @package			cake.tests
- * @subpackage		cake.tests.cases
- * @since			CakePHP(tm) v 1.2.0.4206
- * @version			$Revision: 7296 $
- * @modifiedby		$LastChangedBy: gwoo $
- * @lastmodified	$Date: 2008-06-27 02:09:03 -0700 (Fri, 27 Jun 2008) $
- * @license			http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
+ * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link          https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
+ * @package       cake
+ * @subpackage    cake.tests.cases
+ * @since         CakePHP(tm) v 1.2.0.4206
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
+ * @license       http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
  */
-require_once CAKE.'dispatcher.php';
-App::import('Core', 'AppController');
+require_once CAKE . 'dispatcher.php';
+
+if (!class_exists('AppController')) {
+	require_once LIBS . 'controller' . DS . 'app_controller.php';
+} elseif (!defined('APP_CONTROLLER_EXISTS')){
+	define('APP_CONTROLLER_EXISTS', true);
+}
 /**
  * TestDispatcher class
  *
- * @package              cake
- * @subpackage           cake.tests.cases
+ * @package       cake
+ * @subpackage    cake.tests.cases
  */
 class TestDispatcher extends Dispatcher {
 /**
@@ -44,23 +46,15 @@ class TestDispatcher extends Dispatcher {
  * @access protected
  * @return void
  */
-	function _invoke(&$controller, $params, $missingAction) {
-		$controller->params =& $params;
-		$classVars = get_object_vars($controller);
-		if ($missingAction && in_array('scaffold', array_keys($classVars))) {
-			uses('controller'. DS . 'scaffold');
-			return new Scaffold($controller, $params);
-		} elseif ($missingAction && !in_array('scaffold', array_keys($classVars))) {
-				return $this->cakeError('missingAction', array(
-					array(
-						'className' => Inflector::camelize($params['controller']."Controller"),
-						'action' => $params['action'],
-						'webroot' => $this->webroot,
-						'url' => $this->here,
-						'base' => $this->base
-					)
-				));
+	function _invoke(&$controller, $params) {
+		restore_error_handler();
+		if ($result = parent::_invoke($controller, $params)) {
+			if ($result[0] === 'missingAction') {
+				return $result;
+			}
 		}
+		set_error_handler('simpleTestErrorHandler');
+
 		return $controller;
 	}
 /**
@@ -70,8 +64,8 @@ class TestDispatcher extends Dispatcher {
  * @access public
  * @return void
  */
-	function cakeError($filename) {
-		return $filename;
+	function cakeError($filename, $params) {
+		return array($filename, $params);
 	}
 /**
  * _stop method
@@ -82,22 +76,20 @@ class TestDispatcher extends Dispatcher {
 	function _stop() {
 		return true;
 	}
-
 }
 /**
  * MyPluginAppController class
  *
- * @package              cake
- * @subpackage           cake.tests.cases
+ * @package       cake
+ * @subpackage    cake.tests.cases
  */
 class MyPluginAppController extends AppController {
-
 }
 /**
  * MyPluginController class
  *
- * @package              cake
- * @subpackage           cake.tests.cases
+ * @package       cake
+ * @subpackage    cake.tests.cases
  */
 class MyPluginController extends MyPluginAppController {
 /**
@@ -146,8 +138,8 @@ class MyPluginController extends MyPluginAppController {
 /**
  * SomePagesController class
  *
- * @package              cake
- * @subpackage           cake.tests.cases
+ * @package       cake
+ * @subpackage    cake.tests.cases
  */
 class SomePagesController extends AppController {
 /**
@@ -183,12 +175,30 @@ class SomePagesController extends AppController {
 	function index() {
 		return true;
 	}
+/**
+ * protected method
+ *
+ * @access protected
+ * @return void
+ */
+	function _protected() {
+		return true;
+	}
+/**
+ * redirect method overriding
+ *
+ * @access public
+ * @return void
+ */
+	function redirect() {
+		echo 'this should not be accessible';
+	}
 }
 /**
  * OtherPagesController class
  *
- * @package              cake
- * @subpackage           cake.tests.cases
+ * @package       cake
+ * @subpackage    cake.tests.cases
  */
 class OtherPagesController extends MyPluginAppController {
 /**
@@ -228,8 +238,8 @@ class OtherPagesController extends MyPluginAppController {
 /**
  * TestDispatchPagesController class
  *
- * @package              cake
- * @subpackage           cake.tests.cases
+ * @package       cake
+ * @subpackage    cake.tests.cases
  */
 class TestDispatchPagesController extends AppController {
 /**
@@ -255,21 +265,29 @@ class TestDispatchPagesController extends AppController {
 	function admin_index() {
 		return true;
 	}
+/**
+ * camelCased method
+ *
+ * @access public
+ * @return void
+ */
+	function camelCased() {
+		return true;
+	}
 }
 /**
  * ArticlesTestAppController class
  *
- * @package              cake
- * @subpackage           cake.tests.cases
+ * @package       cake
+ * @subpackage    cake.tests.cases
  */
 class ArticlesTestAppController extends AppController {
-
 }
 /**
  * ArticlesTestController class
  *
- * @package              cake
- * @subpackage           cake.tests.cases
+ * @package       cake
+ * @subpackage    cake.tests.cases
  */
 class ArticlesTestController extends ArticlesTestAppController {
 /**
@@ -299,8 +317,8 @@ class ArticlesTestController extends ArticlesTestAppController {
 /**
  * SomePostsController class
  *
- * @package              cake
- * @subpackage           cake.tests.cases
+ * @package       cake
+ * @subpackage    cake.tests.cases
  */
 class SomePostsController extends AppController {
 /**
@@ -331,7 +349,11 @@ class SomePostsController extends AppController {
  * @return void
  */
 	function beforeFilter() {
-		$this->params['action'] = 'view';
+		if ($this->params['action'] == 'index') {
+			$this->params['action'] = 'view';
+		} else {
+			$this->params['action'] = 'change';
+		}
 		$this->params['pass'] = array('changed');
 	}
 /**
@@ -343,12 +365,21 @@ class SomePostsController extends AppController {
 	function index() {
 		return true;
 	}
+/**
+ * change method
+ *
+ * @access public
+ * @return void
+ */
+	function change() {
+		return true;
+	}
 }
 /**
  * TestCachedPagesController class
  *
- * @package              cake
- * @subpackage           cake.tests.cases
+ * @package       cake
+ * @subpackage    cake.tests.cases
  */
 class TestCachedPagesController extends AppController {
 /**
@@ -378,7 +409,10 @@ class TestCachedPagesController extends AppController {
  * @var array
  * @access public
  */
-	var $cacheAction = array('index'=> '+2 sec', 'test_nocache_tags'=>'+2 sec');
+	var $cacheAction = array(
+		'index'=> '+2 sec', 'test_nocache_tags'=>'+2 sec',
+		'view/' => '+2 sec'
+	);
 /**
  * viewPath property
  *
@@ -402,15 +436,32 @@ class TestCachedPagesController extends AppController {
  * @return void
  */
 	function test_nocache_tags() {
-//$this->cacheAction = '+2 sec';
 		$this->render();
+	}
+/**
+ * view method
+ *
+ * @access public
+ * @return void
+ */
+	function view($id = null) {
+		$this->render('index');
+	}
+/**
+ * test cached forms / tests view object being registered
+ *
+ * @return void
+ */
+	function cache_form() {
+		$this->cacheAction = 10;
+		$this->helpers[] = 'Form';
 	}
 }
 /**
  * TimesheetsController class
  *
- * @package              cake
- * @subpackage           cake.tests.cases
+ * @package       cake
+ * @subpackage    cake.tests.cases
  */
 class TimesheetsController extends AppController {
 /**
@@ -438,26 +489,61 @@ class TimesheetsController extends AppController {
 	}
 }
 /**
- * Short description for class.
+ * DispatcherTest class
  *
- * @package		cake.tests
- * @subpackage	cake.tests.cases
+ * @package       cake
+ * @subpackage    cake.tests.cases
  */
-class DispatcherTest extends UnitTestCase {
+class DispatcherTest extends CakeTestCase {
 /**
  * setUp method
  *
  * @access public
  * @return void
  */
-	function setUp() {
+	function startTest() {
 		$this->_get = $_GET;
 		$_GET = array();
+		$this->_post = $_POST;
+		$this->_files = $_FILES;
+		$this->_server = $_SERVER;
+
+		$this->_app = Configure::read('App');
 		Configure::write('App.base', false);
 		Configure::write('App.baseUrl', false);
 		Configure::write('App.dir', 'app');
 		Configure::write('App.webroot', 'webroot');
+
+		$this->_cache = Configure::read('Cache');
 		Configure::write('Cache.disable', true);
+
+		$this->_vendorPaths = Configure::read('vendorPaths');
+		$this->_pluginPaths = Configure::read('pluginPaths');
+		$this->_viewPaths = Configure::read('viewPaths');
+		$this->_controllerPaths = Configure::read('controllerPaths');
+		$this->_debug = Configure::read('debug');
+
+		Configure::write('controllerPaths',  Configure::corePaths('controller'));
+		Configure::write('viewPaths',  Configure::corePaths('view'));
+	}
+/**
+ * tearDown method
+ *
+ * @access public
+ * @return void
+ */
+	function endTest() {
+		$_GET = $this->_get;
+		$_POST = $this->_post;
+		$_FILES = $this->_files;
+		$_SERVER = $this->_server;
+		Configure::write('App', $this->_app);
+		Configure::write('Cache', $this->_cache);
+		Configure::write('vendorPaths', $this->_vendorPaths);
+		Configure::write('pluginPaths', $this->_pluginPaths);
+		Configure::write('viewPaths', $this->_viewPaths);
+		Configure::write('controllerPaths', $this->_controllerPaths);
+		Configure::write('debug', $this->_debug);
 	}
 /**
  * testParseParamsWithoutZerosAndEmptyPost method
@@ -558,26 +644,27 @@ class DispatcherTest extends UnitTestCase {
  * @return void
  */
 	function testQueryStringOnRoot() {
+		Router::reload();
+		Router::connect('/', array('controller' => 'pages', 'action' => 'display', 'home'));
+		Router::connect('/pages/*', array('controller' => 'pages', 'action' => 'display'));
+
 		$_GET = array('coffee' => 'life', 'sleep' => 'sissies');
 		$Dispatcher =& new Dispatcher();
 		$uri = 'posts/home/?coffee=life&sleep=sissies';
 		$result = $Dispatcher->parseParams($uri);
-		$this->assertPattern('/posts/',$result['controller']);
-		$this->assertPattern('/home/',$result['action']);
+		$this->assertPattern('/posts/', $result['controller']);
+		$this->assertPattern('/home/', $result['action']);
 		$this->assertTrue(isset($result['url']['sleep']));
 		$this->assertTrue(isset($result['url']['coffee']));
-
 
 		$Dispatcher =& new Dispatcher();
 		$uri = '/?coffee=life&sleep=sissy';
 		$result = $Dispatcher->parseParams($uri);
-		$this->assertPattern('/pages/',$result['controller']);
-		$this->assertPattern('/display/',$result['action']);
+		$this->assertPattern('/pages/', $result['controller']);
+		$this->assertPattern('/display/', $result['action']);
 		$this->assertTrue(isset($result['url']['sleep']));
 		$this->assertTrue(isset($result['url']['coffee']));
 		$this->assertEqual($result['url']['coffee'], 'life');
-
-		$_GET = $this->_get;
 	}
 /**
  * testFileUploadArrayStructure method
@@ -676,7 +763,160 @@ class DispatcherTest extends UnitTestCase {
 			'size' => 80469,
 		)));
 		$this->assertEqual($result['data'], $expected);
-		$_FILES = array();
+
+		$_FILES = array(
+			'data' => array(
+				'name' => array(
+					'Document' => array(
+						1 => array(
+							'birth_cert' => 'born on.txt',
+							'passport' => 'passport.txt',
+							'drivers_license' => 'ugly pic.jpg'
+						),
+						2 => array(
+							'birth_cert' => 'aunt betty.txt',
+							'passport' => 'betty-passport.txt',
+							'drivers_license' => 'betty-photo.jpg'
+						),
+					),
+				),
+				'type' => array(
+					'Document' => array(
+						1 => array(
+							'birth_cert' => 'application/octet-stream',
+							'passport' => 'application/octet-stream',
+							'drivers_license' => 'application/octet-stream',
+						),
+						2 => array(
+							'birth_cert' => 'application/octet-stream',
+							'passport' => 'application/octet-stream',
+							'drivers_license' => 'application/octet-stream',
+						)
+					)
+				),
+				'tmp_name' => array(
+					'Document' => array(
+						1 => array(
+							'birth_cert' => '/private/var/tmp/phpbsUWfH',
+							'passport' => '/private/var/tmp/php7f5zLt',
+ 							'drivers_license' => '/private/var/tmp/phpMXpZgT',
+						),
+						2 => array(
+							'birth_cert' => '/private/var/tmp/php5kHZt0',
+ 							'passport' => '/private/var/tmp/phpnYkOuM',
+ 							'drivers_license' => '/private/var/tmp/php9Rq0P3',
+						)
+					)
+				),
+				'error' => array(
+					'Document' => array(
+						1 => array(
+							'birth_cert' => 0,
+							'passport' => 0,
+ 							'drivers_license' => 0,
+						),
+						2 => array(
+							'birth_cert' => 0,
+ 							'passport' => 0,
+ 							'drivers_license' => 0,
+						)
+					)
+				),
+				'size' => array(
+					'Document' => array(
+						1 => array(
+							'birth_cert' => 123,
+							'passport' => 458,
+ 							'drivers_license' => 875,
+						),
+						2 => array(
+							'birth_cert' => 876,
+ 							'passport' => 976,
+ 							'drivers_license' => 9783,
+						)
+					)
+				)
+			)
+		);
+		$Dispatcher =& new Dispatcher();
+		$result = $Dispatcher->parseParams('/');
+		$expected = array(
+			'Document' => array(
+				1 => array(
+					'birth_cert' => array(
+						'name' => 'born on.txt',
+						'tmp_name' => '/private/var/tmp/phpbsUWfH',
+						'error' => 0,
+						'size' => 123,
+						'type' => 'application/octet-stream',
+					),
+					'passport' => array(
+						'name' => 'passport.txt',
+						'tmp_name' => '/private/var/tmp/php7f5zLt',
+						'error' => 0,
+						'size' => 458,
+						'type' => 'application/octet-stream',
+					),
+					'drivers_license' => array(
+						'name' => 'ugly pic.jpg',
+						'tmp_name' => '/private/var/tmp/phpMXpZgT',
+						'error' => 0,
+						'size' => 875,
+						'type' => 'application/octet-stream',
+					),
+				),
+				2 => array(
+					'birth_cert' => array(
+						'name' => 'aunt betty.txt',
+						'tmp_name' => '/private/var/tmp/php5kHZt0',
+						'error' => 0,
+						'size' => 876,
+						'type' => 'application/octet-stream',
+					),
+					'passport' => array(
+						'name' => 'betty-passport.txt',
+						'tmp_name' => '/private/var/tmp/phpnYkOuM',
+						'error' => 0,
+						'size' => 976,
+						'type' => 'application/octet-stream',
+					),
+					'drivers_license' => array(
+						'name' => 'betty-photo.jpg',
+						'tmp_name' => '/private/var/tmp/php9Rq0P3',
+						'error' => 0,
+						'size' => 9783,
+						'type' => 'application/octet-stream',
+					),
+				),
+			)
+		);
+		$this->assertEqual($result['data'], $expected);
+
+
+		$_FILES = array(
+			'data' => array(
+				'name' => array('birth_cert' => 'born on.txt'),
+				'type' => array('birth_cert' => 'application/octet-stream'),
+				'tmp_name' => array('birth_cert' => '/private/var/tmp/phpbsUWfH'),
+				'error' => array('birth_cert' => 0),
+				'size' => array('birth_cert' => 123)
+			)
+		);
+
+		$Dispatcher =& new Dispatcher();
+		$result = $Dispatcher->parseParams('/');
+
+		$expected = array(
+			'birth_cert' => array(
+				'name' => 'born on.txt',
+				'type' => 'application/octet-stream',
+				'tmp_name' => '/private/var/tmp/phpbsUWfH',
+				'error' => 0,
+				'size' => 123
+			)
+		);
+
+		$this->assertEqual($result['data'], $expected);
 	}
 /**
  * testGetUrl method
@@ -702,6 +942,7 @@ class DispatcherTest extends UnitTestCase {
 		$_GET['url'] = array();
 		Configure::write('App.base', '/control');
 		$Dispatcher =& new Dispatcher();
+		$Dispatcher->baseUrl();
 		$uri = '/control/students/browse';
 		$result = $Dispatcher->getUrl($uri);
 		$expected = 'students/browse';
@@ -715,6 +956,13 @@ class DispatcherTest extends UnitTestCase {
 		$expected = '?/home';
 		$this->assertEqual($expected, $result);
 
+		$_GET['url'] = array();
+		$Dispatcher =& new Dispatcher();
+		$Dispatcher->base = '/shop';
+		$uri = '/shop/fr/pages/shop';
+		$result = $Dispatcher->getUrl($uri);
+		$expected = 'fr/pages/shop';
+		$this->assertEqual($expected, $result);
 	}
 /**
  * testBaseUrlAndWebrootWithModRewrite method
@@ -895,6 +1143,42 @@ class DispatcherTest extends UnitTestCase {
 		$this->assertEqual($expectedWebroot, $Dispatcher->webroot);
 	}
 /**
+ * test baseUrl with no rewrite and using the top level index.php.
+ *
+ * @return void
+ */
+	function testBaseUrlNoRewriteTopLevelIndex() {
+		$Dispatcher =& new Dispatcher();
+
+		Configure::write('App.baseUrl', '/index.php');
+		$_SERVER['DOCUMENT_ROOT'] = '/Users/markstory/Sites/cake_dev';
+		$_SERVER['SCRIPT_FILENAME'] = '/Users/markstory/Sites/cake_dev/index.php';
+
+		$result = $Dispatcher->baseUrl();
+		$this->assertEqual('/index.php', $result);
+		$this->assertEqual('/app/webroot/', $Dispatcher->webroot);
+		$this->assertEqual('', $Dispatcher->base);
+	}
+
+/**
+ * test baseUrl with no rewrite, and using the app/webroot/index.php file as is normal with virtual hosts.
+ *
+ * @return void
+ */
+	function testBaseUrlNoRewriteWebrootIndex() {
+		$Dispatcher =& new Dispatcher();
+
+		Configure::write('App.baseUrl', '/index.php');
+		$_SERVER['DOCUMENT_ROOT'] = '/Users/markstory/Sites/cake_dev/app/webroot';
+		$_SERVER['SCRIPT_FILENAME'] = '/Users/markstory/Sites/cake_dev/app/webroot/index.php';
+
+		$result = $Dispatcher->baseUrl();
+		$this->assertEqual('/index.php', $result);
+		$this->assertEqual('/', $Dispatcher->webroot);
+		$this->assertEqual('', $Dispatcher->base);
+	}
+
+/**
  * testBaseUrlAndWebrootWithBase method
  *
  * @access public
@@ -932,11 +1216,15 @@ class DispatcherTest extends UnitTestCase {
  */
 	function testMissingController() {
 		$Dispatcher =& new TestDispatcher();
-		Configure::write('App.baseUrl','/index.php');
+		Configure::write('App.baseUrl', '/index.php');
 		$url = 'some_controller/home/param:value/param2:value2';
 		$controller = $Dispatcher->dispatch($url, array('return' => 1));
-
-		$expected = 'missingController';
+		$expected = array('missingController', array(array(
+			'className' => 'SomeControllerController',
+			'webroot' => '/app/webroot/',
+			'url' => 'some_controller/home/param:value/param2:value2',
+			'base' => '/index.php'
+		)));
 		$this->assertEqual($expected, $controller);
 	}
 /**
@@ -948,11 +1236,18 @@ class DispatcherTest extends UnitTestCase {
 	function testPrivate() {
 		$Dispatcher =& new TestDispatcher();
 		Configure::write('App.baseUrl','/index.php');
-		$url = 'some_pages/redirect/param:value/param2:value2';
+		$url = 'some_pages/_protected/param:value/param2:value2';
+
 		$controller = $Dispatcher->dispatch($url, array('return' => 1));
 
-		$expected = 'privateAction';
-		$this->assertEqual($expected, $controller);
+		$expected = array('privateAction', array(array(
+			'className' => 'SomePagesController',
+			'action' => '_protected',
+			'webroot' => '/app/webroot/',
+			'url' => 'some_pages/_protected/param:value/param2:value2',
+			'base' => '/index.php'
+		)));
+		$this->assertEqual($controller, $expected);
 	}
 /**
  * testMissingAction method
@@ -962,11 +1257,33 @@ class DispatcherTest extends UnitTestCase {
  */
 	function testMissingAction() {
 		$Dispatcher =& new TestDispatcher();
-		Configure::write('App.baseUrl','/index.php');
+		Configure::write('App.baseUrl', '/index.php');
 		$url = 'some_pages/home/param:value/param2:value2';
 
 		$controller = $Dispatcher->dispatch($url, array('return'=> 1));
-		$expected = 'missingAction';
+
+		$expected = array('missingAction', array(array(
+			'className' => 'SomePagesController',
+			'action' => 'home',
+			'webroot' => '/app/webroot/',
+			'url' => '/index.php/some_pages/home/param:value/param2:value2',
+			'base' => '/index.php'
+		)));
+		$this->assertEqual($expected, $controller);
+
+		$Dispatcher =& new TestDispatcher();
+		Configure::write('App.baseUrl','/index.php');
+		$url = 'some_pages/redirect/param:value/param2:value2';
+
+		$controller = $Dispatcher->dispatch($url, array('return'=> 1));
+
+		$expected = array('missingAction', array(array(
+			'className' => 'SomePagesController',
+			'action' => 'redirect',
+			'webroot' => '/app/webroot/',
+			'url' => '/index.php/some_pages/redirect/param:value/param2:value2',
+			'base' => '/index.php'
+		)));
 		$this->assertEqual($expected, $controller);
 	}
 /**
@@ -1001,8 +1318,8 @@ class DispatcherTest extends UnitTestCase {
 		$expected = 'Pages';
 		$this->assertEqual($expected, $controller->name);
 
-
 		unset($Dispatcher);
+
 		$Dispatcher =& new TestDispatcher();
 		Configure::write('App.baseUrl','/timesheets/index.php');
 
@@ -1017,6 +1334,35 @@ class DispatcherTest extends UnitTestCase {
 
 		$this->assertEqual('Timesheets', $controller->name);
 		$this->assertEqual('/timesheets/index.php', $Dispatcher->base);
+
+
+		$url = 'test_dispatch_pages/camelCased';
+		$controller = $Dispatcher->dispatch($url, array('return' => 1));
+		$this->assertEqual('TestDispatchPages', $controller->name);
+
+		$url = 'test_dispatch_pages/camelCased/something. .';
+		$controller = $Dispatcher->dispatch($url, array('return' => 1));
+		$this->assertEqual($controller->params['pass'][0], 'something. .', 'Period was chopped off. %s');
+
+	}
+/**
+ * testDispatchWithArray method
+ *
+ * @access public
+ * @return void
+ */
+	function testDispatchWithArray() {
+		$Dispatcher =& new TestDispatcher();
+		Configure::write('App.baseUrl','/index.php');
+		$url = 'pages/home/param:value/param2:value2';
+
+		$url = array('controller' => 'pages', 'action' => 'display');
+		$controller = $Dispatcher->dispatch($url, array('pass' => array('home'), 'named' => array('param' => 'value', 'param2' => 'value2'), 'return' => 1));
+		$expected = 'Pages';
+		$this->assertEqual($expected, $controller->name);
+
+		$expected = array('0' => 'home', 'param' => 'value', 'param2' => 'value2');
+		$this->assertIdentical($expected, $controller->passedArgs);
 	}
 /**
  * testAdminDispatch method
@@ -1083,6 +1429,9 @@ class DispatcherTest extends UnitTestCase {
 
 		$expected = 'SomePages';
 		$this->assertIdentical($expected, $controller->name);
+
+		$expected = 'some_pages';
+		$this->assertIdentical($expected, $controller->params['controller']);
 
 		$expected = array('0' => 'home', 'param'=>'value', 'param2'=>'value2');
 		$this->assertIdentical($expected, $controller->passedArgs);
@@ -1161,6 +1510,32 @@ class DispatcherTest extends UnitTestCase {
 		$this->assertEqual($controller->params['named'], $expected);
 
 
+		Router::reload();
+		$Dispatcher =& new TestDispatcher();
+		$Dispatcher->base = false;
+
+		/* Simulates the Route for a real plugin, installed in APP/plugins */
+		Router::connect('/my_plugin/:controller/:action/*', array('plugin' => 'my_plugin'));
+
+		$plugin = 'MyPlugin';
+		$pluginUrl = Inflector::underscore($plugin);
+
+		$url = $pluginUrl;
+		$controller = $Dispatcher->dispatch($url, array('return' => 1));
+
+		$expected = $pluginUrl;
+		$this->assertIdentical($controller->plugin, $expected);
+
+		$expected = $plugin;
+		$this->assertIdentical($controller->name, $expected);
+
+		$expected = 'index';
+		$this->assertIdentical($controller->action, $expected);
+
+		$expected = $pluginUrl;
+		$this->assertEqual($controller->params['controller'], $expected);
+
+
 		Configure::write('Routing.admin', 'admin');
 
 		Router::reload();
@@ -1205,6 +1580,55 @@ class DispatcherTest extends UnitTestCase {
 		$this->assertEqual($controller->params, $expected);
 	}
 /**
+ * test Plugin dispatching without controller name and using
+ * plugin short form instead.
+ *
+ * @return void
+ **/
+	function testAutomaticPluginDispatchWithShortAccess() {
+		$_POST = array();
+		$_SERVER['PHP_SELF'] = '/cake/repo/branches/1.2.x.x/index.php';
+
+		Router::reload();
+		Router::connect('/my_plugin/:controller/:action/*', array('plugin'=>'my_plugin'));
+
+		$Dispatcher =& new TestDispatcher();
+		$Dispatcher->base = false;
+
+		$url = 'my_plugin/my_plugin/add';
+		$controller = $Dispatcher->dispatch($url, array('return' => 1));
+		$this->assertFalse(isset($controller->params['pass'][0]));
+
+		$Dispatcher =& new TestDispatcher();
+		$Dispatcher->base = false;
+
+		$url = 'my_plugin/my_plugin/add/0';
+		$controller = $Dispatcher->dispatch($url, array('return' => 1));
+		$this->assertTrue(isset($controller->params['pass'][0]));
+
+		$Dispatcher =& new TestDispatcher();
+		$Dispatcher->base = false;
+
+		$url = 'my_plugin/add';
+		$controller = $Dispatcher->dispatch($url, array('return' => 1));
+
+		$this->assertFalse(isset($controller->params['pass'][0]));
+
+		$Dispatcher =& new TestDispatcher();
+		$Dispatcher->base = false;
+
+		$url = 'my_plugin/add/0';
+		$controller = $Dispatcher->dispatch($url, array('return' => 1));
+		$this->assertIdentical('0',$controller->params['pass'][0]);
+
+		$Dispatcher =& new TestDispatcher();
+		$Dispatcher->base = false;
+
+		$url = 'my_plugin/add/1';
+		$controller = $Dispatcher->dispatch($url, array('return' => 1));
+		$this->assertIdentical('1',$controller->params['pass'][0]);
+	}
+/**
  * testAutomaticPluginControllerMissingActionDispatch method
  *
  * @access public
@@ -1218,10 +1642,32 @@ class DispatcherTest extends UnitTestCase {
 		$Dispatcher =& new TestDispatcher();
 		$Dispatcher->base = false;
 
+		$url = 'my_plugin/not_here/param:value/param2:value2';
+		$controller = $Dispatcher->dispatch($url, array('return'=> 1));
+
+		$expected = array('missingAction', array(array(
+			'className' => 'MyPluginController',
+			'action' => 'not_here',
+			'webroot' => '/cake/repo/branches/1.2.x.x/',
+			'url' => '/cake/repo/branches/1.2.x.x/my_plugin/not_here/param:value/param2:value2',
+			'base' => '/cake/repo/branches/1.2.x.x'
+		)));
+		$this->assertIdentical($expected, $controller);
+
+		Router::reload();
+		$Dispatcher =& new TestDispatcher();
+		$Dispatcher->base = false;
+
 		$url = 'my_plugin/param:value/param2:value2';
 		$controller = $Dispatcher->dispatch($url, array('return'=> 1));
 
-		$expected = 'missingAction';
+		$expected = array('missingAction', array(array(
+			'className' => 'MyPluginController',
+			'action' => 'param:value',
+			'webroot' => '/cake/repo/branches/1.2.x.x/',
+			'url' => '/cake/repo/branches/1.2.x.x/my_plugin/param:value/param2:value2',
+			'base' => '/cake/repo/branches/1.2.x.x'
+		)));
 		$this->assertIdentical($expected, $controller);
 	}
 /**
@@ -1243,8 +1689,32 @@ class DispatcherTest extends UnitTestCase {
 		$url = 'test_dispatch_pages/admin_index/param:value/param2:value2';
 		$controller = $Dispatcher->dispatch($url, array('return' => 1));
 
-		$expected = 'privateAction';
+		$expected = array('privateAction', array(array(
+			'className' => 'TestDispatchPagesController',
+			'action' => 'admin_index',
+			'webroot' => '/cake/repo/branches/1.2.x.x/',
+			'url' => 'test_dispatch_pages/admin_index/param:value/param2:value2',
+			'base' => '/cake/repo/branches/1.2.x.x'
+		)));
 		$this->assertIdentical($expected, $controller);
+	}
+/**
+ * undocumented function
+ *
+ * @return void
+ **/
+	function testTestPluginDispatch() {
+		$Dispatcher =& new TestDispatcher();
+		$_back = Configure::read('pluginPaths');
+		Configure::write('pluginPaths', array(TEST_CAKE_CORE_INCLUDE_PATH . 'tests' . DS . 'test_app' . DS . 'plugins' . DS));
+		$url = '/test_plugin/tests/index';
+		$result = $Dispatcher->dispatch($url, array('return' => 1));
+		$this->assertTrue(class_exists('TestsController'));
+		$this->assertTrue(class_exists('TestPluginAppController'));
+		$this->assertTrue(class_exists('OtherComponentComponent'));
+		$this->assertTrue(class_exists('PluginsComponentComponent'));
+
+		Configure::write('pluginPaths', $_back);
 	}
 /**
  * testChangingParamsFromBeforeFilter method
@@ -1253,14 +1723,27 @@ class DispatcherTest extends UnitTestCase {
  * @return void
  */
 	function testChangingParamsFromBeforeFilter() {
+		$_SERVER['PHP_SELF'] = '/cake/repo/branches/1.2.x.x/index.php';
 		$Dispatcher =& new TestDispatcher();
 		$url = 'some_posts/index/param:value/param2:value2';
+		$controller = $Dispatcher->dispatch($url, array('return' => 1));
+
+		$expected = array('missingAction', array(array(
+			'className' => 'SomePostsController',
+			'action' => 'view',
+			'webroot' => '/cake/repo/branches/1.2.x.x/',
+			'url' => '/cake/repo/branches/1.2.x.x/some_posts/index/param:value/param2:value2',
+			'base' => '/cake/repo/branches/1.2.x.x'
+		)));
+		$this->assertEqual($expected, $controller);
+
+		$url = 'some_posts/something_else/param:value/param2:value2';
 		$controller = $Dispatcher->dispatch($url, array('return' => 1));
 
 		$expected = 'SomePosts';
 		$this->assertEqual($expected, $controller->name);
 
-		$expected = 'view';
+		$expected = 'change';
 		$this->assertEqual($expected, $controller->action);
 
 		$expected = array('changed');
@@ -1283,12 +1766,34 @@ class DispatcherTest extends UnitTestCase {
 		$Dispatcher =& new TestDispatcher();
 
 		Configure::write('debug', 0);
+		ob_start();
+		$Dispatcher->dispatch('img/test.jpg');
+		$result = ob_get_clean();
+		$file = file_get_contents(TEST_CAKE_CORE_INCLUDE_PATH . 'tests' . DS . 'test_app' . DS . 'vendors' . DS . 'img' . DS . 'test.jpg');
+		$this->assertEqual($file, $result);
+
+
+		Configure::write('debug', 0);
 		$Dispatcher->params = $Dispatcher->parseParams('css/test_asset.css');
 
 		ob_start();
 		$Dispatcher->cached('css/test_asset.css');
 		$result = ob_get_clean();
 		$this->assertEqual('this is the test asset css file', $result);
+
+
+		ob_start();
+		$Dispatcher->cached('test_plugin/js/test_plugin/test.js');
+		$result = ob_get_clean();
+		$this->assertEqual('alert("Test App");', $result);
+
+
+		Configure::write('debug', 0);
+		$Dispatcher->params = $Dispatcher->parseParams('test_plugin/js/test_plugin/test.js');
+		ob_start();
+		$Dispatcher->cached('test_plugin/js/test_plugin/test.js');
+		$result = ob_get_clean();
+		$this->assertEqual('alert("Test App");', $result);
 
 
 		Configure::write('debug', 0);
@@ -1298,6 +1803,7 @@ class DispatcherTest extends UnitTestCase {
 		$result = ob_get_clean();
 		$this->assertEqual('this is the test plugin asset css file', $result);
 
+
 		Configure::write('debug', 0);
 		$Dispatcher->params = $Dispatcher->parseParams('test_plugin/img/cake.icon.gif');
 		ob_start();
@@ -1305,6 +1811,15 @@ class DispatcherTest extends UnitTestCase {
 		$result = ob_get_clean();
 		$file = file_get_contents(TEST_CAKE_CORE_INCLUDE_PATH . 'tests' . DS . 'test_app' . DS . 'plugins' . DS . 'test_plugin' .DS . 'vendors' . DS . 'img' . DS . 'cake.icon.gif');
 		$this->assertEqual($file, $result);
+
+
+		Configure::write('debug', 2);
+		$Dispatcher->params = $Dispatcher->parseParams('plugin_js/js/plugin_js.js');
+		ob_start();
+		$Dispatcher->cached('plugin_js/js/plugin_js.js');
+		$result = ob_get_clean();
+		$expected = "alert('win sauce');";
+		$this->assertEqual($result, $expected);
 
 		header('Content-type: text/html');//reset the header content-type without page can render as plain text.
 	}
@@ -1403,6 +1918,85 @@ class DispatcherTest extends UnitTestCase {
 		$this->assertEqual($result, $expected);
 		$filename = $this->__cachePath($dispatcher->here);
 		unlink($filename);
+
+		$url = 'test_cached_pages/view/param/param';
+
+		ob_start();
+		$dispatcher->dispatch($url);
+		$out = ob_get_clean();
+
+		ob_start();
+		$dispatcher->cached($url);
+		$cached = ob_get_clean();
+
+		$result = str_replace(array("\t", "\r\n", "\n"), "", $out);
+		$cached = preg_replace('/<!--+[^<>]+-->/', '', $cached);
+		$expected =  str_replace(array("\t", "\r\n", "\n"), "", $cached);
+
+		$this->assertEqual($result, $expected);
+		$filename = $this->__cachePath($dispatcher->here);
+		unlink($filename);
+
+		$url = 'test_cached_pages/view/foo:bar/value:goo';
+
+		ob_start();
+		$dispatcher->dispatch($url);
+		$out = ob_get_clean();
+
+		ob_start();
+		$dispatcher->cached($url);
+		$cached = ob_get_clean();
+
+		$result = str_replace(array("\t", "\r\n", "\n"), "", $out);
+		$cached = preg_replace('/<!--+[^<>]+-->/', '', $cached);
+		$expected =  str_replace(array("\t", "\r\n", "\n"), "", $cached);
+
+		$this->assertEqual($result, $expected);
+		$filename = $this->__cachePath($dispatcher->here);
+		$this->assertTrue(file_exists($filename));
+		unlink($filename);
+
+		$url = 'TestCachedPages/test_nocache_tags';
+	}
+/**
+ * test that cached() registers a view and un-registers it.  Tests
+ * that helpers using ClassRegistry::getObject('view'); don't fail
+ *
+ * @return void
+ */
+	function testCachedRegisteringViewObject() {
+		Configure::write('Cache.disable', false);
+		Configure::write('Cache.check', true);
+		Configure::write('debug', 2);
+
+		$_POST = array();
+		$_SERVER['PHP_SELF'] = '/';
+
+		Router::reload();
+		Configure::write('viewPaths', array(TEST_CAKE_CORE_INCLUDE_PATH . 'tests' . DS . 'test_app' . DS . 'views'. DS));
+
+		$dispatcher =& new Dispatcher();
+		$dispatcher->base = false;
+
+		$url = 'test_cached_pages/cache_form';
+		ob_start();
+		$dispatcher->dispatch($url);
+		$out = ob_get_clean();
+
+		ClassRegistry::flush();
+
+		ob_start();
+		$dispatcher->cached($url);
+		$cached = ob_get_clean();
+
+		$result = str_replace(array("\t", "\r\n", "\n"), "", $out);
+		$cached = preg_replace('/<!--+[^<>]+-->/', '', $cached);
+		$expected =  str_replace(array("\t", "\r\n", "\n"), "", $cached);
+
+		$this->assertEqual($result, $expected);
+		$filename = $this->__cachePath($dispatcher->here);
+		unlink($filename);
+		ClassRegistry::flush();
 	}
 /**
  * testHttpMethodOverrides method
@@ -1457,6 +2051,23 @@ class DispatcherTest extends UnitTestCase {
 
 		unset($_POST['_method']);
 	}
+
+/**
+ * Tests that invalid characters cannot be injected into the application base path.
+ *
+ * @return void
+ */
+	function testBasePathInjection() {
+		$self = $_SERVER['PHP_SELF'];
+		$_SERVER['PHP_SELF'] = urldecode(
+			"/index.php/%22%3E%3Ch1%20onclick=%22alert('xss');%22%3Eheya%3C/h1%3E"
+		);
+
+		$dispatcher =& new Dispatcher();
+		$result = $dispatcher->baseUrl();
+		$expected = '/index.php/h1 onclick=alert(xss);heya';
+		$this->assertEqual($result, $expected);
+	}
 /**
  * testEnvironmentDetection method
  *
@@ -1470,7 +2081,7 @@ class DispatcherTest extends UnitTestCase {
 			'IIS' => array(
 				'No rewrite base path' => array(
 					'App' => array('base' => false, 'baseUrl' => '/index.php?', 'server' => 'IIS'),
-					'SERVER' => array('HTTPS' => 'off', 'SCRIPT_NAME' => '/index.php', 'PATH_TRANSLATED' => 'C:\\Inetpub\\wwwroot', 'QUERY_STRING' => '', 'REMOTE_ADDR' => '127.0.0.1', 'REMOTE_HOST' => '127.0.0.1', 'REQUEST_METHOD' => 'GET', 'SERVER_NAME' => 'localhost', 'SERVER_PORT' => '80', 'SERVER_PROTOCOL' => 'HTTP/1.1', 'SERVER_SOFTWARE' => 'Microsoft-IIS/5.1', 'APPL_PHYSICAL_PATH' => 'C:\\Inetpub\\wwwroot\\', 'REQUEST_URI' => '/index.php', 'URL' => '/index.php', 'SCRIPT_FILENAME' => 'C:\\Inetpub\\wwwroot\\index.php', 'ORIG_PATH_INFO' => '/index.php', 'PATH_INFO' => '', 'ORIG_PATH_TRANSLATED' => 'C:\\Inetpub\\wwwroot\\index.php', 'DOCUMENT_ROOT' => 'C:\\Inetpub\\wwwroot', 'PHP_SELF' => '/index.php', 'HTTP_ACCEPT' => '*/*', 'HTTP_ACCEPT_LANGUAGE' => 'en-us', 'HTTP_CONNECTION' => 'Keep-Alive', 'HTTP_HOST' => 'localhost', 'HTTP_USER_AGENT' => 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727)', 'HTTP_ACCEPT_ENCODING' => 'gzip, deflate', 'argv' => array(), 'argc' => 0),
+					'SERVER' => array('HTTPS' => 'off', 'SCRIPT_NAME' => '/index.php', 'PATH_TRANSLATED' => 'C:\\Inetpub\\wwwroot', 'QUERY_STRING' => '', 'REMOTE_ADDR' => '127.0.0.1', 'REMOTE_HOST' => '127.0.0.1', 'REQUEST_METHOD' => 'GET', 'SERVER_NAME' => 'localhost', 'SERVER_PORT' => '80', 'SERVER_PROTOCOL' => 'HTTP/1.1', 'APPL_PHYSICAL_PATH' => 'C:\\Inetpub\\wwwroot\\', 'REQUEST_URI' => '/index.php', 'URL' => '/index.php', 'SCRIPT_FILENAME' => 'C:\\Inetpub\\wwwroot\\index.php', 'ORIG_PATH_INFO' => '/index.php', 'PATH_INFO' => '', 'ORIG_PATH_TRANSLATED' => 'C:\\Inetpub\\wwwroot\\index.php', 'DOCUMENT_ROOT' => 'C:\\Inetpub\\wwwroot', 'PHP_SELF' => '/index.php', 'HTTP_HOST' => 'localhost', 'argv' => array(), 'argc' => 0),
 					'reload' => true,
 					'path' => ''
 				),
@@ -1509,18 +2120,54 @@ class DispatcherTest extends UnitTestCase {
 			'Apache' => array(
 				'No rewrite base path' => array(
 					'App' => array('base' => false, 'baseUrl' => '/index.php', 'dir' => 'app', 'webroot' => 'webroot'),
-					'SERVER' => array('SERVER_NAME' => 'localhost', 'SERVER_ADDR' => '::1', 'SERVER_PORT' => '80', 'REMOTE_ADDR' => '::1', 'DOCUMENT_ROOT' => '/Library/WebServer/Documents/officespace/app/webroot', 'SCRIPT_FILENAME' => '/Library/WebServer/Documents/site/app/webroot/index.php', 'REQUEST_METHOD' => 'GET', 'QUERY_STRING' => '', 'REQUEST_URI' => '/', 'SCRIPT_NAME' => '/index.php', 'PHP_SELF' => '/index.php', 'argv' => array(), 'argc' => 0),
+					'SERVER' => array(
+						'SERVER_NAME' => 'localhost',
+						'SERVER_ADDR' => '::1',
+						'SERVER_PORT' => '80',
+						'REMOTE_ADDR' => '::1',
+						'DOCUMENT_ROOT' => '/Library/WebServer/Documents/officespace/app/webroot',
+						'SCRIPT_FILENAME' => '/Library/WebServer/Documents/site/app/webroot/index.php',
+						'QUERY_STRING' => '',
+						'REQUEST_URI' => '/',
+						'SCRIPT_NAME' => '/index.php',
+						'PHP_SELF' => '/index.php',
+						'argv' => array(),
+						'argc' => 0
+					),
 					'reload' => true,
 					'path' => ''
 				),
 				'No rewrite with path' => array(
-					'SERVER' => array('UNIQUE_ID' => 'VardGqn@17IAAAu7LY8AAAAK', 'HTTP_USER_AGENT' => 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X; en-us) AppleWebKit/523.10.5 (KHTML, like Gecko) Version/3.0.4 Safari/523.10.6', 'HTTP_ACCEPT' => 'text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5', 'HTTP_ACCEPT_LANGUAGE' => 'en-us', 'HTTP_ACCEPT_ENCODING' => 'gzip, deflate', 'HTTP_CONNECTION' => 'keep-alive', 'HTTP_HOST' => 'localhost', 'DOCUMENT_ROOT' => '/Library/WebServer/Documents/officespace/app/webroot', 'SCRIPT_FILENAME' => '/Library/WebServer/Documents/officespace/app/webroot/index.php', 'QUERY_STRING' => '', 'REQUEST_URI' => '/index.php/posts/add', 'SCRIPT_NAME' => '/index.php', 'PATH_INFO' => '/posts/add', 'PHP_SELF' => '/index.php/posts/add', 'argv' => array(), 'argc' => 0),
+					'SERVER' => array(
+						'HTTP_HOST' => 'localhost', 
+						'DOCUMENT_ROOT' => '/Library/WebServer/Documents/officespace/app/webroot',
+						'SCRIPT_FILENAME' => '/Library/WebServer/Documents/officespace/app/webroot/index.php',
+						'QUERY_STRING' => '',
+						'REQUEST_URI' => '/index.php/posts/add',
+						'SCRIPT_NAME' => '/index.php',
+						'PATH_INFO' => '/posts/add',
+						'PHP_SELF' => '/index.php/posts/add', 
+						'argv' => array(),
+						'argc' => 0),
 					'reload' => false,
 					'path' => '/posts/add'
 				),
 				'GET Request at base domain' => array(
 					'App' => array('base' => false, 'baseUrl' => null, 'dir' => 'app', 'webroot' => 'webroot'),
-					'SERVER'	=> array('UNIQUE_ID' => '2A-v8sCoAQ8AAAc-2xUAAAAB', 'HTTP_ACCEPT_LANGUAGE' => 'en-us', 'HTTP_ACCEPT_ENCODING' => 'gzip, deflate', 'HTTP_COOKIE' => 'CAKEPHP=jcbv51apn84kd9ucv5aj2ln3t3', 'HTTP_CONNECTION' => 'keep-alive', 'HTTP_HOST' => 'cake.1.2', 'SERVER_NAME' => 'cake.1.2', 'SERVER_ADDR' => '127.0.0.1', 'SERVER_PORT' => '80', 'REMOTE_ADDR' => '127.0.0.1', 'DOCUMENT_ROOT' => '/Volumes/Home/htdocs/cake/repo/branches/1.2.x.x/app/webroot', 'SERVER_ADMIN' => 'you@example.com', 'SCRIPT_FILENAME' => '/Volumes/Home/htdocs/cake/repo/branches/1.2.x.x/app/webroot/index.php', 'REMOTE_PORT' => '53550', 'GATEWAY_INTERFACE' => 'CGI/1.1', 'SERVER_PROTOCOL' => 'HTTP/1.1', 'REQUEST_METHOD' => 'GET', 'QUERY_STRING' => 'a=b', 'REQUEST_URI' => '/?a=b', 'SCRIPT_NAME' => '/index.php', 'PHP_SELF' => '/index.php'),
+					'SERVER'	=> array(
+						'HTTP_HOST' => 'cake.1.2',
+						'SERVER_NAME' => 'cake.1.2',
+						'SERVER_ADDR' => '127.0.0.1',
+						'SERVER_PORT' => '80',
+						'REMOTE_ADDR' => '127.0.0.1',
+						'DOCUMENT_ROOT' => '/Volumes/Home/htdocs/cake/repo/branches/1.2.x.x/app/webroot',
+						'SCRIPT_FILENAME' => '/Volumes/Home/htdocs/cake/repo/branches/1.2.x.x/app/webroot/index.php',
+						'REMOTE_PORT' => '53550',
+						'QUERY_STRING' => 'a=b',
+						'REQUEST_URI' => '/?a=b',
+						'SCRIPT_NAME' => '/index.php',
+						'PHP_SELF' => '/index.php'
+					),
 					'GET' => array('a' => 'b'),
 					'POST' => array(),
 					'reload' => true,
@@ -1530,7 +2177,19 @@ class DispatcherTest extends UnitTestCase {
 				),
 				'New CGI no mod_rewrite' => array(
 					'App' => array('base' => false, 'baseUrl' => '/limesurvey20/index.php', 'dir' => 'app', 'webroot' => 'webroot'),
-					'SERVER' => array('DOCUMENT_ROOT' => '/home/.sites/110/site313/web', 'PATH_INFO' => '/installations', 'PATH_TRANSLATED' => '/home/.sites/110/site313/web/limesurvey20/index.php', 'PHPRC' => '/home/.sites/110/site313', 'QUERY_STRING' => '', 'REQUEST_METHOD' => 'GET', 'REQUEST_URI' => '/limesurvey20/index.php/installations', 'SCRIPT_FILENAME' => '/home/.sites/110/site313/web/limesurvey20/index.php', 'SCRIPT_NAME' => '/limesurvey20/index.php', 'SCRIPT_URI' => 'http://www.gisdat-umfragen.at/limesurvey20/index.php/installations', 'PHP_SELF' => '/limesurvey20/index.php/installations', 'CGI_MODE' => true),
+					'SERVER' => array(
+						'DOCUMENT_ROOT' => '/home/.sites/110/site313/web',
+						'PATH_INFO' => '/installations',
+						'PATH_TRANSLATED' => '/home/.sites/110/site313/web/limesurvey20/index.php',
+						'PHPRC' => '/home/.sites/110/site313',
+						'QUERY_STRING' => '',
+						'REQUEST_URI' => '/limesurvey20/index.php/installations',
+						'SCRIPT_FILENAME' => '/home/.sites/110/site313/web/limesurvey20/index.php',
+						'SCRIPT_NAME' => '/limesurvey20/index.php',
+						'SCRIPT_URI' => 'http://www.gisdat-umfragen.at/limesurvey20/index.php/installations',
+						'PHP_SELF' => '/limesurvey20/index.php/installations',
+						'CGI_MODE' => true
+					),
 					'GET' => array(),
 					'POST' => array(),
 					'reload' => true,
@@ -1561,6 +2220,31 @@ class DispatcherTest extends UnitTestCase {
 			}
 		}
 		$this->__loadEnvironment(array_merge(array('reload' => true), $backup));
+	}
+/**
+ * Tests that the Dispatcher does not return an empty action
+ *
+ * @access private
+ * @return void
+ */
+	function testTrailingSlash() {
+		$_POST = array();
+		$_SERVER['PHP_SELF'] = '/cake/repo/branches/1.2.x.x/index.php';
+
+		Router::reload();
+		$Dispatcher =& new TestDispatcher();
+		Router::connect('/myalias/:action/*', array('controller' => 'my_controller', 'action' => null));
+
+		$Dispatcher->base = false;
+		$url = 'myalias/'; //Fails
+		$controller = $Dispatcher->dispatch($url, array('return' => 1));
+		$result = $Dispatcher->parseParams($url);
+		$this->assertEqual('index', $result['action']);
+
+		$url = 'myalias'; //Passes
+		$controller = $Dispatcher->dispatch($url, array('return' => 1));
+		$result = $Dispatcher->parseParams($url);
+		$this->assertEqual('index', $result['action']);
 	}
 /**
  * backupEnvironment method
@@ -1640,7 +2324,7 @@ class DispatcherTest extends UnitTestCase {
 		if ($here == '/') {
 			$path = 'home';
 		}
-		$path = Inflector::slug($path);
+		$path = strtolower(Inflector::slug($path));
 
 		$filename = CACHE . 'views' . DS . $path . '.php';
 
@@ -1648,15 +2332,6 @@ class DispatcherTest extends UnitTestCase {
 			$filename = CACHE . 'views' . DS . $path . '_index.php';
 		}
 		return $filename;
-	}
-/**
- * tearDown method
- *
- * @access public
- * @return void
- */
-	function tearDown() {
-		$_GET = $this->_get;
 	}
 }
 ?>

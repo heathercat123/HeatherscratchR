@@ -1,6 +1,5 @@
 <?php
-/* SVN FILE: $Id: text.php 7296 2008-06-27 09:09:03Z gwoo $ */
-
+/* SVN FILE: $Id$ */
 /**
  * Text Helper
  *
@@ -8,45 +7,41 @@
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
- * Copyright 2005-2008, Cake Software Foundation, Inc.
- *								1785 E. Sahara Avenue, Suite 490-204
- *								Las Vegas, Nevada 89104
+ * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
+ * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @filesource
- * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
- * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
- * @package			cake
- * @subpackage		cake.cake.libs.view.helpers
- * @since			CakePHP(tm) v 0.10.0.1076
- * @version			$Revision: 7296 $
- * @modifiedby		$LastChangedBy: gwoo $
- * @lastmodified	$Date: 2008-06-27 02:09:03 -0700 (Fri, 27 Jun 2008) $
- * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link          http://cakephp.org CakePHP(tm) Project
+ * @package       cake
+ * @subpackage    cake.cake.libs.view.helpers
+ * @since         CakePHP(tm) v 0.10.0.1076
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
+ * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
-
 /**
  * Included libraries.
  *
  */
-
 if (!class_exists('HtmlHelper')) {
 	App::import('Helper', 'Html');
 }
-
+if (!class_exists('Multibyte')) {
+	App::import('Core', 'Multibyte');
+}
 /**
  * Text helper library.
  *
  * Text manipulations: Highlight, excerpt, truncate, strip of links, convert email addresses to mailto: links...
  *
- * @package		cake
- * @subpackage	cake.cake.libs.view.helpers
+ * @package       cake
+ * @subpackage    cake.cake.libs.view.helpers
  */
 class TextHelper extends AppHelper {
-
 /**
  * Highlights a given phrase in a text. You can specify any expression in highlighter that
  * may include the \1 expression to include the $phrase found.
@@ -70,21 +65,19 @@ class TextHelper extends AppHelper {
 			foreach ($phrase as $key => $value) {
 				$key = $value;
 				$value = $highlighter;
-				$key = '(' . $key . ')';
+				$key = '(' . preg_quote($key, '|') . ')';
 				if ($considerHtml) {
 					$key = '(?![^<]+>)' . $key . '(?![^<]+>)';
 				}
 				$replace[] = '|' . $key . '|iu';
 				$with[] = empty($value) ? $highlighter : $value;
 			}
-			
 			return preg_replace($replace, $with, $text);
 		} else {
-			$phrase = '(' . $phrase . ')';
+			$phrase = '(' . preg_quote($phrase, '|') . ')';
 			if ($considerHtml) {
 				$phrase = '(?![^<]+>)' . $phrase . '(?![^<]+>)';
 			}
-			
 			return preg_replace('|'.$phrase.'|iu', $highlighter, $text);
 		}
 	}
@@ -108,18 +101,12 @@ class TextHelper extends AppHelper {
  * @access public
  */
 	function autoLinkUrls($text, $htmlOptions = array()) {
-		$options = 'array(';
-		foreach ($htmlOptions as $option => $value) {
-				$value = var_export($value, true);
-				$options .= "'$option' => $value, ";
-		}
-		$options .= ')';
-
-		$text = preg_replace_callback('#(?<!href="|">)((?:http|https|ftp|nntp)://[^ <]+)#i', create_function('$matches',
+		$options = var_export($htmlOptions, true);
+		$text = preg_replace_callback('#(?<!href="|">)((?:https?|ftp|nntp)://[^\s<>()]+)#i', create_function('$matches',
 			'$Html = new HtmlHelper(); $Html->tags = $Html->loadConfig(); return $Html->link($matches[0], $matches[0],' . $options . ');'), $text);
 
 		return preg_replace_callback('#(?<!href="|">)(?<!http://|https://|ftp://|nntp://)(www\.[^\n\%\ <]+[^<\n\%\,\.\ <])(?<!\))#i',
-			create_function('$matches', '$Html = new HtmlHelper(); $Html->tags = $Html->loadConfig(); return $Html->link($matches[0], "http://" . strtolower($matches[0]),' . $options . ');'), $text);
+			create_function('$matches', '$Html = new HtmlHelper(); $Html->tags = $Html->loadConfig(); return $Html->link($matches[0], "http://" . $matches[0],' . $options . ');'), $text);
 	}
 /**
  * Adds email links (<a href="mailto:....) to a given text.
@@ -136,8 +123,9 @@ class TextHelper extends AppHelper {
 			$options .= "'$option' => '$value', ";
 		}
 		$options .= ')';
+		$atom = '[a-z0-9!#$%&\'*+\/=?^_`{|}~-]';
 
-		return preg_replace_callback('#([_A-Za-z0-9+-]+(?:\.[_A-Za-z0-9+-]+)*@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*)#',
+		return preg_replace_callback('/(' . $atom . '+(?:\.' . $atom . '+)*@[a-z0-9-]+(?:\.[a-z0-9-]+)+)/i',
 						create_function('$matches', '$Html = new HtmlHelper(); $Html->tags = $Html->loadConfig(); return $Html->link($matches[0], "mailto:" . $matches[0],' . $options . ');'), $text);
 	}
 /**
@@ -169,74 +157,81 @@ class TextHelper extends AppHelper {
 			extract($ending);
 		}
 		if ($considerHtml) {
-			if (strlen(preg_replace('/<.*?>/', '', $text)) <= $length) {
+			if (mb_strlen(preg_replace('/<.*?>/', '', $text)) <= $length) {
 				return $text;
 			}
-
-			preg_match_all('/(<.+?>)?([^<>]*)/s', $text, $lines, PREG_SET_ORDER);
-			$total_length = strlen($ending);
-			$open_tags = array();
+			$totalLength = mb_strlen(strip_tags($ending));
+			$openTags = array();
 			$truncate = '';
-
-			foreach ($lines as $line_matchings) {
-				if (!empty($line_matchings[1])) {
-					if (preg_match('/^<(\s*.+?\/\s*|\s*(img|br|input|hr|area|base|basefont|col|frame|isindex|link|meta|param)(\s.+?)?)>$/is', $line_matchings[1])) {
-					} elseif (preg_match('/^<\s*\/([^\s]+?)\s*>$/s', $line_matchings[1], $tag_matchings)) {
-						$pos = array_search($tag_matchings[1], $open_tags);
+			preg_match_all('/(<\/?([\w+]+)[^>]*>)?([^<>]*)/', $text, $tags, PREG_SET_ORDER);
+			foreach ($tags as $tag) {
+				if (!preg_match('/img|br|input|hr|area|base|basefont|col|frame|isindex|link|meta|param/s', $tag[2])) {
+					if (preg_match('/<[\w]+[^>]*>/s', $tag[0])) {
+						array_unshift($openTags, $tag[2]);
+					} else if (preg_match('/<\/([\w]+)[^>]*>/s', $tag[0], $closeTag)) {
+						$pos = array_search($closeTag[1], $openTags);
 						if ($pos !== false) {
-							unset($open_tags[$pos]);
+							array_splice($openTags, $pos, 1);
 						}
-					} elseif (preg_match('/^<\s*([^\s>!]+).*?>$/s', $line_matchings[1], $tag_matchings)) {
-						array_unshift($open_tags, strtolower($tag_matchings[1]));
 					}
-					$truncate .= $line_matchings[1];
 				}
+				$truncate .= $tag[1];
 
-				$content_length = strlen(preg_replace('/&[0-9a-z]{2,8};|&#[0-9]{1,7};|&#x[0-9a-f]{1,6};/i', ' ', $line_matchings[2]));
-				if ($total_length+$content_length > $length) {
-					$left = $length - $total_length;
-					$entities_length = 0;
-					if (preg_match_all('/&[0-9a-z]{2,8};|&#[0-9]{1,7};|&#x[0-9a-f]{1,6};/i', $line_matchings[2], $entities, PREG_OFFSET_CAPTURE)) {
+				$contentLength = mb_strlen(preg_replace('/&[0-9a-z]{2,8};|&#[0-9]{1,7};|&#x[0-9a-f]{1,6};/i', ' ', $tag[3]));
+				if ($contentLength + $totalLength > $length) {
+					$left = $length - $totalLength;
+					$entitiesLength = 0;
+					if (preg_match_all('/&[0-9a-z]{2,8};|&#[0-9]{1,7};|&#x[0-9a-f]{1,6};/i', $tag[3], $entities, PREG_OFFSET_CAPTURE)) {
 						foreach ($entities[0] as $entity) {
-							if ($entity[1]+1-$entities_length <= $left) {
+							if ($entity[1] + 1 - $entitiesLength <= $left) {
 								$left--;
-								$entities_length += strlen($entity[0]);
+								$entitiesLength += mb_strlen($entity[0]);
 							} else {
 								break;
 							}
 						}
 					}
-					$truncate .= substr($line_matchings[2], 0, $left+$entities_length);
+
+					$truncate .= mb_substr($tag[3], 0 , $left + $entitiesLength);
 					break;
 				} else {
-					$truncate .= $line_matchings[2];
-					$total_length += $content_length;
+					$truncate .= $tag[3];
+					$totalLength += $contentLength;
 				}
-
-				if ($total_length >= $length) {
+				if ($totalLength >= $length) {
 					break;
 				}
 			}
 		} else {
-			if (strlen($text) <= $length) {
+			if (mb_strlen($text) <= $length) {
 				return $text;
 			} else {
-				$truncate = substr($text, 0, $length - strlen($ending));
+				$truncate = mb_substr($text, 0, $length - strlen($ending));
 			}
 		}
-
 		if (!$exact) {
-			$spacepos = strrpos($truncate, ' ');
+			$spacepos = mb_strrpos($truncate, ' ');
 			if (isset($spacepos)) {
-				$truncate = substr($truncate, 0, $spacepos);
+				if ($considerHtml) {
+					$bits = mb_substr($truncate, $spacepos);
+					preg_match_all('/<\/([a-z]+)>/', $bits, $droppedTags, PREG_SET_ORDER);
+					if (!empty($droppedTags)) {
+						foreach ($droppedTags as $closingTag) {
+							if (!in_array($closingTag[1], $openTags)) {
+								array_unshift($openTags, $closingTag[1]);
+							}
+						}
+					}
+				}
+				$truncate = mb_substr($truncate, 0, $spacepos);
 			}
 		}
 
 		$truncate .= $ending;
 
 		if ($considerHtml) {
-			foreach ($open_tags as $tag) {
-				$truncate .= '</' . $tag . '>';
+			foreach ($openTags as $tag) {
+				$truncate .= '</'.$tag.'>';
 			}
 		}
 
@@ -267,21 +262,32 @@ class TextHelper extends AppHelper {
 			return $this->truncate($text, $radius * 2, $ending);
 		}
 
-		if ($radius < strlen($phrase)) {
-			$radius = strlen($phrase);
+		$phraseLen = strlen($phrase);
+		if ($radius < $phraseLen) {
+			$radius = $phraseLen;
 		}
 
 		$pos = strpos(strtolower($text), strtolower($phrase));
-		$startPos = ife($pos <= $radius, 0, $pos - $radius);
-		$endPos = ife($pos + strlen($phrase) + $radius >= strlen($text), strlen($text), $pos + strlen($phrase) + $radius);
-		$excerpt = substr($text, $startPos, $endPos - $startPos);
 
-		if ($startPos != 0) {
-			$excerpt = substr_replace($excerpt, $ending, 0, strlen($phrase));
+		$startPos = 0;
+		if ($pos > $radius) {
+			$startPos = $pos - $radius;
 		}
 
-		if ($endPos != strlen($text)) {
-			$excerpt = substr_replace($excerpt, $ending, -strlen($phrase));
+		$textLen = strlen($text);
+
+		$endPos = $pos + $phraseLen + $radius;
+		if ($endPos >= $textLen) {
+			$endPos = $textLen;
+		}
+
+		$excerpt = substr($text, $startPos, $endPos - $startPos);
+		if ($startPos != 0) {
+			$excerpt = substr_replace($excerpt, $ending, 0, $phraseLen);
+		}
+
+		if ($endPos != $textLen) {
+			$excerpt = substr_replace($excerpt, $ending, -$phraseLen);
 		}
 
 		return $excerpt;
@@ -294,16 +300,17 @@ class TextHelper extends AppHelper {
  * @access public
  */
 	function toList($list, $and = 'and') {
-		$r = '';
-		$c = count($list) - 1;
+		$return = '';
+		$count = count($list) - 1;
+	    $counter = 0;
 		foreach ($list as $i => $item) {
-			$r .= $item;
-			if ($c > 0 && $i < $c)
-			{
-				$r .= ($i < $c - 1 ? ', ' : " {$and} ");
+			$return .= $item;
+			if ($count > 0 && $counter < $count) {
+				$return .= ($counter < $count - 1 ? ', ' : " {$and} ");
 			}
+		    $counter++;
 		}
-		return $r;
+		return $return;
 	}
 /**
  * Text-to-html parser, similar to Textile or RedCloth, only with a little different syntax.

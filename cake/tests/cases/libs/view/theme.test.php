@@ -1,41 +1,41 @@
 <?php
-/* SVN FILE: $Id: theme.test.php 7296 2008-06-27 09:09:03Z gwoo $ */
+/* SVN FILE: $Id$ */
 /**
- * Short description for file.
+ * ThemeViewTest file
  *
  * Long description for file
  *
  * PHP versions 4 and 5
  *
  * CakePHP(tm) Tests <https://trac.cakephp.org/wiki/Developement/TestSuite>
- * Copyright 2005-2008, Cake Software Foundation, Inc.
- *								1785 E. Sahara Avenue, Suite 490-204
- *								Las Vegas, Nevada 89104
+ * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  *  Licensed under The Open Group Test Suite License
  *  Redistributions of files must retain the above copyright notice.
  *
- * @filesource
- * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
- * @link				https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
- * @package			cake.tests
- * @subpackage		cake.tests.cases.libs
- * @since			CakePHP(tm) v 1.2.0.4206
- * @version			$Revision: 7296 $
- * @modifiedby		$LastChangedBy: gwoo $
- * @lastmodified	$Date: 2008-06-27 02:09:03 -0700 (Fri, 27 Jun 2008) $
- * @license			http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
+ * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link          https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
+ * @package       cake
+ * @subpackage    cake.tests.cases.libs
+ * @since         CakePHP(tm) v 1.2.0.4206
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
+ * @license       http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
  */
-App::import('Core', array('Theme', 'Controller', 'Error'));
+App::import('Core', array('Theme', 'Controller'));
 
+if (!class_exists('ErrorHandler')) {
+	App::import('Core', array('Error'));
+}
 if (!defined('CAKEPHP_UNIT_TEST_EXECUTION')) {
 	define('CAKEPHP_UNIT_TEST_EXECUTION', 1);
 }
 /**
  * ThemePostsController class
  *
- * @package              cake
- * @subpackage           cake.tests.cases.libs.view
+ * @package       cake
+ * @subpackage    cake.tests.cases.libs.view
  */
 class ThemePostsController extends Controller {
 /**
@@ -61,8 +61,8 @@ class ThemePostsController extends Controller {
 /**
  * ThemeViewTestErrorHandler class
  *
- * @package              cake
- * @subpackage           cake.tests.cases.libs.view
+ * @package       cake
+ * @subpackage    cake.tests.cases.libs.view
  */
 class ThemeViewTestErrorHandler extends ErrorHandler {
 /**
@@ -78,8 +78,8 @@ class ThemeViewTestErrorHandler extends ErrorHandler {
 /**
  * TestThemeView class
  *
- * @package              cake
- * @subpackage           cake.tests.cases.libs.view
+ * @package       cake
+ * @subpackage    cake.tests.cases.libs.view
  */
 class TestThemeView extends ThemeView {
 /**
@@ -126,14 +126,13 @@ class TestThemeView extends ThemeView {
 		return $error;
 	}
 }
-
 /**
- * Short description for class.
+ * ThemeViewTest class
  *
- * @package		cake.tests
- * @subpackage	cake.tests.cases.libs
+ * @package       cake
+ * @subpackage    cake.tests.cases.libs
  */
-class ThemeViewTest extends UnitTestCase {
+class ThemeViewTest extends CakeTestCase {
 /**
  * setUp method
  *
@@ -142,11 +141,35 @@ class ThemeViewTest extends UnitTestCase {
  */
 	function setUp() {
 		Router::reload();
-		$this->Controller = new Controller();
-		$this->PostsController = new ThemePostsController();
+		$this->Controller =& new Controller();
+		$this->PostsController =& new ThemePostsController();
 		$this->PostsController->viewPath = 'posts';
 		$this->PostsController->index();
-		$this->ThemeView = new ThemeView($this->PostsController);
+		$this->ThemeView =& new ThemeView($this->PostsController);
+	}
+/**
+ * tearDown method
+ *
+ * @access public
+ * @return void
+ */
+	function tearDown() {
+		unset($this->ThemeView);
+		unset($this->PostsController);
+		unset($this->Controller);
+		ClassRegistry::flush();
+	}
+/**
+ * test that the theme view can be constructed without going into the registry
+ *
+ * @return void
+ */
+	function testConstructionNoRegister() {
+		ClassRegistry::flush();
+		$controller = null;
+		$Theme =& new ThemeView($controller, false);
+		$ThemeTwo =& ClassRegistry::getObject('view');
+		$this->assertFalse($ThemeTwo);
 	}
 /**
  * testPluginGetTemplate method
@@ -157,7 +180,7 @@ class ThemeViewTest extends UnitTestCase {
 	function testPluginGetTemplate() {
 		$this->Controller->plugin = 'test_plugin';
 		$this->Controller->name = 'TestPlugin';
-		$this->Controller->viewPath = 'test_plugin';
+		$this->Controller->viewPath = 'tests';
 		$this->Controller->action = 'index';
 		$this->Controller->theme = 'test_plugin_theme';
 
@@ -165,7 +188,7 @@ class ThemeViewTest extends UnitTestCase {
 		Configure::write('pluginPaths', array(TEST_CAKE_CORE_INCLUDE_PATH . 'tests' . DS . 'test_app' . DS . 'plugins' . DS));
 		Configure::write('viewPaths', array(TEST_CAKE_CORE_INCLUDE_PATH . 'tests' . DS . 'test_app' . DS . 'views'. DS));
 
-		$expected = TEST_CAKE_CORE_INCLUDE_PATH . 'tests' . DS . 'test_app' . DS . 'plugins' . DS .'test_plugin' . DS . 'views' . DS . 'themed' . DS . 'test_plugin_theme' . DS .'test_plugin' . DS .'index.ctp';
+		$expected = TEST_CAKE_CORE_INCLUDE_PATH . 'tests' . DS . 'test_app' . DS . 'plugins' . DS .'test_plugin' . DS . 'views' . DS . 'themed' . DS . 'test_plugin_theme' . DS .'tests' . DS .'index.ctp';
 		$result = $ThemeView->getViewFileName('index');
 		$this->assertEqual($result, $expected);
 
@@ -210,7 +233,7 @@ class ThemeViewTest extends UnitTestCase {
 		$this->assertEqual($result, $expected);
 
 		$ThemeView->layoutPath = 'email' . DS . 'html';
-		$expected = TEST_CAKE_CORE_INCLUDE_PATH . 'libs' . DS . 'view' . DS . 'layouts' . DS . 'email' . DS . 'html' . DS . 'default.ctp';
+		$expected = TEST_CAKE_CORE_INCLUDE_PATH . 'tests' . DS . 'test_app' . DS . 'views' . DS . 'layouts' . DS . 'email' . DS . 'html' . DS . 'default.ctp';
 		$result = $ThemeView->getLayoutFileName();
 		$this->assertEqual($result, $expected);
 	}
@@ -259,17 +282,6 @@ class ThemeViewTest extends UnitTestCase {
 		set_error_handler('simpleTestErrorHandler');
 		$this->assertPattern("/Missing Layout/", $expected);
 		$this->assertPattern("/views(\/|\\\)themed(\/|\\\)my_theme(\/|\\\)layouts(\/|\\\)whatever.ctp/", $expected);
-	}
-/**
- * tearDown method
- *
- * @access public
- * @return void
- */
-	function tearDown() {
-		unset($this->ThemeView);
-		unset($this->PostsController);
-		unset($this->Controller);
 	}
 }
 ?>

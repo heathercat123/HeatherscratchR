@@ -1,50 +1,46 @@
 <?php
-/* SVN FILE: $Id: file.test.php 7296 2008-06-27 09:09:03Z gwoo $ */
+/* SVN FILE: $Id$ */
 /**
- * Short description for file.
+ * FileTest file
  *
  * Long description for file
  *
  * PHP versions 4 and 5
  *
  * CakePHP(tm) Tests <https://trac.cakephp.org/wiki/Developement/TestSuite>
- * Copyright 2005-2008, Cake Software Foundation, Inc.
- *								1785 E. Sahara Avenue, Suite 490-204
- *								Las Vegas, Nevada 89104
+ * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  *  Licensed under The Open Group Test Suite License
  *  Redistributions of files must retain the above copyright notice.
  *
- * @filesource
- * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
- * @link				https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
- * @package			cake.tests
- * @subpackage		cake.tests.cases.libs
- * @since			CakePHP(tm) v 1.2.0.4206
- * @version			$Revision: 7296 $
- * @modifiedby		$LastChangedBy: gwoo $
- * @lastmodified	$Date: 2008-06-27 02:09:03 -0700 (Fri, 27 Jun 2008) $
- * @license			http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
+ * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link          https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
+ * @package       cake
+ * @subpackage    cake.tests.cases.libs
+ * @since         CakePHP(tm) v 1.2.0.4206
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
+ * @license       http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
  */
-uses('file');
-
+App::import('Core', 'File');
 /**
- * Short description for class.
+ * FileTest class
  *
- * @package		cake.tests
- * @subpackage	cake.tests.cases.libs
+ * @package       cake
+ * @subpackage    cake.tests.cases.libs
  */
-class FileTest extends UnitTestCase {
+class FileTest extends CakeTestCase {
 /**
  * File property
- * 
+ *
  * @var mixed null
  * @access public
  */
 	var $File = null;
 /**
  * testBasic method
- * 
+ *
  * @access public
  * @return void
  */
@@ -61,7 +57,10 @@ class FileTest extends UnitTestCase {
 		$this->assertEqual($result, $expecting);
 
 		$result = $this->File->info();
-		$expecting = array('dirname'=> dirname(__FILE__), 'basename'=> basename(__FILE__), 'extension'=> 'php', 'filename'=>'file.test');
+		$expecting = array(
+			'dirname' => dirname(__FILE__), 'basename' => basename(__FILE__),
+			'extension' => 'php', 'filename' =>'file.test'
+		);
 		$this->assertEqual($result, $expecting);
 
 		$result = $this->File->ext();
@@ -92,17 +91,17 @@ class FileTest extends UnitTestCase {
 		$expecting = filegroup($file);
 		$this->assertEqual($result, $expecting);
 
-		$result = $this->File->perms();
-		$expecting = '0644';
-		$this->assertEqual($result, $expecting);
-
 		$result = $this->File->Folder();
 		$this->assertIsA($result, 'Folder');
 
+		$this->skipIf(DIRECTORY_SEPARATOR === '\\', '%s File permissions tests not supported on Windows');
+		$result = $this->File->perms();
+		$expecting = '0644';
+		$this->assertEqual($result, $expecting);
 	}
 /**
  * testRead method
- * 
+ *
  * @access public
  * @return void
  */
@@ -111,6 +110,12 @@ class FileTest extends UnitTestCase {
 		$expecting = file_get_contents(__FILE__);
 		$this->assertEqual($result, $expecting);
 		$this->assertTrue(!is_resource($this->File->handle));
+
+		$this->File->lock = true;
+		$result = $this->File->read();
+		$expecting = file_get_contents(__FILE__);
+		$this->assertEqual($result, $expecting);
+		$this->File->lock = null;
 
 		$data = $expecting;
 		$expecting = substr($data, 0, 3);
@@ -124,7 +129,7 @@ class FileTest extends UnitTestCase {
 	}
 /**
  * testOffset method
- * 
+ *
  * @access public
  * @return void
  */
@@ -156,7 +161,7 @@ class FileTest extends UnitTestCase {
 	}
 /**
  * testOpen method
- * 
+ *
  * @access public
  * @return void
  */
@@ -180,7 +185,7 @@ class FileTest extends UnitTestCase {
 	}
 /**
  * testClose method
- * 
+ *
  * @access public
  * @return void
  */
@@ -197,7 +202,7 @@ class FileTest extends UnitTestCase {
 	}
 /**
  * testCreate method
- * 
+ *
  * @access public
  * @return void
  */
@@ -208,7 +213,7 @@ class FileTest extends UnitTestCase {
 	}
 /**
  * testOpeningNonExistantFileCreatesIt method
- * 
+ *
  * @access public
  * @return void
  */
@@ -221,21 +226,27 @@ class FileTest extends UnitTestCase {
 	}
 /**
  * testPrepare method
- * 
+ *
  * @access public
  * @return void
  */
 	function testPrepare() {
 		$string = "some\nvery\ncool\r\nteststring here\n\n\nfor\r\r\n\n\r\n\nhere";
-		$expected = "some\nvery\ncool\nteststring here\n\n\nfor\n\n\n\n\nhere";
+		if (DS == '\\') {
+			$expected = "some\r\nvery\r\ncool\r\nteststring here\r\n\r\n\r\n";
+			$expected .= "for\r\n\r\n\r\n\r\n\r\nhere";
+		} else {
+			$expected = "some\nvery\ncool\nteststring here\n\n\nfor\n\n\n\n\nhere";
+		}
 		$this->assertIdentical(File::prepare($string), $expected);
 
-		$expected = "some\r\nvery\r\ncool\r\nteststring here\r\n\r\n\r\nfor\r\n\r\n\r\n\r\n\r\nhere";
+		$expected = "some\r\nvery\r\ncool\r\nteststring here\r\n\r\n\r\n";
+		$expected .= "for\r\n\r\n\r\n\r\n\r\nhere";
 		$this->assertIdentical(File::prepare($string, true), $expected);
 	}
 /**
  * testReadable method
- * 
+ *
  * @access public
  * @return void
  */
@@ -248,7 +259,7 @@ class FileTest extends UnitTestCase {
 	}
 /**
  * testWritable method
- * 
+ *
  * @access public
  * @return void
  */
@@ -261,7 +272,7 @@ class FileTest extends UnitTestCase {
 	}
 /**
  * testExecutable method
- * 
+ *
  * @access public
  * @return void
  */
@@ -274,7 +285,7 @@ class FileTest extends UnitTestCase {
 	}
 /**
  * testLastAccess method
- * 
+ *
  * @access public
  * @return void
  */
@@ -288,7 +299,7 @@ class FileTest extends UnitTestCase {
 	}
 /**
  * testLastChange method
- * 
+ *
  * @access public
  * @return void
  */
@@ -304,7 +315,7 @@ class FileTest extends UnitTestCase {
 	}
 /**
  * testWrite method
- * 
+ *
  * @access public
  * @return void
  */
@@ -334,7 +345,7 @@ class FileTest extends UnitTestCase {
 	}
 /**
  * testAppend method
- * 
+ *
  * @access public
  * @return void
  */
@@ -362,14 +373,14 @@ class FileTest extends UnitTestCase {
 	}
 /**
  * testDelete method
- * 
+ *
  * @access public
  * @return void
  */
 	function testDelete() {
 		if (!$tmpFile = $this->_getTmpFile()) {
 			return false;
-		};
+		}
 
 		if (!file_exists($tmpFile)) {
 			touch($tmpFile);
@@ -384,10 +395,29 @@ class FileTest extends UnitTestCase {
 		$result = $TmpFile->delete();
 		$this->assertFalse($result);
 	}
+
+/**
+ * Windows has issues unlinking files if there are
+ * active filehandles open.
+ *
+ * @return void
+ */
+	function testDeleteAfterRead() {
+		if (!$tmpFile = $this->_getTmpFile()) {
+			return false;
+		}
+		if (!file_exists($tmpFile)) {
+			touch($tmpFile);
+		}
+		$file =& new File($tmpFile);
+		$file->read();
+		$this->assertTrue($file->delete());
+	}
+
 /**
  * getTmpFile method
- * 
- * @param bool $paintSkip 
+ *
+ * @param bool $paintSkip
  * @access protected
  * @return void
  */
@@ -407,7 +437,8 @@ class FileTest extends UnitTestCase {
 			$assertLine = $assertLine->traceMethod();
 			$shortPath = substr($tmpFile, strlen(ROOT));
 
-			$message = sprintf(__('[FileTest] Skipping %s because "%s" not writeable!', true), $caller, $shortPath).$assertLine;
+			$message = '[FileTest] Skipping %s because "%s" not writeable!';
+			$message = sprintf(__($message, true), $caller, $shortPath).$assertLine;
 			$this->_reporter->paintSkip($message);
 		}
 		return false;

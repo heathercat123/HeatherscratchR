@@ -1,5 +1,5 @@
 <?php
-/* SVN FILE: $Id: view.php 7296 2008-06-27 09:09:03Z gwoo $ */
+/* SVN FILE: $Id$ */
 /**
  * The View Tasks handles creating and updating view files.
  *
@@ -7,31 +7,28 @@
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
- * Copyright 2005-2008, Cake Software Foundation, Inc.
- *								1785 E. Sahara Avenue, Suite 490-204
- *								Las Vegas, Nevada 89104
+ * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
+ * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @filesource
- * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
- * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
- * @package			cake
- * @subpackage		cake.cake.console.libs.tasks
- * @since			CakePHP(tm) v 1.2
- * @version			$Revision: 7296 $
- * @modifiedby		$LastChangedBy: gwoo $
- * @lastmodified	$Date: 2008-06-27 02:09:03 -0700 (Fri, 27 Jun 2008) $
- * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link          http://cakephp.org CakePHP(tm) Project
+ * @package       cake
+ * @subpackage    cake.cake.console.libs.tasks
+ * @since         CakePHP(tm) v 1.2
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
+ * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 App::import('Core', 'Controller');
 /**
  * Task class for creating and updating view files.
  *
- * @package		cake
- * @subpackage	cake.cake.console.libs.tasks
+ * @package       cake
+ * @subpackage    cake.cake.console.libs.tasks
  */
 class ViewTask extends Shell {
 /**
@@ -124,12 +121,13 @@ class ViewTask extends Shell {
 			} else {
 				$vars = $this->__loadController();
 				if ($vars) {
-					$protected = array_map('strtolower', get_class_methods('appcontroller'));
-					$classVars = get_class_vars($this->controllerName . 'Controller');
-					if (array_key_exists('scaffold', $classVars)) {
+
+					$methods =  array_diff(
+						array_map('strtolower', get_class_methods($this->controllerName . 'Controller')),
+						array_map('strtolower', get_class_methods('appcontroller'))
+					);
+					if (empty($methods)) {
 						$methods = $this->scaffoldActions;
-					} else {
-						$methods = get_class_methods($this->controllerName . 'Controller');
 					}
 					$adminDelete = null;
 
@@ -138,7 +136,7 @@ class ViewTask extends Shell {
 						$adminDelete = $adminRoute.'_delete';
 					}
 					foreach ($methods as $method) {
-						if ($method{0} != '_' && !in_array(low($method), array_merge($protected, array('delete', $adminDelete)))) {
+						if ($method{0} != '_' && !in_array($method, array('delete', $adminDelete))) {
 							$content = $this->getContent($method, $vars);
 							$this->bake($method, $content);
 						}
@@ -162,25 +160,25 @@ class ViewTask extends Shell {
 
 		$this->controllerName = $this->Controller->getName();
 
-		$this->controllerPath = low(Inflector::underscore($this->controllerName));
+		$this->controllerPath = strtolower(Inflector::underscore($this->controllerName));
 
 		$interactive = $this->in("Would you like bake to build your views interactively?\nWarning: Choosing no will overwrite {$this->controllerName} views if it exist.", array('y','n'), 'y');
 
-		if (low($interactive) == 'y' || low($interactive) == 'yes') {
+		if (strtolower($interactive) == 'y' || strtolower($interactive) == 'yes') {
 			$this->interactive = true;
 			$wannaDoScaffold = $this->in("Would you like to create some scaffolded views (index, add, view, edit) for this controller?\nNOTE: Before doing so, you'll need to create your controller and model classes (including associated models).", array('y','n'), 'n');
 		}
 
-		if (low($wannaDoScaffold) == 'y' || low($wannaDoScaffold) == 'yes') {
+		if (strtolower($wannaDoScaffold) == 'y' || strtolower($wannaDoScaffold) == 'yes') {
 			$wannaDoAdmin = $this->in("Would you like to create the views for admin routing?", array('y','n'), 'y');
 		}
 		$admin = false;
 
-		if ((low($wannaDoAdmin) == 'y' || low($wannaDoAdmin) == 'yes')) {
+		if ((strtolower($wannaDoAdmin) == 'y' || strtolower($wannaDoAdmin) == 'yes')) {
 			$admin = $this->getAdmin();
 		}
 
-		if (low($wannaDoScaffold) == 'y' || low($wannaDoScaffold) == 'yes') {
+		if (strtolower($wannaDoScaffold) == 'y' || strtolower($wannaDoScaffold) == 'yes') {
 			$actions = $this->scaffoldActions;
 			if ($admin) {
 				foreach ($actions as $action) {
@@ -214,7 +212,7 @@ class ViewTask extends Shell {
 			$this->out("Path:			 ".$this->params['app'] . DS . $this->controllerPath . DS . Inflector::underscore($action) . ".ctp");
 			$this->hr();
 			$looksGood = $this->in('Look okay?', array('y','n'), 'y');
-			if (low($looksGood) == 'y' || low($looksGood) == 'yes') {
+			if (strtolower($looksGood) == 'y' || strtolower($looksGood) == 'yes') {
 				$this->bake($action);
 				$this->_stop();
 			} else {
@@ -374,7 +372,7 @@ class ViewTask extends Shell {
 		$keys = array('belongsTo', 'hasOne', 'hasMany', 'hasAndBelongsToMany');
 		$associations = array();
 
-		foreach ($keys as $key => $type){
+		foreach ($keys as $key => $type) {
 			foreach ($model->{$type} as $assocKey => $assocData) {
 				$associations[$type][$assocKey]['primaryKey'] = $model->{$assocKey}->primaryKey;
 				$associations[$type][$assocKey]['displayField'] = $model->{$assocKey}->displayField;

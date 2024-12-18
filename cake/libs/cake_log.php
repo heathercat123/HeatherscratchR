@@ -1,5 +1,5 @@
 <?php
-/* SVN FILE: $Id: cake_log.php 7296 2008-06-27 09:09:03Z gwoo $ */
+/* SVN FILE: $Id$ */
 /**
  * Logging.
  *
@@ -7,31 +7,28 @@
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
- * Copyright 2005-2008, Cake Software Foundation, Inc.
- *								1785 E. Sahara Avenue, Suite 490-204
- *								Las Vegas, Nevada 89104
+ * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
+ * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @filesource
- * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
- * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
- * @package			cake
- * @subpackage		cake.cake.libs
- * @since			CakePHP(tm) v 0.2.9
- * @version			$Revision: 7296 $
- * @modifiedby		$LastChangedBy: gwoo $
- * @lastmodified	$Date: 2008-06-27 02:09:03 -0700 (Fri, 27 Jun 2008) $
- * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link          http://cakephp.org CakePHP(tm) Project
+ * @package       cake
+ * @subpackage    cake.cake.libs
+ * @since         CakePHP(tm) v 0.2.9
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
+ * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 /**
  * Included libraries.
  *
  */
 	if (!class_exists('File')) {
-		uses('file');
+		require LIBS . 'file.php';
 	}
 /**
  * Set up error level constants to be used within the framework if they are not defined within the
@@ -53,8 +50,8 @@
 /**
  * Logs messages to text files
  *
- * @package		cake
- * @subpackage	cake.cake.libs
+ * @package       cake
+ * @subpackage    cake.cake.libs
  */
 class CakeLog {
 /**
@@ -64,6 +61,7 @@ class CakeLog {
  * @param string $msg  Message to log
  * @return boolean Success
  * @access public
+ * @static
  */
 	function write($type, $msg) {
 		if (!defined('LOG_ERROR')) {

@@ -1,28 +1,25 @@
 <?php
-/* SVN FILE: $Id: xml.php 7296 2008-06-27 09:09:03Z gwoo $ */
+/* SVN FILE: $Id$ */
 /**
  * XML Helper class file.
  *
  * Simplifies the output of XML documents.
  *
- * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
- * Copyright 2005-2008, Cake Software Foundation, Inc.
- *								1785 E. Sahara Avenue, Suite 490-204
- *								Las Vegas, Nevada 89104
+ * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
+ * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @filesource
- * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
- * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
- * @package			cake
- * @subpackage		cake.cake.libs.view.helpers
- * @since			CakePHP(tm) v 1.2
- * @version			$Revision: 7296 $
- * @modifiedby		$LastChangedBy: gwoo $
- * @lastmodified	$Date: 2008-06-27 02:09:03 -0700 (Fri, 27 Jun 2008) $
- * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link          http://cakephp.org CakePHP(tm) Project
+ * @package       cake
+ * @subpackage    cake.cake.libs.view.helpers
+ * @since         CakePHP(tm) v 1.2
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
+ * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 App::import('Core', array('Xml', 'Set'));
 
@@ -31,11 +28,10 @@ App::import('Core', array('Xml', 'Set'));
  *
  * XmlHelper encloses all methods needed while working with XML documents.
  *
- * @package		cake
- * @subpackage	cake.cake.libs.view.helpers
+ * @package       cake
+ * @subpackage    cake.cake.libs.view.helpers
  */
 class XmlHelper extends AppHelper {
-
 /**
  * Default document encoding
  *
@@ -43,6 +39,9 @@ class XmlHelper extends AppHelper {
  * @var string
  */
 	var $encoding = 'UTF-8';
+
+	var $Xml;
+	var $XmlElement;
 /**
  * Constructor
  * @return void
@@ -115,7 +114,7 @@ class XmlHelper extends AppHelper {
 			$cdata = true;
 			unset($content['cdata']);
 		}
-		if (is_array($content) && isset($content['value'])) {
+		if (is_array($content) && array_key_exists('value', $content)) {
 			$content = $content['value'];
 		}
 		$children = array();
@@ -131,7 +130,7 @@ class XmlHelper extends AppHelper {
 		$out = $elem->toString(array('cdata' => $cdata, 'leaveOpen' => !$endTag));
 
 		if (!$endTag) {
-			$this->Xml =& $elem;
+			$this->XmlElement =& $elem;
 		}
 		return $this->output($out);
 	}
@@ -141,9 +140,10 @@ class XmlHelper extends AppHelper {
  * @return string
  */
 	function closeElem() {
-		$name = $this->Xml->name();
-		if ($parent =& $this->Xml->parent()) {
-			$this->Xml =& $parent;
+		$elem = (empty($this->XmlElement)) ? $this->Xml : $this->XmlElement;
+		$name = $elem->name();
+		if ($parent =& $elem->parent()) {
+			$this->XmlElement =& $parent;
 		}
 		return $this->output('</' . $name . '>');
 	}
@@ -151,12 +151,16 @@ class XmlHelper extends AppHelper {
  * Serializes a model resultset into XML
  *
  * @param  mixed  $data The content to be converted to XML
- * @param  array  $options The data formatting options
+ * @param  array  $options The data formatting options.  For a list of valid options, see
+ *                         XmlNode::__construct().
  * @return string A copy of $data in XML format
+ * @see XmlNode
  */
 	function serialize($data, $options = array()) {
-		$data =& new Xml($data, array_merge(array('attributes' => false, 'format' => 'attributes'), $options));
-		return $data->toString(array_merge(array('header' => false), $options));
+		$options += array('attributes' => false, 'format' => 'attributes');
+		$data =& new Xml($data, $options);
+		return $data->toString($options + array('header' => false));
 	}
 }
+
 ?>

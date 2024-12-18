@@ -1,5 +1,5 @@
 <?php
-/* SVN FILE: $Id: cake_reporter.php 7296 2008-06-27 09:09:03Z gwoo $ */
+/* SVN FILE: $Id$ */
 /**
  * Short description for file.
  *
@@ -8,29 +8,26 @@
  * PHP versions 4 and 5
  *
  * CakePHP(tm) Tests <https://trac.cakephp.org/wiki/Developement/TestSuite>
- * Copyright 2005-2008, Cake Software Foundation, Inc.
- *								1785 E. Sahara Avenue, Suite 490-204
- *								Las Vegas, Nevada 89104
+ * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  *  Licensed under The Open Group Test Suite License
  *  Redistributions of files must retain the above copyright notice.
  *
- * @filesource
- * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
- * @link				https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
- * @package			cake
- * @subpackage		cake.cake.tests.libs
- * @since			CakePHP(tm) v 1.2.0.4433
- * @version			$Revision: 7296 $
- * @modifiedby		$LastChangedBy: gwoo $
- * @lastmodified	$Date: 2008-06-27 02:09:03 -0700 (Fri, 27 Jun 2008) $
- * @license			http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
+ * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link          https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
+ * @package       cake
+ * @subpackage    cake.cake.tests.libs
+ * @since         CakePHP(tm) v 1.2.0.4433
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
+ * @license       http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
  */
 /**
  * Short description for class.
  *
- * @package    cake
- * @subpackage cake.cake.tests.lib
+ * @package       cake
+ * @subpackage    cake.cake.tests.lib
  */
 class CakeHtmlReporter extends SimpleReporter {
 	var $_character_set;
@@ -56,7 +53,6 @@ class CakeHtmlReporter extends SimpleReporter {
  */
 	function paintHeader($testName) {
 		$this->sendNoCacheHeaders();
-		ob_start();
 		echo "<h2>$testName</h2>\n";
 		echo "<ul class='tests'>\n";
 	}
@@ -84,7 +80,6 @@ class CakeHtmlReporter extends SimpleReporter {
  */
 	function paintFooter($test_name) {
 		$colour = ($this->getFailCount() + $this->getExceptionCount() > 0 ? "red" : "green");
-		ob_start();
 		echo "</ul>\n";
 		echo "<div style=\"";
 		echo "padding: 8px; margin: 1em 0; background-color: $colour; color: white;";
@@ -95,7 +90,6 @@ class CakeHtmlReporter extends SimpleReporter {
 		echo "<strong>" . $this->getFailCount() . "</strong> fails and ";
 		echo "<strong>" . $this->getExceptionCount() . "</strong> exceptions.";
 		echo "</div>\n";
-		echo "</body>\n</html>\n";
 	}
 /**
  * Paints the test failure with a breadcrumbs
@@ -106,7 +100,6 @@ class CakeHtmlReporter extends SimpleReporter {
  * @access public
  */
 	function paintFail($message) {
-		ob_start();
 		parent::paintFail($message);
 		echo "<li class='fail'>\n";
 		echo "<span>Failed</span>";
@@ -125,7 +118,6 @@ class CakeHtmlReporter extends SimpleReporter {
  * @access public
  */
 	function paintPass($message) {
-		ob_start();
 		parent::paintPass($message);
 
 		if ($this->_show_passes) {
@@ -144,9 +136,8 @@ class CakeHtmlReporter extends SimpleReporter {
  * @access public
  */
 	function paintError($message) {
-		ob_start();
 		parent::paintError($message);
-		echo "<li class='fail'>\n";
+		echo "<li class='error'>\n";
 		echo "<span>Error</span>";
 		echo "<div class='msg'>" . $this->_htmlEntities($message) . "</div>\n";
 		$breadcrumb = Set::filter($this->getTestList());
@@ -160,7 +151,6 @@ class CakeHtmlReporter extends SimpleReporter {
  * @access public
  */
 	function paintException($exception) {
-		ob_start();
 		parent::paintException($exception);
 		echo "<li class='fail'>\n";
 		echo "<span>Exception</span>";
@@ -180,7 +170,6 @@ class CakeHtmlReporter extends SimpleReporter {
  * @access public
  */
 	function paintSkip($message) {
-		ob_start();
 		parent::paintSkip($message);
 		echo "<li class='skipped'>\n";
 		echo "<span>Skipped</span> ";
@@ -193,7 +182,6 @@ class CakeHtmlReporter extends SimpleReporter {
  * @access public
  */
 	function paintFormattedMessage($message) {
-		ob_start();
 		echo '<pre>' . $this->_htmlEntities($message) . '</pre>';
 	}
 /**

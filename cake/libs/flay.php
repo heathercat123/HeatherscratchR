@@ -1,5 +1,5 @@
 <?php
-/* SVN FILE: $Id: flay.php 6311 2008-01-02 06:33:52Z phpnut $ */
+/* SVN FILE: $Id$ */
 /**
  * Text-to-HTML parser.
  *
@@ -7,39 +7,36 @@
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
- * Copyright 2005-2008, Cake Software Foundation, Inc.
- *								1785 E. Sahara Avenue, Suite 490-204
- *								Las Vegas, Nevada 89104
+ * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
+ * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @filesource
- * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
- * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
- * @package			cake
- * @subpackage		cake.cake.libs
- * @since			CakePHP(tm) v 0.2.9
- * @version			$Revision: 6311 $
- * @modifiedby		$LastChangedBy: phpnut $
- * @lastmodified	$Date: 2008-01-01 22:33:52 -0800 (Tue, 01 Jan 2008) $
- * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link          http://cakephp.org CakePHP(tm) Project
+ * @package       cake
+ * @subpackage    cake.cake.libs
+ * @since         CakePHP(tm) v 0.2.9
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
+ * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 /**
  * Included libraries.
  *
  */
-	if (!class_exists('Object')) {
-		 uses ('object');
-	}
+if (!class_exists('Object')) {
+	uses('object');
+}
 /**
  * Text-to-HTML parser.
  *
  * Text-to-html parser, similar to Textile or RedCloth, only with a little different syntax.
  *
- * @package		cake
- * @subpackage	cake.cake.libs
+ * @package       cake
+ * @subpackage    cake.cake.libs
  */
 class Flay extends Object{
 /**
@@ -143,8 +140,8 @@ class Flay extends Object{
 						}
 					}
 
-					if (count($links)) {
-						for ($ii = 0; $ii < count($links); $ii++) {
+					if ($count = count($links)) {
+						for ($ii = 0; $ii < $count; $ii++) {
 							if (preg_match("#^(http|https|ftp|nntp)://#", $links[$ii])) {
 								$prefix = null;
 							} else {
@@ -219,7 +216,7 @@ class Flay extends Object{
 		if (count($snips) > $max_snippets) {
 			$snips = array_slice($snips, 0, $max_snippets);
 		}
-		$joined = join(' <b>...</b> ', $snips);
+		$joined = implode(' <b>...</b> ', $snips);
 		$snips = $joined ? "<b>...</b> {$joined} <b>...</b>" : substr($string, 0, 80) . '<b>...</b>';
 		return $this->colorMark($words, $snips);
 	}

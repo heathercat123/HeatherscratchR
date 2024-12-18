@@ -1,36 +1,33 @@
 <?php
-/* SVN FILE: $Id: html.php 7296 2008-06-27 09:09:03Z gwoo $ */
+/* SVN FILE: $Id$ */
 /**
  * Html Helper class file.
  *
  * Simplifies the construction of HTML elements.
  *
- * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
- * Copyright 2005-2008, Cake Software Foundation, Inc.
- *								1785 E. Sahara Avenue, Suite 490-204
- *								Las Vegas, Nevada 89104
+ * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
+ * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @filesource
- * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
- * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
- * @package			cake
- * @subpackage		cake.cake.libs.view.helpers
- * @since			CakePHP(tm) v 0.9.1
- * @version			$Revision: 7296 $
- * @modifiedby		$LastChangedBy: gwoo $
- * @lastmodified	$Date: 2008-06-27 02:09:03 -0700 (Fri, 27 Jun 2008) $
- * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link          http://cakephp.org CakePHP(tm) Project
+ * @package       cake
+ * @subpackage    cake.cake.libs.view.helpers
+ * @since         CakePHP(tm) v 0.9.1
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
+ * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 /**
  * Html Helper class for easy use of HTML widgets.
  *
  * HtmlHelper encloses all methods needed while working with HTML pages.
  *
- * @package		cake
- * @subpackage	cake.cake.libs.view.helpers
+ * @package       cake
+ * @subpackage    cake.cake.libs.view.helpers
  */
 class HtmlHelper extends AppHelper {
 /*************************************************************************
@@ -191,7 +188,7 @@ class HtmlHelper extends AppHelper {
 /**
  * Creates a link to an external resource and handles basic meta tags
  *
- * @param  string  $title The title of the external resource
+ * @param  string  $type The title of the external resource
  * @param  mixed   $url   The address of the external resource or string for content attribute
  * @param  array   $attributes Other attributes for the generated tag. If the type attribute is html, rss, atom, or icon, the mime-type is returned.
  * @param  boolean $inline If set to false, the generated tag appears in the head tag of the layout.
@@ -233,14 +230,14 @@ class HtmlHelper extends AppHelper {
 
 		if (isset($attributes['link'])) {
 			if (isset($attributes['rel']) && $attributes['rel'] === 'icon') {
-				$out = sprintf($this->tags['metalink'], $attributes['link'], $this->_parseAttributes($attributes, array('link')));
+				$out = sprintf($this->tags['metalink'], $attributes['link'], $this->_parseAttributes($attributes, array('link'), ' ', ' '));
 				$attributes['rel'] = 'shortcut icon';
 			} else {
 				$attributes['link'] = $this->url($attributes['link'], true);
 			}
-			$out .= sprintf($this->tags['metalink'], $attributes['link'], $this->_parseAttributes($attributes, array('link')));
+			$out .= sprintf($this->tags['metalink'], $attributes['link'], $this->_parseAttributes($attributes, array('link'), ' ', ' '));
 		} else {
-			$out = sprintf($this->tags['meta'], $this->_parseAttributes($attributes, array('type')));
+			$out = sprintf($this->tags['meta'], $this->_parseAttributes($attributes, array('type'), ' ', ' '));
 		}
 
 		if ($inline) {
@@ -257,8 +254,10 @@ class HtmlHelper extends AppHelper {
  * @return string A meta tag containing the specified character set.
  */
 	function charset($charset = null) {
-		$charset = current(array_filter(array($charset, strtolower(Configure::read('App.encoding')), 'utf-8')));
-		return $this->output(sprintf($this->tags['charset'], $charset));
+		if (empty($charset)) {
+			$charset = strtolower(Configure::read('App.encoding'));
+		}
+		return $this->output(sprintf($this->tags['charset'], (!empty($charset) ? $charset : 'utf-8')));
 	}
 /**
  * Creates an HTML link.
@@ -285,12 +284,12 @@ class HtmlHelper extends AppHelper {
 			$escapeTitle = false;
 		}
 
-		if (isset($htmlAttributes['escape'])) {
+		if (isset($htmlAttributes['escape']) && $escapeTitle == true) {
 			$escapeTitle = $htmlAttributes['escape'];
-			unset($htmlAttributes['escape']);
 		}
+
 		if ($escapeTitle === true) {
-			$title = htmlspecialchars($title, ENT_QUOTES);
+			$title = h($title);
 		} elseif (is_string($escapeTitle)) {
 			$title = htmlentities($title, ENT_QUOTES, $escapeTitle);
 		}
@@ -316,8 +315,10 @@ class HtmlHelper extends AppHelper {
 /**
  * Creates a link element for CSS stylesheets.
  *
- * @param mixed $path The name of a CSS style sheet in /app/webroot/css, or an array containing names of CSS stylesheets in that directory.
- * @param string $rel Rel attribute. Defaults to "stylesheet".
+ * @param mixed $path The name of a CSS style sheet or an array containing names of
+ *   CSS stylesheets. If `$path` is prefixed with '/', the path will be relative to the webroot
+ *   of your application. Otherwise, the path will be relative to your CSS path, usually webroot/css.
+ * @param string $rel Rel attribute. Defaults to "stylesheet". If equal to 'import' the stylesheet will be imported.
  * @param array $htmlAttributes Array of HTML attributes.
  * @param boolean $inline If set to false, the generated tag appears in the head tag of the layout.
  * @return string CSS <link /> or <style /> tag, depending on the type of link.
@@ -337,23 +338,30 @@ class HtmlHelper extends AppHelper {
 		if (strpos($path, '://') !== false) {
 			$url = $path;
 		} else {
-			if ($path{0} !== '/') {
+			if ($path[0] !== '/') {
 				$path = CSS_URL . $path;
 			}
 
 			if (strpos($path, '?') === false) {
-				if (strpos($path, '.css') === false) {
+				if (!preg_match('/.*\.(css|php)$/i', $path)) {
 					$path .= '.css';
 				}
-				if ((Configure::read('Asset.timestamp') === true && Configure::read() > 0) || Configure::read('Asset.timestamp') === 'force') {
-					$path .= '?' . @filemtime(WWW_ROOT . str_replace('/', DS, $path));
+			}
+			$timestampEnabled = (
+				(Configure::read('Asset.timestamp') === true && Configure::read() > 0) ||
+				Configure::read('Asset.timestamp') === 'force'
+			);
+
+			$url = $this->webroot($path);
+			if (strpos($path, '?') === false && $timestampEnabled) {
+				$url .= '?' . @filemtime(WWW_ROOT . str_replace('/', DS, $path));
+			}
+			if (Configure::read('Asset.filter.css')) {
+				$pos = strpos($url, CSS_URL);
+				if ($pos !== false) {
+					$url = substr($url, 0, $pos) . 'ccss/' . substr($url, $pos + strlen(CSS_URL));
 				}
 			}
-
-			if (Configure::read('Asset.filter.css')) {
-				$path = str_replace(CSS_URL, 'ccss/', $path);
-			}
-			$url = $this->webroot($path);
 		}
 
 		if ($rel == 'import') {
@@ -376,7 +384,8 @@ class HtmlHelper extends AppHelper {
 /**
  * Builds CSS style data from an array of CSS properties
  *
- * @param array $data
+ * @param array $data Style data array
+ * @param boolean $inline Whether or not the style block should be displayed inline
  * @return string CSS styling data
  */
 	function style($data, $inline = true) {
@@ -388,9 +397,9 @@ class HtmlHelper extends AppHelper {
 			$out[] = $key.':'.$value.';';
 		}
 		if ($inline) {
-			return join(' ', $out);
+			return implode(' ', $out);
 		}
-		return join("\n", $out);
+		return implode("\n", $out);
 	}
 /**
  * Returns the breadcrumb trail as a sequence of &raquo;-separated links.
@@ -400,7 +409,7 @@ class HtmlHelper extends AppHelper {
  * @return string
  */
 	function getCrumbs($separator = '&raquo;', $startText = false) {
-		if (count($this->_crumbs)) {
+		if (!empty($this->_crumbs)) {
 			$out = array();
 			if ($startText) {
 				$out[] = $this->link($startText, '/');
@@ -413,7 +422,7 @@ class HtmlHelper extends AppHelper {
 					$out[] = $crumb[0];
 				}
 			}
-			return $this->output(join($separator, $out));
+			return $this->output(implode($separator, $out));
 		} else {
 			return null;
 		}
@@ -422,21 +431,22 @@ class HtmlHelper extends AppHelper {
  * Creates a formatted IMG element.
  *
  * @param string $path Path to the image file, relative to the app/webroot/img/ directory.
- * @param array	$htmlAttributes Array of HTML attributes.
+ * @param array	$options Array of HTML attributes.
  * @return string
  */
 	function image($path, $options = array()) {
 		if (is_array($path)) {
 			$path = $this->url($path);
-		} elseif ($path{0} === '/') {
-			$path = $this->webroot($path);
-		} elseif (strpos($path, '://') !== false) {
-			$path = $path;
-		} else {
-			if (Configure::read('Asset.timestamp') == true && Configure::read() > 0) {
-				$path .= '?' . @filemtime(str_replace('/', DS, WWW_ROOT . IMAGES_URL . $path));
+		} elseif (strpos($path, '://') === false) {
+			if ($path[0] !== '/') {
+				$path = IMAGES_URL . $path;
 			}
-			$path = $this->webroot(IMAGES_URL . $path);
+
+			if ((Configure::read('Asset.timestamp') == true && Configure::read() > 0) || Configure::read('Asset.timestamp') === 'force') {
+				$path = $this->webroot($path) . '?' . @filemtime(WWW_ROOT . str_replace('/', DS, $path));
+			} else {
+				$path = $this->webroot($path);
+			}
 		}
 
 		if (!isset($options['alt'])) {
@@ -470,7 +480,7 @@ class HtmlHelper extends AppHelper {
 		foreach ($names as $arg) {
 			$out[] = sprintf($this->tags['tableheader'], $this->_parseAttributes($thOptions), $arg);
 		}
-		$data = sprintf($this->tags['tablerow'], $this->_parseAttributes($trOptions), join(' ', $out));
+		$data = sprintf($this->tags['tablerow'], $this->_parseAttributes($trOptions), implode(' ', $out));
 		return $this->output($data);
 	}
 /**
@@ -520,16 +530,16 @@ class HtmlHelper extends AppHelper {
 				$cellsOut[] = sprintf($this->tags['tablecell'], $this->_parseAttributes($cellOptions), $cell);
 			}
 			$options = $this->_parseAttributes($count % 2 ? $oddTrOptions : $evenTrOptions);
-			$out[] = sprintf($this->tags['tablerow'], $options, join(' ', $cellsOut));
+			$out[] = sprintf($this->tags['tablerow'], $options, implode(' ', $cellsOut));
 		}
-		return $this->output(join("\n", $out));
+		return $this->output(implode("\n", $out));
 	}
 /**
  * Returns a formatted block tag, i.e DIV, SPAN, P.
  *
  * @param string $name Tag name.
  * @param string $text String content that will appear inside the div element.
- *			If null, only a start tag will be printed
+ *   If null, only a start tag will be printed
  * @param array $attributes Additional HTML attributes of the DIV tag
  * @param boolean $escape If true, $text will be HTML-escaped
  * @return string The formatted tag element
@@ -553,7 +563,7 @@ class HtmlHelper extends AppHelper {
  *
  * @param string $class CSS class name of the div element.
  * @param string $text String content that will appear inside the div element.
- *			If null, only a start tag will be printed
+ *   If null, only a start tag will be printed
  * @param array $attributes Additional HTML attributes of the DIV tag
  * @param boolean $escape If true, $text will be HTML-escaped
  * @return string The formatted DIV element
@@ -620,7 +630,7 @@ class HtmlHelper extends AppHelper {
 		$out = '';
 
 		$index = 1;
-		foreach($items as $key => $item) {
+		foreach ($items as $key => $item) {
 			if (is_array($item)) {
 				$item = $key . $this->nestedList($item, $attributes, $itemAttributes, $tag);
 			}

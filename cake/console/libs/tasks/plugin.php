@@ -1,5 +1,5 @@
 <?php
-/* SVN FILE: $Id: plugin.php 7118 2008-06-04 20:49:29Z gwoo $ */
+/* SVN FILE: $Id$ */
 /**
  * The Plugin Task handles creating an empty plugin, ready to be used
  *
@@ -7,24 +7,21 @@
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
- * Copyright 2005-2008, Cake Software Foundation, Inc.
- *								1785 E. Sahara Avenue, Suite 490-204
- *								Las Vegas, Nevada 89104
+ * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
+ * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @filesource
- * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
- * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
- * @package			cake
- * @subpackage		cake.cake.console.libs.tasks
- * @since			CakePHP(tm) v 1.2
- * @version			$Revision: 7118 $
- * @modifiedby		$LastChangedBy: gwoo $
- * @lastmodified	$Date: 2008-06-04 13:49:29 -0700 (Wed, 04 Jun 2008) $
- * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link          http://cakephp.org CakePHP(tm) Project
+ * @package       cake
+ * @subpackage    cake.cake.console.libs.tasks
+ * @since         CakePHP(tm) v 1.2
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
+ * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 if (!class_exists('File')) {
 	uses('file');
@@ -32,8 +29,8 @@ if (!class_exists('File')) {
 /**
  * Task class for creating a plugin
  *
- * @package		cake
- * @subpackage	cake.cake.console.libs.tasks
+ * @package       cake
+ * @subpackage    cake.cake.console.libs.tasks
  */
 class PluginTask extends Shell {
 /**
@@ -71,7 +68,7 @@ class PluginTask extends Shell {
 
 		$plugin = null;
 
-		if(isset($this->args[0])) {
+		if (isset($this->args[0])) {
 			$plugin = Inflector::camelize($this->args[0]);
 			$pluginPath = Inflector::underscore($plugin) . DS;
 			$this->Dispatch->shiftArgs();
@@ -86,8 +83,8 @@ class PluginTask extends Shell {
 				$this->__interactive($plugin);
 			}
 		}
-		
-		if(isset($this->args[0])) {
+
+		if (isset($this->args[0])) {
 			$task = Inflector::classify($this->args[0]);
 			$this->Dispatch->shiftArgs();
 			if (in_array($task, $this->tasks)) {
@@ -138,7 +135,7 @@ class PluginTask extends Shell {
 
 		$looksGood = $this->in('Look okay?', array('y', 'n', 'q'), 'y');
 
-		if (low($looksGood) == 'y' || low($looksGood) == 'yes') {
+		if (strtolower($looksGood) == 'y' || strtolower($looksGood) == 'yes') {
 			$verbose = $this->in(__('Do you want verbose output?', true), array('y', 'n'), 'n');
 
 			$Folder = new Folder($this->path . $pluginPath);
@@ -148,7 +145,7 @@ class PluginTask extends Shell {
 				$Folder->create($this->path . $pluginPath . DS . $directory);
 			}
 
-			if (low($verbose) == 'y' || low($verbose) == 'yes') {
+			if (strtolower($verbose) == 'y' || strtolower($verbose) == 'yes') {
 				foreach ($Folder->messages() as $message) {
 					$this->out($message);
 				}
@@ -164,7 +161,7 @@ class PluginTask extends Shell {
 			$out = "<?php\n\n";
 			$out .= "class {$plugin}AppController extends AppController {\n\n";
 			$out .= "}\n\n";
-			$out .= "?>\n";
+			$out .= "?>";
 			$this->createFile($this->path . $pluginPath. DS . $controllerFileName, $out);
 
 			$modelFileName = $pluginPath . '_app_model.php';
@@ -172,14 +169,14 @@ class PluginTask extends Shell {
 			$out = "<?php\n\n";
 			$out .= "class {$plugin}AppModel extends AppModel {\n\n";
 			$out .= "}\n\n";
-			$out .= "?>\n";
+			$out .= "?>";
 			$this->createFile($this->path . $pluginPath . DS . $modelFileName, $out);
 
 			$this->hr();
 			$this->out(sprintf(__("Created: %s in %s", true), $plugin, $this->path . $pluginPath));
 			$this->hr();
 		}
-		
+
 		return true;
 	}
 /**

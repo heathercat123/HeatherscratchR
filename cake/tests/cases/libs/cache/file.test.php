@@ -1,30 +1,27 @@
 <?php
-/* SVN FILE: $Id: file.test.php 7296 2008-06-27 09:09:03Z gwoo $ */
+/* SVN FILE: $Id$ */
 /**
- * Short description for file.
+ * FileEngineTest file
  *
  * Long description for file
  *
  * PHP versions 4 and 5
  *
  * CakePHP(tm) Tests <https://trac.cakephp.org/wiki/Developement/TestSuite>
- * Copyright 2005-2008, Cake Software Foundation, Inc.
- *								1785 E. Sahara Avenue, Suite 490-204
- *								Las Vegas, Nevada 89104
+ * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  *  Licensed under The Open Group Test Suite License
  *  Redistributions of files must retain the above copyright notice.
  *
- * @filesource
- * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
- * @link				https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
- * @package			cake.tests
- * @subpackage		cake.tests.cases.libs.cache
- * @since			CakePHP(tm) v 1.2.0.5434
- * @version			$Revision: 7296 $
- * @modifiedby		$LastChangedBy: gwoo $
- * @lastmodified	$Date: 2008-06-27 02:09:03 -0700 (Fri, 27 Jun 2008) $
- * @license			http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
+ * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link          https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
+ * @package       cake
+ * @subpackage    cake.tests.cases.libs.cache
+ * @since         CakePHP(tm) v 1.2.0.5434
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
+ * @license       http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
  */
 if (!class_exists('Cache')) {
 	require LIBS . 'cache.php';
@@ -33,10 +30,10 @@ if (!defined('CAKEPHP_UNIT_TEST_EXECUTION')) {
 	define('CAKEPHP_UNIT_TEST_EXECUTION', 1);
 }
 /**
- * Short description for class.
+ * FileEngineTest class
  *
- * @package    cake.tests
- * @subpackage cake.tests.cases.libs.cache
+ * @package       cake
+ * @subpackage    cake.tests.cases.libs.cache
  */
 class FileEngineTest extends CakeTestCase {
 /**
@@ -47,23 +44,26 @@ class FileEngineTest extends CakeTestCase {
  */
 	var $config = array();
 /**
- * start method
+ * startCase method
  *
  * @access public
  * @return void
  */
-	function start() {
-		$this->config = Cache::config('default');
-		$settings = Cache::config('default', array('engine'=> 'File', 'path' => CACHE));
+	function startCase() {
+		$this->_cacheDisable = Configure::read('Cache.disable');
+		$this->_cacheConfig = Cache::config('default');
+		Configure::write('Cache.disable', false);
+		Cache::config('default', array('engine' => 'File', 'path' => CACHE));
 	}
 /**
- * end method
+ * endCase method
  *
  * @access public
  * @return void
  */
-	function end() {
-		Cache::config('default', $this->config['settings']);
+	function endCase() {
+		Configure::write('Cache.disable', $this->_cacheDisable);
+		Cache::config('default', $this->_cacheConfig['settings']);
 	}
 /**
  * testCacheDirChange method
@@ -92,20 +92,21 @@ class FileEngineTest extends CakeTestCase {
 		$result = Cache::write(null, 'here');
 		$this->assertFalse($result);
 
+		Cache::set(array('duration' => 1));
+
 		$result = Cache::read('test');
 		$expecting = '';
 		$this->assertEqual($result, $expecting);
 
 		$data = 'this is a test of the emergency broadcasting system';
-		$result = Cache::write('test', $data, 1);
-
-		$this->assertTrue($result);
+		$result = Cache::write('test', $data);
 		$this->assertTrue(file_exists(CACHE . 'cake_test'));
-
 
 		$result = Cache::read('test');
 		$expecting = $data;
 		$this->assertEqual($result, $expecting);
+
+		Cache::delete('test');
 	}
 /**
  * testExpiry method
@@ -114,20 +115,23 @@ class FileEngineTest extends CakeTestCase {
  * @return void
  */
 	function testExpiry() {
-		sleep(2);
+		Cache::set(array('duration' => 1));
+
 		$result = Cache::read('test');
 		$this->assertFalse($result);
 
 		$data = 'this is a test of the emergency broadcasting system';
-		$result = Cache::write('other_test', $data, 1);
+		$result = Cache::write('other_test', $data);
 		$this->assertTrue($result);
 
 		sleep(2);
 		$result = Cache::read('other_test');
 		$this->assertFalse($result);
 
+		Cache::set(array('duration' =>  "+1 second"));
+
 		$data = 'this is a test of the emergency broadcasting system';
-		$result = Cache::write('other_test', $data, "+1 second");
+		$result = Cache::write('other_test', $data);
 		$this->assertTrue($result);
 
 		sleep(2);
@@ -184,15 +188,15 @@ class FileEngineTest extends CakeTestCase {
  * @return void
  */
 	function testClear() {
+		Cache::engine('File', array('duration' => 1));
 		$data = 'this is a test of the emergency broadcasting system';
-		$write = Cache::write('serialize_test1', $data, 1);
-		$write = Cache::write('serialize_test2', $data, 1);
-		$write = Cache::write('serialize_test3', $data, 1);
+		$write = Cache::write('serialize_test1', $data);
+		$write = Cache::write('serialize_test2', $data);
+		$write = Cache::write('serialize_test3', $data);
 		$this->assertTrue(file_exists(CACHE . 'cake_serialize_test1'));
 		$this->assertTrue(file_exists(CACHE . 'cake_serialize_test2'));
 		$this->assertTrue(file_exists(CACHE . 'cake_serialize_test3'));
-		Cache::engine('File', array('duration' => 1));
-		sleep(4);
+		sleep(2);
 		$result = Cache::clear(true);
 		$this->assertTrue($result);
 		$this->assertFalse(file_exists(CACHE . 'cake_serialize_test1'));
@@ -200,9 +204,9 @@ class FileEngineTest extends CakeTestCase {
 		$this->assertFalse(file_exists(CACHE . 'cake_serialize_test3'));
 
 		$data = 'this is a test of the emergency broadcasting system';
-		$write = Cache::write('serialize_test1', $data, 1);
-		$write = Cache::write('serialize_test2', $data, 1);
-		$write = Cache::write('serialize_test3', $data, 1);
+		$write = Cache::write('serialize_test1', $data);
+		$write = Cache::write('serialize_test2', $data);
+		$write = Cache::write('serialize_test3', $data);
 		$this->assertTrue(file_exists(CACHE . 'cake_serialize_test1'));
 		$this->assertTrue(file_exists(CACHE . 'cake_serialize_test2'));
 		$this->assertTrue(file_exists(CACHE . 'cake_serialize_test3'));
@@ -216,12 +220,12 @@ class FileEngineTest extends CakeTestCase {
 		$result = Cache::engine('File', array('path' => CACHE . 'views'));
 
 		$data = 'this is a test of the emergency broadcasting system';
-		$write = Cache::write('controller_view_1', $data, 1);
-		$write = Cache::write('controller_view_2', $data, 1);
-		$write = Cache::write('controller_view_3', $data, 1);
-		$write = Cache::write('controller_view_10', $data, 1);
-		$write = Cache::write('controller_view_11', $data, 1);
-		$write = Cache::write('controller_view_12', $data, 1);
+		$write = Cache::write('controller_view_1', $data);
+		$write = Cache::write('controller_view_2', $data);
+		$write = Cache::write('controller_view_3', $data);
+		$write = Cache::write('controller_view_10', $data);
+		$write = Cache::write('controller_view_11', $data);
+		$write = Cache::write('controller_view_12', $data);
 		$this->assertTrue(file_exists(CACHE . 'views'. DS . 'cake_controller_view_1'));
 		$this->assertTrue(file_exists(CACHE . 'views'. DS . 'cake_controller_view_2'));
 		$this->assertTrue(file_exists(CACHE . 'views'. DS . 'cake_controller_view_3'));
@@ -245,12 +249,12 @@ class FileEngineTest extends CakeTestCase {
 		$this->assertFalse(file_exists(CACHE . 'views'. DS . 'cake_controller_view_11'));
 		$this->assertFalse(file_exists(CACHE . 'views'. DS . 'cake_controller_view_12'));
 
-		$write = Cache::write('controller_view_1', $data, 1);
-		$write = Cache::write('controller_view_2', $data, 1);
-		$write = Cache::write('controller_view_3', $data, 1);
-		$write = Cache::write('controller_view_10', $data, 1);
-		$write = Cache::write('controller_view_11', $data, 1);
-		$write = Cache::write('controller_view_12', $data, 1);
+		$write = Cache::write('controller_view_1', $data);
+		$write = Cache::write('controller_view_2', $data);
+		$write = Cache::write('controller_view_3', $data);
+		$write = Cache::write('controller_view_10', $data);
+		$write = Cache::write('controller_view_11', $data);
+		$write = Cache::write('controller_view_12', $data);
 		$this->assertTrue(file_exists(CACHE . 'views'. DS . 'cake_controller_view_1'));
 		$this->assertTrue(file_exists(CACHE . 'views'. DS . 'cake_controller_view_2'));
 		$this->assertTrue(file_exists(CACHE . 'views'. DS . 'cake_controller_view_3'));
@@ -294,9 +298,7 @@ class FileEngineTest extends CakeTestCase {
  * @return void
  */
 	function testRemoveWindowsSlashesFromCache() {
-		Cache::engine('File', array('isWindows' => true, 'prefix' => null, 'path' => TEST_CAKE_CORE_INCLUDE_PATH . 'tests' . DS . 'test_app' . DS . 'tmp'));
-
-		$data = Cache::read('dir_map');
+		Cache::engine('File', array('isWindows' => true, 'prefix' => null, 'path' => TMP));
 
 		$expected = array (
 				'C:\dev\prj2\sites\cake\libs' => array(
@@ -326,9 +328,17 @@ class FileEngineTest extends CakeTestCase {
 				'C:\dev\prj2\sites\main_site\views\helpers' => array(
 					0 => 'C:\dev\prj2\sites\main_site\views\helpers'));
 
+		$data = Cache::write('test_dir_map', $expected);
+		$data = Cache::read('test_dir_map');
+		Cache::delete('test_dir_map');
 		$this->assertEqual($expected, $data);
 	}
-
+/**
+ * testWriteQuotedString method
+ *
+ * @access public
+ * @return void
+ */
 	function testWriteQuotedString() {
 		Cache::engine('File', array('path' => TMP . 'tests'));
 		Cache::write('App.doubleQuoteTest', '"this is a quoted string"');
