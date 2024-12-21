@@ -25,7 +25,7 @@
 		<dt><input type="checkbox" checked> Add website styles </dt>
         <dd>- Users would be able to switch between the 1.3 and 1.4 styles, maybe even more </dd>
 	
-		<dt><input type="checkbox" 		  > Make switching website styles not require re-logging in </dt>
+		<dt><input type="checkbox" checked> Make switching website styles not require re-logging in </dt>
         <dd>- QOL improvement, we need it </dd>
   </dl>
  </div>
