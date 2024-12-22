@@ -1,46 +1,49 @@
 <?php
-/* SVN FILE: $Id$ */
+/* SVN FILE: $Id: helper.test.php 7296 2008-06-27 09:09:03Z gwoo $ */
 /**
- * HelperTest file
+ * Short description for file.
  *
  * Long description for file
  *
  * PHP versions 4 and 5
  *
  * CakePHP(tm) Tests <https://trac.cakephp.org/wiki/Developement/TestSuite>
- * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * Copyright 2005-2008, Cake Software Foundation, Inc.
+ *								1785 E. Sahara Avenue, Suite 490-204
+ *								Las Vegas, Nevada 89104
  *
  *  Licensed under The Open Group Test Suite License
  *  Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
- * @package       cake
- * @subpackage    cake.tests.cases.libs
- * @since         CakePHP(tm) v 1.2.0.4206
- * @version       $Revision$
- * @modifiedby    $LastChangedBy$
- * @lastmodified  $Date$
- * @license       http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
+ * @filesource
+ * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
+ * @link				https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
+ * @package			cake.tests
+ * @subpackage		cake.tests.cases.libs
+ * @since			CakePHP(tm) v 1.2.0.4206
+ * @version			$Revision: 7296 $
+ * @modifiedby		$LastChangedBy: gwoo $
+ * @lastmodified	$Date: 2008-06-27 02:09:03 -0700 (Fri, 27 Jun 2008) $
+ * @license			http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
  */
-App::import('Core', array('View', 'Helper'));
+uses('view' . DS . 'view', 'view' . DS . 'helper');
 /**
  * HelperTestPost class
- *
- * @package       cake
- * @subpackage    cake.tests.cases.libs.view
+ * 
+ * @package              cake
+ * @subpackage           cake.tests.cases.libs.view
  */
 class HelperTestPost extends Model {
 /**
  * useTable property
- *
+ * 
  * @var bool false
  * @access public
  */
 	var $useTable = false;
 /**
  * schema method
- *
+ * 
  * @access public
  * @return void
  */
@@ -58,29 +61,30 @@ class HelperTestPost extends Model {
 	}
 /**
  * hasAndBelongsToMany property
- *
+ * 
  * @var array
  * @access public
  */
-	var $hasAndBelongsToMany = array('HelperTestTag'=> array('with' => 'HelperTestPostsTag'));
+	var $hasAndBelongsToMany = array('HelperTestTag'=> array());
 }
+
 /**
  * HelperTestComment class
- *
- * @package       cake
- * @subpackage    cake.tests.cases.libs.view
+ * 
+ * @package              cake
+ * @subpackage           cake.tests.cases.libs.view
  */
 class HelperTestComment extends Model {
 /**
  * useTable property
- *
+ * 
  * @var bool false
  * @access public
  */
 	var $useTable = false;
 /**
  * schema method
- *
+ * 
  * @access public
  * @return void
  */
@@ -98,21 +102,21 @@ class HelperTestComment extends Model {
 }
 /**
  * HelperTestTag class
- *
- * @package       cake
- * @subpackage    cake.tests.cases.libs.view
+ * 
+ * @package              cake
+ * @subpackage           cake.tests.cases.libs.view
  */
 class HelperTestTag extends Model {
 /**
  * useTable property
- *
+ * 
  * @var bool false
  * @access public
  */
 	var $useTable = false;
 /**
  * schema method
- *
+ * 
  * @access public
  * @return void
  */
@@ -128,21 +132,21 @@ class HelperTestTag extends Model {
 }
 /**
  * HelperTestPostsTag class
- *
- * @package       cake
- * @subpackage    cake.tests.cases.libs.view
+ * 
+ * @package              cake
+ * @subpackage           cake.tests.cases.libs.view
  */
 class HelperTestPostsTag extends Model {
 /**
  * useTable property
- *
+ * 
  * @var bool false
  * @access public
  */
 	var $useTable = false;
 /**
  * schema method
- *
+ * 
  * @access public
  * @return void
  */
@@ -154,16 +158,17 @@ class HelperTestPostsTag extends Model {
 		return $this->_schema;
 	}
 }
+
 /**
- * HelperTest class
+ * Short description for class.
  *
- * @package       cake
- * @subpackage    cake.tests.cases.libs
+ * @package		cake.tests
+ * @subpackage	cake.tests.cases.libs
  */
-class HelperTest extends CakeTestCase {
+class HelperTest extends UnitTestCase {
 /**
  * setUp method
- *
+ * 
  * @access public
  * @return void
  */
@@ -178,18 +183,8 @@ class HelperTest extends CakeTestCase {
 		ClassRegistry::addObject('HelperTestTag', new HelperTestTag());
 	}
 /**
- * tearDown method
- *
- * @access public
- * @return void
- */
-	function tearDown() {
-		unset($this->Helper, $this->View);
-		ClassRegistry::flush();
-	}
-/**
  * testFormFieldNameParsing method
- *
+ * 
  * @access public
  * @return void
  */
@@ -324,74 +319,8 @@ class HelperTest extends CakeTestCase {
 		$this->assertEqual($this->View->fieldSuffix, null);
 	}
 /**
- * test getting values from Helper
- *
- * @return void
- **/
-	function testValue() {
-		$this->Helper->data = array('fullname' => 'This is me');
-		$this->Helper->setEntity('fullname');
-		$result = $this->Helper->value('fullname');
-		$this->assertEqual($result, 'This is me');
-
-		$this->Helper->data = array('Post' => array('name' => 'First Post'));
-		$this->Helper->setEntity('Post.name');
-		$result = $this->Helper->value('Post.name');
-		$this->assertEqual($result, 'First Post');
-
-		$this->Helper->data = array('Post' => array(2 => array('name' => 'First Post')));
-		$this->Helper->setEntity('Post.2.name');
-		$result = $this->Helper->value('Post.2.name');
-		$this->assertEqual($result, 'First Post');
-
-		$this->Helper->data = array('Post' => array(2 => array('created' => array('year' => '2008'))));
-		$this->Helper->setEntity('Post.2.created');
-		$result = $this->Helper->value('Post.2.created');
-		$this->assertEqual($result, array('year' => '2008'));
-
-		$this->Helper->data = array('Post' => array(2 => array('created' => array('year' => '2008'))));
-		$this->Helper->setEntity('Post.2.created.year');
-		$result = $this->Helper->value('Post.2.created.year');
-		$this->assertEqual($result, '2008');
-	}
-/**
- * Ensure HTML escaping of url params.  So link addresses are valid and not exploited
- *
- * @return void
- **/
-	function testUrlConversion() {
-		$result = $this->Helper->url('/controller/action/1');
-		$this->assertEqual($result, '/controller/action/1');
-
-		$result = $this->Helper->url('/controller/action/1?one=1&two=2');
-		$this->assertEqual($result, '/controller/action/1?one=1&amp;two=2');
-
-		$result = $this->Helper->url(array('controller' => 'posts', 'action' => 'index', 'page' => '1" onclick="alert(\'XSS\');"'));
-		$this->assertEqual($result, "/posts/index/page:1&quot; onclick=&quot;alert(&#039;XSS&#039;);&quot;");
-
-		$result = $this->Helper->url('/controller/action/1/param:this+one+more');
-		$this->assertEqual($result, '/controller/action/1/param:this+one+more');
-
-		$result = $this->Helper->url('/controller/action/1/param:this%20one%20more');
-		$this->assertEqual($result, '/controller/action/1/param:this%20one%20more');
-
-		$result = $this->Helper->url('/controller/action/1/param:%7Baround%20here%7D%5Bthings%5D%5Bare%5D%24%24');
-		$this->assertEqual($result, '/controller/action/1/param:%7Baround%20here%7D%5Bthings%5D%5Bare%5D%24%24');
-
-		$result = $this->Helper->url(array(
-			'controller' => 'posts', 'action' => 'index', 'param' => '%7Baround%20here%7D%5Bthings%5D%5Bare%5D%24%24'
-		));
-		$this->assertEqual($result, "/posts/index/param:%7Baround%20here%7D%5Bthings%5D%5Bare%5D%24%24");
-
-		$result = $this->Helper->url(array(
-			'controller' => 'posts', 'action' => 'index', 'page' => '1', 
-			'?' => array('one' => 'value', 'two' => 'value', 'three' => 'purple')
-		));
-		$this->assertEqual($result, "/posts/index/page:1?one=value&amp;two=value&amp;three=purple");
-	}
-/**
  * testFieldsWithSameName method
- *
+ * 
  * @access public
  * @return void
  */
@@ -426,7 +355,7 @@ class HelperTest extends CakeTestCase {
 	}
 /**
  * testFieldSameAsModel method
- *
+ * 
  * @access public
  * @return void
  */
@@ -447,7 +376,7 @@ class HelperTest extends CakeTestCase {
 	}
 /**
  * testFieldSuffixForDate method
- *
+ * 
  * @access public
  * @return void
  */
@@ -472,7 +401,7 @@ class HelperTest extends CakeTestCase {
 	}
 /**
  * testMulitDimensionValue method
- *
+ * 
  * @access public
  * @return void
  */
@@ -505,7 +434,7 @@ class HelperTest extends CakeTestCase {
 	}
 /**
  * testClean method
- *
+ * 
  * @access public
  * @return void
  */
@@ -519,17 +448,17 @@ class HelperTest extends CakeTestCase {
 		$result = $this->Helper->clean('<script>with something</script>');
 		$this->assertEqual($result, 'with something');
 
-		$result = $this->Helper->clean('<script type="text/javascript">alert("ruined");</script>');
-		$this->assertNoPattern('#</*script#', $result);
-
-		$result = $this->Helper->clean("<script \ntype=\"text/javascript\">\n\talert('ruined');\n\n\t\t</script>");
-		$this->assertNoPattern('#</*script#', $result);
-
-		$result = $this->Helper->clean('<body/onload=do(/something/)>');
-		$this->assertEqual($result, '<body/>');
-
-		$result = $this->Helper->clean('&lt;script&gt;alert(document.cookie)&lt;/script&gt;');
-		$this->assertEqual($result, '&amp;lt;script&amp;gt;alert(document.cookie)&amp;lt;/script&amp;gt;');
+	}
+/**
+ * tearDown method
+ * 
+ * @access public
+ * @return void
+ */
+	function tearDown() {
+		unset($this->Helper, $this->View);
+		ClassRegistry::flush();
 	}
 }
+
 ?>

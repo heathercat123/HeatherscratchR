@@ -1,75 +1,66 @@
 <?php
-/* SVN FILE: $Id$ */
+/* SVN FILE: $Id: xcache.test.php 7296 2008-06-27 09:09:03Z gwoo $ */
 /**
- * XcacheEngineTest file
+ * Short description for file.
  *
  * Long description for file
  *
  * PHP versions 4 and 5
  *
  * CakePHP(tm) Tests <https://trac.cakephp.org/wiki/Developement/TestSuite>
- * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * Copyright 2005-2008, Cake Software Foundation, Inc.
+ *								1785 E. Sahara Avenue, Suite 490-204
+ *								Las Vegas, Nevada 89104
  *
  *  Licensed under The Open Group Test Suite License
  *  Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
- * @package       cake
- * @subpackage    cake.tests.cases.libs.cache
- * @since         CakePHP(tm) v 1.2.0.5434
- * @version       $Revision$
- * @modifiedby    $LastChangedBy$
- * @lastmodified  $Date$
- * @license       http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
+ * @filesource
+ * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
+ * @link				https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
+ * @package			cake.tests
+ * @subpackage		cake.tests.cases.libs.cache
+ * @since			CakePHP(tm) v 1.2.0.5434
+ * @version			$Revision: 7296 $
+ * @modifiedby		$LastChangedBy: gwoo $
+ * @lastmodified	$Date: 2008-06-27 02:09:03 -0700 (Fri, 27 Jun 2008) $
+ * @license			http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
  */
 if (!class_exists('Cache')) {
 	require LIBS . 'cache.php';
 }
 /**
- * XcacheEngineTest class
+ * Short description for class.
  *
- * @package       cake
- * @subpackage    cake.tests.cases.libs.cache
+ * @package    cake.tests
+ * @subpackage cake.tests.cases.libs.cache
  */
 class XcacheEngineTest extends UnitTestCase {
 /**
  * skip method
- *
+ * 
  * @access public
  * @return void
  */
 	function skip() {
 		$skip = true;
-		if ($result = Cache::engine('Xcache')) {
+		if($result = Cache::engine('Xcache')) {
 			$skip = false;
 		}
-		$this->skipIf($skip, '%s Xcache is not installed or configured properly');
+		$this->skipif($skip, 'Xcache is not installed or configured properly');
 	}
 /**
  * setUp method
- *
+ * 
  * @access public
  * @return void
  */
 	function setUp() {
-		$this->_cacheDisable = Configure::read('Cache.disable');
-		Configure::write('Cache.disable', false);
-		Cache::config('xcache', array('engine' => 'Xcache', 'prefix' => 'cake_'));
-	}
-/**
- * tearDown method
- *
- * @access public
- * @return void
- */
-	function tearDown() {
-		Configure::write('Cache.disable', $this->_cacheDisable);
-		Cache::config('default');
+		Cache::config('xcache', array('engine'=>'Xcache', 'prefix' => 'cake_'));
 	}
 /**
  * testSettings method
- *
+ * 
  * @access public
  * @return void
  */
@@ -79,66 +70,60 @@ class XcacheEngineTest extends UnitTestCase {
 						'duration'=> 3600,
 						'probability' => 100,
 						'engine' => 'Xcache',
-						'PHP_AUTH_USER' => 'user',
-						'PHP_AUTH_PW' => 'password',
+						'PHP_AUTH_USER' => 'cake',
+						'PHP_AUTH_PW' => 'cake',
 						);
 		$this->assertEqual($settings, $expecting);
 	}
 /**
  * testReadAndWriteCache method
- *
+ * 
  * @access public
  * @return void
  */
 	function testReadAndWriteCache() {
-		Cache::set(array('duration' => 1));
-
 		$result = Cache::read('test');
 		$expecting = '';
 		$this->assertEqual($result, $expecting);
 
 		$data = 'this is a test of the emergency broadcasting system';
-		$result = Cache::write('test', $data);
+		$result = Cache::write('test', $data, 1);
 		$this->assertTrue($result);
 
 		$result = Cache::read('test');
 		$expecting = $data;
 		$this->assertEqual($result, $expecting);
-
-		Cache::delete('test');
 	}
 /**
  * testExpiry method
- *
+ * 
  * @access public
  * @return void
  */
 	function testExpiry() {
-		Cache::set(array('duration' => 1));
+		sleep(3);
 		$result = Cache::read('test');
 		$this->assertFalse($result);
 
 		$data = 'this is a test of the emergency broadcasting system';
-		$result = Cache::write('other_test', $data);
+		$result = Cache::write('other_test', $data, 1);
 		$this->assertTrue($result);
 
-		sleep(2);
+		sleep(3);
 		$result = Cache::read('other_test');
 		$this->assertFalse($result);
 
-		Cache::set(array('duration' =>  "+1 second"));
-
 		$data = 'this is a test of the emergency broadcasting system';
-		$result = Cache::write('other_test', $data);
+		$result = Cache::write('other_test', $data, "+1 second");
 		$this->assertTrue($result);
 
-		sleep(2);
+		sleep(3);
 		$result = Cache::read('other_test');
 		$this->assertFalse($result);
 	}
 /**
  * testDeleteCache method
- *
+ * 
  * @access public
  * @return void
  */
@@ -151,21 +136,13 @@ class XcacheEngineTest extends UnitTestCase {
 		$this->assertTrue($result);
 	}
 /**
- * testClearCache method
- *
+ * tearDown method
+ * 
  * @access public
  * @return void
  */
-	function testClearCache() {
-		$data = 'this is a test of the emergency broadcasting system';
-		$result = Cache::write('clear_test_1', $data);
-		$this->assertTrue($result);
-
-		$result = Cache::write('clear_test_2', $data);
-		$this->assertTrue($result);
-
-		$result = Cache::clear();
-		$this->assertTrue($result);
+	function tearDown() {
+		Cache::config('default');
 	}
 }
 ?>

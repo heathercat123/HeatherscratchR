@@ -1,5 +1,5 @@
 <?php
-/* SVN FILE: $Id$ */
+/* SVN FILE: $Id: dbo_db2.php 7296 2008-06-27 09:09:03Z gwoo $ */
 /**
  * IBM DB2 for DBO
  *
@@ -9,21 +9,24 @@
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
+ * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
  * Copyright 2007, Cake Software Foundation, Inc.
+ *								1785 E. Sahara Avenue, Suite 490-204
+ *								Las Vegas, Nevada 89104
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @package       cake
- * @subpackage    cake.cake.libs.model.datasources.dbo
- * @since         CakePHP(tm) v 0.10.5.1790
- * @version       $Revision$
- * @modifiedby    $LastChangedBy$
- * @lastmodified  $Date$
- * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @filesource
+ * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
+ * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
+ * @package			cake
+ * @subpackage		cake.cake.libs.model.datasources.dbo
+ * @since			CakePHP(tm) v 0.10.5.1790
+ * @version			$Revision: 7296 $
+ * @modifiedby		$LastChangedBy: gwoo $
+ * @lastmodified	$Date: 2008-06-27 02:09:03 -0700 (Fri, 27 Jun 2008) $
+ * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 /**
  * IBM DB2 for DBO
@@ -32,8 +35,8 @@
  * Sun Java DB) using the native ibm_db2 extension:
  * http://pecl.php.net/package/ibm_db2
  *
- * @package       cake
- * @subpackage    cake.cake.libs.model.datasources.dbo
+ * @package		cake
+ * @subpackage	cake.cake.libs.model.datasources.dbo
  */
 class DboDb2 extends DboSource {
 /**
@@ -115,7 +118,7 @@ class DboDb2 extends DboSource {
 		if ($config['cataloged']) {
 			$this->connection = $connect($config['database'], $config['login'], $config['password']);
 		} else {
-			$connString = sprintf(
+			$conn_string = sprintf(
 				"DRIVER={IBM DB2 ODBC DRIVER};DATABASE=%s;HOSTNAME=%s;PORT=%d;PROTOCOL=TCPIP;UID=%s;PWD=%s;",
 				$config['database'],
 				$config['hostname'],
@@ -123,7 +126,7 @@ class DboDb2 extends DboSource {
 				$config['login'],
 				$config['password']
 			);
-			$this->connection = db2_connect($connString, '', '');
+			$this->connection = db2_connect($conn_string, '', '');
 		}
 
 		if ($this->connection) {
@@ -134,14 +137,6 @@ class DboDb2 extends DboSource {
 			$this->_execute('SET CURRENT SCHEMA = ' . $config['schema']);
 		}
 		return $this->connected;
-	}
-/**
- * Check that the DB2 extension is installed/loaded
- *
- * @return boolean
- **/
-	function enabled() {
-		return extension_loaded('ibm_db2');
 	}
 /**
  * Disconnects from database.
@@ -166,15 +161,15 @@ class DboDb2 extends DboSource {
 		// get result from db
 		$result = db2_exec($this->connection, $sql);
 
-		if (!is_bool($result)) {
+		if(!is_bool($result)){
 			// build table/column map for this result
 			$map = array();
-			$numFields = db2_num_fields($result);
+			$num_fields = db2_num_fields($result);
 			$index = 0;
 			$j = 0;
 			$offset = 0;
 
-			while ($j < $numFields) {
+			while ($j < $num_fields) {
 				$columnName = strtolower(db2_field_name($result, $j));
 				$tmp = strpos($sql, '.' . $columnName, $offset);
 				$tableName = substr($sql, $offset, ($tmp-$offset));
@@ -255,6 +250,7 @@ class DboDb2 extends DboSource {
  * @return string Quoted and escaped
  * @todo Add logic that formats/escapes data based on column type
  */
+
 	function value($data, $column = null, $safe = false) {
 		$parent = parent::value($data, $column, $safe);
 
@@ -282,10 +278,13 @@ class DboDb2 extends DboSource {
 			break;
 		}
 
-		if ($column == 'integer' || $column == 'float') {
+		// TODO: Make sure this isn't catching other numeric values
+		// that are going into string columns.
+		if ($column == 'integer' || is_numeric($data)) {
 			return $data;
+		} else {
+			return "'" . $data . "'";
 		}
-		return "'" . $data . "'";
 	}
 /**
  * Not sure about this one, MySQL needs it but does ODBC?  Safer just to leave it
@@ -520,8 +519,8 @@ class DboDb2 extends DboSource {
  * do not correspond to a particular model belong under array
  * key 0.
  *
- * 1. Gets the column headers
- * {{{
+ * 1.  Gets the column headers
+ *
  * Post.id
  * Post.title
  *
@@ -536,7 +535,7 @@ class DboDb2 extends DboSource {
  *          [0] => Post
  *          [1] => title
  *      )
- * }}}
+ *
  * @param unknown_type $results
  */
 	function resultSet(&$results, $sql = null) {
@@ -564,8 +563,9 @@ class DboDb2 extends DboSource {
 				$i++;
 			}
 			return $resultRow;
+		} else {
+			return false;
 		}
-		return false;
 	}
 }
 ?>

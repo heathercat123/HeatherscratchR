@@ -1,8 +1,8 @@
 <?php
-$output = "<h2>Sweet, \"" . Inflector::humanize($app) . "\" got Baked by CakePHP!</h2>\n";
+$output = "<h2>Sweet, \"".Inflector::humanize($app)."\" got Baked by CakePHP!</h2>\n";
 $output .="
 <?php
-if (Configure::read() > 0):
+if(Configure::read() > 0):
 	Debugger::checkSessionKey();
 endif;
 ?>

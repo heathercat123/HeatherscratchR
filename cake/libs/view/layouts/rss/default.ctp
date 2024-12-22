@@ -13,4 +13,5 @@ echo $rss->document(
 		array(), $channel, $content_for_layout
 	)
 );
+
 ?>

@@ -1,5 +1,5 @@
 <?php
-/* SVN FILE: $Id$ */
+/* SVN FILE: $Id: acl.php 7118 2008-06-04 20:49:29Z gwoo $ */
 /**
  * Short description for file.
  *
@@ -7,35 +7,38 @@
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
+ * Copyright 2005-2008, Cake Software Foundation, Inc.
+ *								1785 E. Sahara Avenue, Suite 490-204
+ *								Las Vegas, Nevada 89104
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @package       cake
- * @subpackage    cake.cake.console.libs
- * @since         CakePHP(tm) v 1.2.0.5012
- * @version       $Revision$
- * @modifiedby    $LastChangedBy$
- * @lastmodified  $Date$
- * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @filesource
+ * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
+ * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
+ * @package			cake
+ * @subpackage		cake.cake.console.libs
+ * @since			CakePHP(tm) v 1.2.0.5012
+ * @version			$Revision: 7118 $
+ * @modifiedby		$LastChangedBy: gwoo $
+ * @lastmodified	$Date: 2008-06-04 13:49:29 -0700 (Wed, 04 Jun 2008) $
+ * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 App::import('Component', 'Acl');
 App::import('Model', 'DbAcl');
 /**
  * Shell for ACL management.
  *
- * @package       cake
- * @subpackage    cake.cake.console.libs
+ * @package		cake
+ * @subpackage	cake.cake.console.libs
  */
 class AclShell extends Shell {
 /**
  * Contains instance of AclComponent
  *
- * @var AclComponent
+ * @var object
  * @access public
  */
 	var $Acl;
@@ -204,7 +207,7 @@ class AclShell extends Shell {
 		extract($this->__dataVars());
 		$data = array(
 			$class => array(
-				'id' => $this->args[1],
+				'id' 		=> $this->args[1],
 				'parent_id' => $this->args[2]
 			)
 		);
@@ -224,7 +227,7 @@ class AclShell extends Shell {
 		$this->_checkArgs(2, 'getPath');
 		$this->checkNodeType();
 		extract($this->__dataVars());
-		$id = is_numeric($this->args[1]) ? intval($this->args[1]) : $this->args[1];
+		$id = ife(is_numeric($this->args[1]), intval($this->args[1]), $this->args[1]);
 		$nodes = $this->Acl->{$class}->getPath($id);
 		if (empty($nodes)) {
 			$this->error(sprintf(__("Supplied Node '%s' not found", true), $this->args[1]), __("No tree returned.", true));
@@ -303,7 +306,7 @@ class AclShell extends Shell {
 		$this->checkNodeType();
 		extract($this->__dataVars());
 		if (isset($this->args[1]) && !is_null($this->args[1])) {
-			$key = is_numeric($this->args[1]) ? $secondary_id : 'alias';
+			$key = ife(is_numeric($this->args[1]), $secondary_id, 'alias');
 			$conditions = array($class . '.' . $key => $this->args[1]);
 		} else {
 			$conditions = null;
@@ -335,12 +338,7 @@ class AclShell extends Shell {
 			}
 			$last   = $n[$class]['rght'];
 			$count  = count($stack);
-			$indent = str_repeat('  ', $count);
-			if ($n[$class]['alias']) {
-				$this->out($indent . "[" . $n[$class]['id'] . "]" . $n[$class]['alias']."\n");
-			 } else {
-				$this->out($indent . "[" . $n[$class]['id'] . "]" . $n[$class]['model'] . '.' . $n[$class]['foreign_key'] . "\n");
-			}
+			$this->out(str_repeat('  ', $count) . "[" . $n[$class]['id'] . "]" . $n[$class]['alias']."\n");
 		}
 		$this->hr();
 	}
@@ -424,8 +422,8 @@ class AclShell extends Shell {
 			foreach ($commands as $cmd) {
 				$this->out("{$cmd}\n\n");
 			}
-		} elseif (isset($commands[strtolower($this->args[0])])) {
-			$this->out($commands[strtolower($this->args[0])] . "\n\n");
+		} elseif (isset($commands[low($this->args[0])])) {
+			$this->out($commands[low($this->args[0])] . "\n\n");
 		} else {
 			$this->out(sprintf(__("Command '%s' not found", true), $this->args[0]));
 		}
@@ -456,7 +454,7 @@ class AclShell extends Shell {
 			return false;
 		}
 		extract($this->__dataVars($this->args[0]));
-		$key = is_numeric($this->args[1]) ? $secondary_id : 'alias';
+		$key = (ife(is_numeric($this->args[1]), $secondary_id, 'alias'));
 		$conditions = array($class . '.' . $key => $this->args[1]);
 		$possibility = $this->Acl->{$class}->find('all', compact('conditions'));
 		if (empty($possibility)) {
@@ -471,8 +469,8 @@ class AclShell extends Shell {
  * @access private
  */
 	function __getParams() {
-		$aro = is_numeric($this->args[0]) ? intval($this->args[0]) : $this->args[0];
-		$aco = is_numeric($this->args[1]) ? intval($this->args[1]) : $this->args[1];
+		$aro = ife(is_numeric($this->args[0]), intval($this->args[0]), $this->args[0]);
+		$aco = ife(is_numeric($this->args[1]), intval($this->args[1]), $this->args[1]);
 
 		if (is_string($aro) && preg_match('/^([\w]+)\.(.*)$/', $aro, $matches)) {
 			$aro = array(
@@ -511,7 +509,7 @@ class AclShell extends Shell {
 		}
 		$vars = array();
 		$class = ucwords($type);
-		$vars['secondary_id'] = strtolower($class) == 'aro' ? 'foreign_key' : 'object_id';
+		$vars['secondary_id'] = ife(strtolower($class) == 'aro', 'foreign_key', 'object_id');
 		$vars['data_name'] = $type;
 		$vars['table_name'] = $type . 's';
 		$vars['class'] = $class;

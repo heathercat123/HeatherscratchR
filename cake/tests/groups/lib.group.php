@@ -1,60 +1,60 @@
 <?php
-/* SVN FILE: $Id$ */
+/* SVN FILE: $Id: lib.group.php 7296 2008-06-27 09:09:03Z gwoo $ */
 /**
- * LibGroupTest file
+ * Short description for file.
  *
  * Long description for file
  *
  * PHP versions 4 and 5
  *
  * CakePHP(tm) Tests <https://trac.cakephp.org/wiki/Developement/TestSuite>
- * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * Copyright 2005-2008, Cake Software Foundation, Inc.
+ *								1785 E. Sahara Avenue, Suite 490-204
+ *								Las Vegas, Nevada 89104
  *
  *  Licensed under The Open Group Test Suite License
  *  Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
- * @package       cake
- * @subpackage    cake.tests.groups
- * @since         CakePHP(tm) v 1.2.0.4206
- * @version       $Revision$
- * @modifiedby    $LastChangedBy$
- * @lastmodified  $Date$
- * @license       http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
+ * @filesource
+ * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
+ * @link				https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
+ * @package			cake.tests
+ * @subpackage		cake.tests.groups
+ * @since			CakePHP(tm) v 1.2.0.4206
+ * @version			$Revision: 7296 $
+ * @modifiedby		$LastChangedBy: gwoo $
+ * @lastmodified	$Date: 2008-06-27 02:09:03 -0700 (Fri, 27 Jun 2008) $
+ * @license			http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
  */
-/**
- * LibGroupTest class
+/** AllCoreLibGroupTest
  *
  * This test group will run all test in the cases/libs directory.
  *
- * @package       cake
- * @subpackage    cake.tests.groups
+ * @package    cake.tests
+ * @subpackage cake.tests.groups
  */
-class LibGroupTest extends GroupTest {
+/**
+ * AllCoreLibGroupTest class
+ * 
+ * @package              cake
+ * @subpackage           cake.tests.groups
+ */
+class AllCoreLibGroupTest extends GroupTest {
 /**
  * label property
- *
+ * 
  * @var string 'All cake/libs/* (Not yet implemented)'
  * @access public
  */
-	var $label = 'All core, non MVC element libs';
+	var $label = 'All cake/libs/* (Not yet implemented)';
 /**
- * LibGroupTest method
- *
+ * AllCoreLibGroupTest method
+ * 
  * @access public
  * @return void
  */
-	function LibGroupTest() {
-		TestManager::addTestFile($this, CORE_TEST_CASES . DS . 'libs' . DS . 'cake_log');
-		TestManager::addTestFile($this, CORE_TEST_CASES . DS . 'libs' . DS . 'class_registry');
-		TestManager::addTestFile($this, CORE_TEST_CASES . DS . 'libs' . DS . 'inflector');
-		TestManager::addTestFile($this, CORE_TEST_CASES . DS . 'libs' . DS . 'overloadable');
-		TestManager::addTestFile($this, CORE_TEST_CASES . DS . 'libs' . DS . 'sanitize');
-		TestManager::addTestFile($this, CORE_TEST_CASES . DS . 'libs' . DS . 'security');
-		TestManager::addTestFile($this, CORE_TEST_CASES . DS . 'libs' . DS . 'set');
-		TestManager::addTestFile($this, CORE_TEST_CASES . DS . 'libs' . DS . 'string');
-		TestManager::addTestFile($this, CORE_TEST_CASES . DS . 'libs' . DS . 'validation');
+	function AllCoreLibGroupTest() {
+		TestManager::addTestCasesFromDirectory($this, CORE_TEST_CASES . DS . 'libs');
 	}
 }
 ?>

@@ -1,5 +1,5 @@
 <?php
-/* SVN FILE: $Id$ */
+/* SVN FILE: $Id: schema.test.php 7296 2008-06-27 09:09:03Z gwoo $ */
 /**
  * Test for Schema database management
  *
@@ -7,27 +7,31 @@
  * PHP versions 4 and 5
  *
  * CakePHP(tm) Tests <https://trac.cakephp.org/wiki/Developement/TestSuite>
- * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * Copyright 2005-2008, Cake Software Foundation, Inc.
+ *								1785 E. Sahara Avenue, Suite 490-204
+ *								Las Vegas, Nevada 89104
  *
  *  Licensed under The Open Group Test Suite License
  *  Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
- * @package       cake
- * @subpackage    cake.tests.cases.libs
- * @since         CakePHP(tm) v 1.2.0.5550
- * @version       $Revision$
- * @modifiedby    $LastChangedBy$
- * @lastmodified  $Date$
- * @license       http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
+ * @filesource
+ * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
+ * @link				https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
+ * @package			cake.tests
+ * @subpackage		cake.tests.cases.libs
+ * @since			CakePHP(tm) v 1.2.0.5550
+ * @version			$Revision: 7296 $
+ * @modifiedby		$LastChangedBy: gwoo $
+ * @lastmodified	$Date: 2008-06-27 02:09:03 -0700 (Fri, 27 Jun 2008) $
+ * @license			http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
  */
 App::import('Core', 'Schema');
+
 /**
  * Test for Schema database management
  *
- * @package       cake
- * @subpackage    cake.tests.cases.libs
+ * @package		cake.tests
+ * @subpackage	cake.tests.cases.libs
  */
 class MyAppSchema extends CakeSchema {
 /**
@@ -51,15 +55,15 @@ class MyAppSchema extends CakeSchema {
  * @access public
  */
 	var $comments = array(
-		'id' => array('type' => 'integer', 'null' => false, 'default' => 0, 'key' => 'primary'),
-		'post_id' => array('type' => 'integer', 'null' => false, 'default' => 0),
-		'user_id' => array('type' => 'integer', 'null' => false),
-		'title' => array('type' => 'string', 'null' => false, 'length' => 100),
-		'comment' => array('type' => 'text', 'null' => false, 'default' => null),
-		'published' => array('type' => 'string', 'null' => true, 'default' => 'N', 'length' => 1),
-		'created' => array('type' => 'datetime', 'null' => true, 'default' => null),
-		'updated' => array('type' => 'datetime', 'null' => true, 'default' => null),
-		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => true)),
+		'id' => array('type'=>'integer', 'null' => false, 'default'=> 0, 'key' => 'primary'),
+		'post_id' => array('type'=>'integer', 'null' => false, 'default'=> 0),
+		'user_id' => array('type'=>'integer', 'null' => false),
+		'title' => array('type'=>'string', 'null' => false, 'length'=> 100),
+		'comment' => array('type'=>'text', 'null' => false, 'default'=> null),
+		'published' => array('type'=>'string', 'null' => true, 'default' => 'N', 'length' => 1),
+		'created' => array('type'=>'datetime', 'null' => true, 'default'=> null),
+		'updated' => array('type'=>'datetime', 'null' => true, 'default'=> null),
+		'indexes' => array('PRIMARY'=>array('column'=>'id', 'unique' => true)),
 	);
 /**
  * posts property
@@ -68,15 +72,15 @@ class MyAppSchema extends CakeSchema {
  * @access public
  */
 	var $posts = array(
-		'id' => array('type' => 'integer', 'null' => false, 'default' => 0, 'key' => 'primary'),
-		'author_id' => array('type' => 'integer', 'null' => true, 'default' => ''),
-		'title' => array('type' => 'string', 'null' => false, 'default' => 'Title'),
-		'body' => array('type' => 'text', 'null' => true, 'default' => null),
-		'summary' => array('type' => 'text', 'null' => true),
-		'published' => array('type' => 'string', 'null' => true, 'default' => 'Y', 'length' => 1),
-		'created' => array('type' => 'datetime', 'null' => true, 'default' => null),
-		'updated' => array('type' => 'datetime', 'null' => true, 'default' => null),
-		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => true)),
+		'id' => array('type'=>'integer', 'null' => false, 'default'=> 0, 'key' => 'primary'),
+		'author_id' => array('type'=>'integer', 'null' => true, 'default'=> ''),
+		'title' => array('type'=>'string', 'null' => false, 'default'=> 'Title'),
+		'body' => array('type'=>'text', 'null' => true, 'default'=> null),
+		'summary'=>array('type'=> 'text', 'null'=> true),
+		'published' => array('type'=>'string', 'null' => true, 'default' => 'Y', 'length' => 1),
+		'created' => array('type'=>'datetime', 'null' => true, 'default'=> null),
+		'updated' => array('type'=>'datetime', 'null' => true, 'default'=> null),
+		'indexes' => array('PRIMARY'=>array('column'=>'id', 'unique' => true)),
 	);
 /**
  * setup method
@@ -100,8 +104,8 @@ class MyAppSchema extends CakeSchema {
 /**
  * TestAppSchema class
  *
- * @package       cake
- * @subpackage    cake.tests.cases.libs.model
+ * @package              cake
+ * @subpackage           cake.tests.cases.libs.model
  */
 class TestAppSchema extends CakeSchema {
 /**
@@ -118,15 +122,15 @@ class TestAppSchema extends CakeSchema {
  * @access public
  */
 	var $comments = array(
-		'id' => array('type' => 'integer', 'null' => false, 'default' => 0,'key' => 'primary'),
-		'article_id' => array('type' => 'integer', 'null' => false),
-		'user_id' => array('type' => 'integer', 'null' => false),
-		'comment' => array('type' => 'text', 'null' => true, 'default' => null),
-		'published' => array('type' => 'string', 'null' => true, 'default' => 'N', 'length' => 1),
-		'created' => array('type' => 'datetime', 'null' => true, 'default' => null),
-		'updated' => array('type' => 'datetime', 'null' => true, 'default' => null),
-		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => true)),
-	);
+			'id' => array('type'=>'integer', 'null' => false, 'default'=> 0,'key' => 'primary'),
+			'article_id' => array('type'=>'integer', 'null' => false),
+			'user_id' => array('type'=>'integer', 'null' => false),
+			'comment' => array('type'=>'text', 'null' => true, 'default'=> null),
+			'published' => array('type'=>'string', 'null' => true, 'default' => 'N', 'length' => 1),
+			'created' => array('type'=>'datetime', 'null' => true, 'default'=> null),
+			'updated' => array('type'=>'datetime', 'null' => true, 'default'=> null),
+			'indexes' => array('PRIMARY'=>array('column'=>'id', 'unique' => true)),
+		);
 /**
  * posts property
  *
@@ -134,15 +138,15 @@ class TestAppSchema extends CakeSchema {
  * @access public
  */
 	var $posts = array(
-		'id' => array('type' => 'integer', 'null' => false, 'default' => 0, 'key' => 'primary'),
-		'author_id' => array('type' => 'integer', 'null' => false),
-		'title' => array('type' => 'string', 'null' => false),
-		'body' => array('type' => 'text', 'null' => true, 'default' => null),
-		'published' => array('type' => 'string', 'null' => true, 'default' => 'N', 'length' => 1),
-		'created' => array('type' => 'datetime', 'null' => true, 'default' => null),
-		'updated' => array('type' => 'datetime', 'null' => true, 'default' => null),
-		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => true)),
-	);
+			'id' => array('type'=>'integer', 'null' => false, 'default'=> 0, 'key' => 'primary'),
+			'author_id' => array('type'=>'integer', 'null' => false),
+			'title' => array('type'=>'string', 'null' => false),
+			'body' => array('type'=>'text', 'null' => true, 'default'=> null),
+			'published' => array('type'=>'string', 'null' => true, 'default' => 'N', 'length' => 1),
+			'created' => array('type'=>'datetime', 'null' => true, 'default'=> null),
+			'updated' => array('type'=>'datetime', 'null' => true, 'default'=> null),
+			'indexes' => array('PRIMARY'=>array('column'=>'id', 'unique' => true)),
+		);
 /**
  * posts_tags property
  *
@@ -151,8 +155,8 @@ class TestAppSchema extends CakeSchema {
  */
 	var $posts_tags = array(
 		'post_id' => array('type' => 'integer', 'null' => false, 'key' => 'primary'),
-		'tag_id' => array('type' => 'string', 'null' => false, 'key' => 'primary'),
-		'indexes' => array('posts_tag' => array('column' => array('tag_id', 'post_id'), 'unique' => 1))
+		'tag_id' => array('type' => 'string', 'null' => false),
+		'indexes' => array()
 	);
 /**
  * tags property
@@ -161,11 +165,11 @@ class TestAppSchema extends CakeSchema {
  * @access public
  */
 	var $tags = array(
-		'id' => array('type' => 'integer', 'null' => false, 'default' => 0, 'key' => 'primary'),
+		'id' => array('type' => 'integer', 'null'=> false, 'default'=> 0, 'key' => 'primary'),
 		'tag' => array('type' => 'string', 'null' => false),
-		'created' => array('type' => 'datetime', 'null' => true, 'default' => null),
-		'updated' => array('type' => 'datetime', 'null' => true, 'default' => null),
-		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => true))
+		'created' => array('type' => 'datetime', 'null' => true, 'default'=> null),
+		'updated' => array('type' => 'datetime', 'null' => true, 'default'=> null),
+		'indexes' => array('PRIMARY'=>array('column'=>'id', 'unique' => true)),
 	);
 /**
  * datatypes property
@@ -174,9 +178,9 @@ class TestAppSchema extends CakeSchema {
  * @access public
  */
 	var $datatypes = array(
-		'id' => array('type' => 'integer', 'null' => false, 'default' => 0, 'key' => 'primary'),
+		'id' => array('type' => 'integer', 'null'=> false, 'default'=> 0, 'key' => 'primary'),
 		'float_field' => array('type' => 'float', 'null' => false, 'length' => '5,2'),
-		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => true))
+		'indexes' => array('PRIMARY'=>array('column'=>'id', 'unique' => true)),
 	);
 /**
  * setup method
@@ -198,10 +202,10 @@ class TestAppSchema extends CakeSchema {
 	}
 }
 /**
- * SchmeaPost class
+ * Short description for class.
  *
- * @package       cake
- * @subpackage    cake.tests.cases.libs.model
+ * @package		cake.tests
+ * @subpackage	cake.tests.cases.libs.model
  */
 class SchemaPost extends CakeTestModel {
 /**
@@ -232,12 +236,13 @@ class SchemaPost extends CakeTestModel {
  * @access public
  */
 	var $hasAndBelongsToMany = array('SchemaTag');
+
 }
 /**
- * SchemaComment class
+ * Short description for class.
  *
- * @package       cake
- * @subpackage    cake.tests.cases.libs.model
+ * @package		cake.tests
+ * @subpackage	cake.tests.cases.libs.model
  */
 class SchemaComment extends CakeTestModel {
 /**
@@ -263,10 +268,10 @@ class SchemaComment extends CakeTestModel {
 	var $belongsTo = array('SchemaPost');
 }
 /**
- * SchemaTag class
+ * Short description for class.
  *
- * @package       cake
- * @subpackage    cake.tests.cases.libs.model
+ * @package		cake.tests
+ * @subpackage	cake.tests.cases.libs.model
  */
 class SchemaTag extends CakeTestModel {
 /**
@@ -292,10 +297,10 @@ class SchemaTag extends CakeTestModel {
 	var $hasAndBelongsToMany = array('SchemaPost');
 }
 /**
- * SchemaDatatype class
+ * Short description for class.
  *
- * @package       cake
- * @subpackage    cake.tests.cases.libs.model
+ * @package		cake.tests
+ * @subpackage	cake.tests.cases.libs.model
  */
 class SchemaDatatype extends CakeTestModel {
 /**
@@ -314,30 +319,32 @@ class SchemaDatatype extends CakeTestModel {
 	var $useTable = 'datatypes';
 }
 /**
- * Testdescribe class
+ * PostsTag class
  *
- * This class is defined purely to inherit the cacheSources variable otherwise
- * testSchemaCreatTable will fail if listSources has already been called and
- * its source cache populated - I.e. if the test is run within a group
- *
- * @uses          CakeTestModel
- * @package
- * @subpackage    cake.tests.cases.libs.model
+ * @package              cake
+ * @subpackage           cake.tests.cases.libs.model
  */
-class Testdescribe extends CakeTestModel {
+class PostsTag extends CakeTestModel {
 /**
  * name property
  *
- * @var string 'Testdescribe'
+ * @var string 'PostsTag'
  * @access public
  */
-	var $name = 'Testdescribe';
+	var $name = 'PostsTag';
+/**
+ * useTable property
+ *
+ * @var string 'posts_tags'
+ * @access public
+ */
+	var $useTable = 'posts_tags';
 }
 /**
- * CakeSchemaTest
+ * Short description for class.
  *
- * @package       cake
- * @subpackage    cake.tests.cases.libs
+ * @package    cake.tests
+ * @subpackage cake.tests.cases.libs
  */
 class CakeSchemaTest extends CakeTestCase {
 /**
@@ -353,17 +360,8 @@ class CakeSchemaTest extends CakeTestCase {
  * @access public
  * @return void
  */
-	function startTest() {
+	function setUp() {
 		$this->Schema = new TestAppSchema();
-	}
-/**
- * tearDown method
- *
- * @access public
- * @return void
- */
-	function tearDown() {
-		unset($this->Schema);
 	}
 /**
  * testSchemaName method
@@ -388,26 +386,10 @@ class CakeSchemaTest extends CakeTestCase {
  * @return void
  */
 	function testSchemaRead() {
-
-		$read = $this->Schema->read(array(
-			'connection' => 'test_suite',
-			'name' => 'TestApp',
-			'models' => array('SchemaPost', 'SchemaComment', 'SchemaTag', 'SchemaDatatype')
-		));
+		$read = $this->Schema->read(array('connection'=>'test_suite', 'name'=>'TestApp', 'models' => array('SchemaPost', 'SchemaComment', 'SchemaTag', 'SchemaDatatype')));
 		unset($read['tables']['missing']);
-
 		$this->assertEqual($read['tables'], $this->Schema->tables);
-		$this->assertIdentical(
-			$read['tables']['datatypes']['float_field'],
-			$this->Schema->tables['datatypes']['float_field']
-		);
-
-		$db =& ConnectionManager::getDataSource('test_suite');
-		$config = $db->config;
-		$config['prefix'] = 'schema_test_prefix_';
-		ConnectionManager::create('schema_prefix', $config);
-		$read = $this->Schema->read(array('connection' => 'schema_prefix', 'models' => false));
-		$this->assertTrue(empty($read['tables']));
+		$this->assertIdentical($read['tables']['datatypes']['float_field'], $this->Schema->tables['datatypes']['float_field']);
 	}
 /**
  * testSchemaWrite method
@@ -416,7 +398,8 @@ class CakeSchemaTest extends CakeTestCase {
  * @return void
  */
 	function testSchemaWrite() {
-		$write = $this->Schema->write(array('name' => 'MyOtherApp', 'tables' => $this->Schema->tables, 'path' => TMP . 'tests'));
+
+		$write = $this->Schema->write(array('name'=>'MyOtherApp', 'tables'=> $this->Schema->tables, 'path'=> TMP . 'tests'));
 		$file = file_get_contents(TMP . 'tests' . DS .'schema.php');
 		$this->assertEqual($write, $file);
 
@@ -435,63 +418,23 @@ class CakeSchemaTest extends CakeTestCase {
 		$New = new MyAppSchema();
 		$compare = $New->compare($this->Schema);
 		$expected = array(
-			'comments' => array(
-				'add' => array(
-					'post_id' => array('type' => 'integer', 'null' => false, 'default' => 0),
-					'title' => array('type' => 'string', 'null' => false, 'length' => 100)
-				),
-				'drop' => array('article_id' => array('type' => 'integer', 'null' => false)),
-				'change' => array(
-					'comment' => array('type' => 'text', 'null' => false, 'default' => null)
-				)
-			),
-			'posts' => array(
-				'add' => array('summary' => array('type' => 'text', 'null' => 1)),
-				'change' => array(
-					'author_id' => array('type' => 'integer', 'null' => true, 'default' => ''),
-					'title' => array('type' => 'string', 'null' => false, 'default' => 'Title'),
-					'published' => array(
-						'type' => 'string', 'null' => true, 'default' => 'Y', 'length' => '1'
-					)
-				)
-			),
-		);
-		$this->assertEqual($expected, $compare);
+					'comments'=> array(
+						'add'=> array('post_id'=> array('type'=> 'integer', 'null'=> false, 'default'=> 0),
+										'title'=> array('type'=> 'string', 'null'=> false, 'length'=> 100)
+									),
+						'drop'=> array('article_id'=> array('type'=> 'integer', 'null'=> false)),
+						'change'=> array('comment'=> array('type'=>'text', 'null'=> false, 'default'=> null))
 
-		$tables = array(
-			'missing' => array(
-				'categories' => array(
-					'id' => array('type' => 'integer', 'null' => false, 'default' => NULL, 'key' => 'primary'),
-					'created' => array('type' => 'datetime', 'null' => false, 'default' => NULL),
-					'modified' => array('type' => 'datetime', 'null' => false, 'default' => NULL),
-					'name' => array('type' => 'string', 'null' => false, 'default' => NULL, 'length' => 100),
-					'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1))
-				)
-			),
-			'ratings' => array(
-				'id' => array('type' => 'integer', 'null' => false, 'default' => NULL, 'key' => 'primary'),
-				'foreign_key' => array('type' => 'integer', 'null' => false, 'default' => NULL),
-				'model' => array('type' => 'varchar', 'null' => false, 'default' => NULL),
-				'value' => array('type' => 'float', 'null' => false, 'length' => '5,2', 'default' => NULL),
-				'created' => array('type' => 'datetime', 'null' => false, 'default' => NULL),
-				'modified' => array('type' => 'datetime', 'null' => false, 'default' => NULL),
-				'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1))
-			)
-		);
-		$compare = $New->compare($this->Schema, $tables);
-		$expected = array(
-			'ratings' => array(
-				'add' => array(
-					'id' => array('type' => 'integer', 'null' => false, 'default' => NULL, 'key' => 'primary'),
-					'foreign_key' => array('type' => 'integer', 'null' => false, 'default' => NULL),
-					'model' => array('type' => 'varchar', 'null' => false, 'default' => NULL),
-					'value' => array('type' => 'float', 'null' => false, 'length' => '5,2', 'default' => NULL),
-					'created' => array('type' => 'datetime', 'null' => false, 'default' => NULL),
-					'modified' => array('type' => 'datetime', 'null' => false, 'default' => NULL),
-					'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1))
-				)
-			)
-		);
+						),
+					'posts'=> array(
+						'add'=> array('summary'=>array('type'=> 'text', 'null'=> 1)),
+						'change'=> array('author_id'=> array('type'=>'integer', 'null'=> true, 'default'=> ''),
+										'title'=> array('type'=>'string', 'null'=> false, 'default'=> 'Title'),
+										'published'=> array('type'=>'string', 'null'=> true, 'default'=>'Y', 'length'=> '1')
+									),
+						),
+					);
+
 		$this->assertEqual($expected, $compare);
 	}
 /**
@@ -501,7 +444,7 @@ class CakeSchemaTest extends CakeTestCase {
  * @return void
  */
 	function testSchemaLoading() {
-		$Other = $this->Schema->load(array('name' => 'MyOtherApp', 'path' => TMP . 'tests'));
+		$Other = $this->Schema->load(array('name'=>'MyOtherApp', 'path'=> TMP . 'tests'));
 		$this->assertEqual($Other->name, 'MyOtherApp');
 		$this->assertEqual($Other->tables, $this->Schema->tables);
 	}
@@ -513,27 +456,28 @@ class CakeSchemaTest extends CakeTestCase {
  */
 	function testSchemaCreateTable() {
 		$db =& ConnectionManager::getDataSource('test_suite');
-		$db->cacheSources = false;
+		$db->query('CREATE TABLE ' . $db->fullTableName('testdescribes') . ' (id int(11) AUTO_INCREMENT, int_null int(10) unsigned NULL, int_not_null int(10) unsigned NOT NULL, primary key(id));');
 
-		$Schema =& new CakeSchema(array(
-			'connection' => 'test_suite',
-			'testdescribes' => array(
-				'id' => array('type' => 'integer', 'key' => 'primary'),
-				'int_null' => array('type' => 'integer', 'null' => true),
-				'int_not_null' => array('type' => 'integer', 'null' => false),
-			),
-		));
+		$Schema =& new CakeSchema(array('connection' => 'test_suite'));
+		$read = $Schema->read(array('models' => array('Testdescribe')));
+		unset($read['tables']['missing']);
+		$Schema->tables = $read['tables'];
+
 		$sql = $db->createSchema($Schema);
 
-		$col = $Schema->tables['testdescribes']['int_null'];
-		$col['name'] = 'int_null';
-		$column = $this->db->buildColumn($col);
-		$this->assertPattern('/' . preg_quote($column, '/') . '/', $sql);
+		$this->assertPattern('/`int_null` int\(10\) DEFAULT NULL/', $sql);
+		$this->assertPattern('/`int_not_null` int\(10\) NOT NULL/', $sql);
 
-		$col = $Schema->tables['testdescribes']['int_not_null'];
-		$col['name'] = 'int_not_null';
-		$column = $this->db->buildColumn($col);
-		$this->assertPattern('/' . preg_quote($column, '/') . '/', $sql);
+		$db->query('DROP TABLE ' . $this->db->fullTableName('testdescribes'));
+	}
+/**
+ * tearDown method
+ *
+ * @access public
+ * @return void
+ */
+	function tearDown() {
+		unset($this->Schema);
 	}
 }
 ?>

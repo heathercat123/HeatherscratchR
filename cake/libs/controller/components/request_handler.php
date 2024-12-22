@@ -1,27 +1,30 @@
 <?php
-/* SVN FILE: $Id$ */
+/* SVN FILE: $Id: request_handler.php 7118 2008-06-04 20:49:29Z gwoo $ */
 /**
  * Request object for handling alternative HTTP requests
  *
- * Alternative HTTP requests can come from wireless units like mobile phones, palmtop computers,
- * and the like.  These units have no use for Ajax requests, and this Component can tell how Cake
- * should respond to the different needs of a handheld computer and a desktop machine.
+ * Alternative HTTP requests can come from wireless units like mobile phones, palmtop computers, and the like.
+ * These units have no use for Ajax requests, and this Component can tell how Cake should respond to the different
+ * needs of a handheld computer and a desktop machine.
  *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
+ * Copyright 2005-2008, Cake Software Foundation, Inc.
+ *								1785 E. Sahara Avenue, Suite 490-204
+ *								Las Vegas, Nevada 89104
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @package       cake
- * @subpackage    cake.cake.libs.controller.components
- * @since         CakePHP(tm) v 0.10.4.1076
- * @version       $Revision$
- * @modifiedby    $LastChangedBy$
- * @lastmodified  $Date$
- * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @filesource
+ * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
+ * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
+ * @package			cake
+ * @subpackage		cake.cake.libs.controller.components
+ * @since			CakePHP(tm) v 0.10.4.1076
+ * @version			$Revision: 7118 $
+ * @modifiedby		$LastChangedBy: gwoo $
+ * @lastmodified	$Date: 2008-06-04 13:49:29 -0700 (Wed, 04 Jun 2008) $
+ * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 
 if (!defined('REQUEST_MOBILE_UA')) {
@@ -31,8 +34,8 @@ if (!defined('REQUEST_MOBILE_UA')) {
 /**
  * Request object for handling HTTP requests
  *
- * @package       cake
- * @subpackage    cake.cake.libs.controller.components
+ * @package		cake
+ * @subpackage	cake.cake.libs.controller.components
  *
  */
 class RequestHandlerComponent extends Object {
@@ -91,11 +94,7 @@ class RequestHandlerComponent extends Object {
 		'rss'			=> 'application/rss+xml',
 		'atom'			=> 'application/atom+xml',
 		'amf'			=> 'application/x-amf',
-		'wap'			=> array(
-			'text/vnd.wap.wml',
-			'text/vnd.wap.wmlscript',
-			'image/vnd.wap.wbmp'
-		),
+		'wap'			=> array('text/vnd.wap.wml', 'text/vnd.wap.wmlscript', 'image/vnd.wap.wbmp'),
 		'wml'			=> 'text/vnd.wap.wml',
 		'wmlscript'		=> 'text/vnd.wap.wmlscript',
 		'wbmp'			=> 'image/vnd.wap.wbmp',
@@ -158,7 +157,6 @@ class RequestHandlerComponent extends Object {
  * as the first item.
  *
  * @param object $controller A reference to the controller
- * @return void
  * @see Router::parseExtensions()
  * @access public
  */
@@ -182,22 +180,16 @@ class RequestHandlerComponent extends Object {
  *   to the $data property of the controller, which can then be saved to a model object.
  *
  * @param object $controller A reference to the controller
- * @return void
  * @access public
  */
 	function startup(&$controller) {
 		if (!$this->enabled) {
 			return;
 		}
-
 		$this->__initializeTypes();
 		$controller->params['isAjax'] = $this->isAjax();
-		$isRecognized = (
-			!in_array($this->ext, array('html', 'htm')) &&
-			in_array($this->ext, array_keys($this->__requestContent))
-		);
 
-		if (!empty($this->ext) && $isRecognized) {
+		if (!empty($this->ext) && !in_array($this->ext, array('html', 'htm')) && in_array($this->ext, array_keys($this->__requestContent))) {
 			$this->renderAs($controller, $this->ext);
 		} elseif ($this->isAjax()) {
 			$this->renderAs($controller, 'ajax');
@@ -208,7 +200,6 @@ class RequestHandlerComponent extends Object {
 				App::import('Core', 'Xml');
 			}
 			$xml = new Xml(trim(file_get_contents('php://input')));
-
 			if (is_object($xml->child('data')) && count($xml->children) == 1) {
 				$controller->data = $xml->child('data');
 			} else {
@@ -230,9 +221,6 @@ class RequestHandlerComponent extends Object {
 		foreach ($_POST as $key => $val) {
 			unset($_POST[$key]);
 		}
-		if (is_array($url)) {
-			$url = Router::url($url + array('base' => false));
-		}
 		echo $this->requestAction($url, array('return'));
 		$this->_stop();
 	}
@@ -252,7 +240,7 @@ class RequestHandlerComponent extends Object {
  * @access public
  */
 	function isFlash() {
-		return (preg_match('/^(Shockwave|Adobe) Flash/', env('HTTP_USER_AGENT')) == 1);
+		return env('HTTP_USER_AGENT') === "Shockwave Flash";
 	}
 /**
  * Returns true if the current request is over HTTPS, false otherwise.
@@ -370,8 +358,7 @@ class RequestHandlerComponent extends Object {
  *
  * @param string $name The name of the Content-type, i.e. "html", "xml", "css"
  * @param mixed $type The Content-type or array of Content-types assigned to the name,
- *    i.e. "text/html", or "application/xml"
- * @return void
+ *                    i.e. "text/html", or "application/xml"
  * @access public
  */
 	function setContent($name, $type = null) {
@@ -389,13 +376,13 @@ class RequestHandlerComponent extends Object {
  */
 	function getReferrer() {
 		if (env('HTTP_HOST') != null) {
-			$sessHost = env('HTTP_HOST');
+			$sess_host = env('HTTP_HOST');
 		}
 
 		if (env('HTTP_X_FORWARDED_HOST') != null) {
-			$sessHost = env('HTTP_X_FORWARDED_HOST');
+			$sess_host = env('HTTP_X_FORWARDED_HOST');
 		}
-		return trim(preg_replace('/(?:\:.*)/', '', $sessHost));
+		return trim(preg_replace('/:.*/', '', $sess_host));
 	}
 /**
  * Gets remote client IP
@@ -403,9 +390,11 @@ class RequestHandlerComponent extends Object {
  * @return string Client IP address
  * @access public
  */
-	function getClientIP($safe = true) {
+	function getClientIP($safe = false) {
 		if (!$safe && env('HTTP_X_FORWARDED_FOR') != null) {
-			$ipaddr = preg_replace('/(?:,.*)/', '', env('HTTP_X_FORWARDED_FOR'));
+			//$ipaddr = preg_replace('/(?:,.*)/', '', env('HTTP_X_FORWARDED_FOR'));
+			$ipaddr = explode(",", env('HTTP_X_FORWARDED_FOR'));
+			$ipaddr = $ipaddr[sizeof($ipaddr)-1];
 		} else {
 			if (env('HTTP_CLIENT_IP') != null) {
 				$ipaddr = env('HTTP_CLIENT_IP');
@@ -429,11 +418,11 @@ class RequestHandlerComponent extends Object {
  * header.
  *
  * @param mixed $type Can be null (or no parameter), a string type name, or an
- *   array of types
+ *					array of types
  * @return mixed If null or no parameter is passed, returns an array of content
- *   types the client accepts.  If a string is passed, returns true
- *   if the client accepts it.  If an array is passed, returns true
- *   if the client accepts one or more elements in the array.
+ *				types the client accepts.  If a string is passed, returns true
+ *				if the client accepts it.  If an array is passed, returns true
+ *				if the client accepts one or more elements in the array.
  * @access public
  * @see RequestHandlerComponent::setContent()
  */
@@ -452,7 +441,7 @@ class RequestHandlerComponent extends Object {
 			return false;
 		} elseif (is_string($type)) {
 
-			if (!isset($this->__requestContent[$type])) {
+			if (!in_array($type, array_keys($this->__requestContent))) {
 				return false;
 			}
 
@@ -475,7 +464,6 @@ class RequestHandlerComponent extends Object {
  * Determines the content type of the data the client has sent (i.e. in a POST request)
  *
  * @param mixed $type Can be null (or no parameter), a string type name, or an array of types
- * @return mixed
  * @access public
  */
 	function requestedWith($type = null) {
@@ -483,9 +471,8 @@ class RequestHandlerComponent extends Object {
 			return null;
 		}
 
-		list($contentType) = explode(';', env('CONTENT_TYPE'));
 		if ($type == null) {
-			return $this->mapType($contentType);
+			return $this->mapType(env('CONTENT_TYPE'));
 		} elseif (is_array($type)) {
 			foreach ($type as $t) {
 				if ($this->requestedWith($t)) {
@@ -494,7 +481,7 @@ class RequestHandlerComponent extends Object {
 			}
 			return false;
 		} elseif (is_string($type)) {
-			return ($type == $this->mapType($contentType));
+			return ($type == $this->mapType(env('CONTENT_TYPE')));
 		}
 	}
 /**
@@ -506,66 +493,49 @@ class RequestHandlerComponent extends Object {
  * HTTP_ACCEPT.
  *
  * @param mixed $type An optional array of 'friendly' content-type names, i.e.
- *   'html', 'xml', 'js', etc.
+ *                     'html', 'xml', 'js', etc.
  * @return mixed If $type is null or not provided, the first content-type in the
- *    list, based on preference, is returned.
+ *                list, based on preference, is returned.
  * @access public
  * @see RequestHandlerComponent::setContent()
  */
 	function prefers($type = null) {
 		$this->__initializeTypes();
-		$accept = $this->accepts();
-
 		if ($type == null) {
 			if (empty($this->ext)) {
+				$accept = $this->accepts(null);
 				if (is_array($accept)) {
 					return $accept[0];
 				}
 				return $accept;
+			} else {
+				return $this->ext;
 			}
-			return $this->ext;
 		}
-
-		$types = $type;
-		if (is_string($type)) {
-			$types = array($type);
-		}
-
-		if (count($types) === 1) {
-			if (!empty($this->ext)) {
-				return ($types[0] == $this->ext);
-			}
-			return ($types[0] == $accept[0]);
-		}
+		App::import('Core', 'Set');
+		$types = Set::normalize($type, false);
 		$accepts = array();
 
 		foreach ($types as $type) {
-			if (in_array($type, $accept)) {
+			if ($this->accepts($type)) {
 				$accepts[] = $type;
 			}
 		}
 
-		if (count($accepts) === 0) {
+		if (count($accepts) == 0) {
 			return false;
-		} elseif (count($types) === 1) {
-			return ($types[0] === $accepts[0]);
-		} elseif (count($accepts) === 1) {
-            return $accepts[0];
+		} elseif (count($accepts) == 1) {
+			return $accepts[0];
+		} else {
+			$accepts = array_intersect($this->__acceptTypes, $accepts);
+			return $accepts[0];
 		}
-
-		$acceptedTypes = array();
-		foreach ($this->__acceptTypes as $type) {
-			$acceptedTypes[] = $this->mapType($type);
-		}
-		$accepts = array_intersect($acceptedTypes, $accepts);
-		return $accepts[0];
 	}
 /**
  * Sets the layout and template paths for the content type defined by $type.
  *
  * @param object $controller A reference to a controller object
  * @param string $type Type of response to send (e.g: 'ajax')
- * @return void
  * @access public
  * @see RequestHandlerComponent::setContent()
  * @see RequestHandlerComponent::respondAs()
@@ -585,42 +555,36 @@ class RequestHandlerComponent extends Object {
 		$controller->ext = '.ctp';
 
 		if (empty($this->__renderType)) {
-			$controller->viewPath .= DS . $type;
+			$controller->viewPath .= '/' . $type;
 		} else {
-			$remove = preg_replace("/([\/\\\\]{$this->__renderType})$/", DS . $type, $controller->viewPath);
-			$controller->viewPath = $remove;
+			$controller->viewPath = preg_replace("/\/{$type}$/", '/' . $type, $controller->viewPath);
 		}
 		$this->__renderType = $type;
 		$controller->layoutPath = $type;
 
-		if (isset($this->__requestContent[$type])) {
+		if (in_array($type, array_keys($this->__requestContent))) {
 			$this->respondAs($type, $options);
 		}
 
 		$helper = ucfirst($type);
-		$isAdded = (
-			in_array($helper, $controller->helpers) ||
-			array_key_exists($helper, $controller->helpers)
-		);
-
-		if (!$isAdded) {
+		if (!in_array($helper, $controller->helpers) && !array_key_exists($helper, $controller->helpers)) {
 			if (App::import('Helper', $helper)) {
 				$controller->helpers[] = $helper;
 			}
 		}
 	}
 /**
- * Sets the response header based on type map index name.  If DEBUG is greater than 2, the header
- * is not set.
+ * Sets the response header based on type map index name.  If DEBUG is greater
+ * than 2, the header is not set.
  *
- * @param mixed $type Friendly type name, i.e. 'html' or 'xml', or a full content-type,
- *    like 'application/x-shockwave'.
+ * @param mixed $type Friendly type name, i.e. 'html' or 'xml', or a full
+ *                    content-type, like 'application/x-shockwave'.
  * @param array $options If $type is a friendly type name that is associated with
- *    more than one type of content, $index is used to select which content-type to use.
- *   
+ *                     more than one type of content, $index is used to select
+ *                     which content-type to use.
  * @return boolean Returns false if the friendly type name given in $type does
- *    not exist in the type map, or if the Content-type header has
- *    already been set by this method.
+ *                 not exist in the type map, or if the Content-type header has
+ *                 already been set by this method.
  * @access public
  * @see RequestHandlerComponent::setContent()
  */
@@ -632,8 +596,7 @@ class RequestHandlerComponent extends Object {
 		if (!array_key_exists($type, $this->__requestContent) && strpos($type, '/') === false) {
 			return false;
 		}
-		$defaults = array('index' => 0, 'charset' => null, 'attachment' => false);
-		$options = array_merge($defaults, $options);
+		$options = array_merge(array('index' => 0, 'charset' => null, 'attachment' => false), $options);
 
 		if (strpos($type, '/') === false && isset($this->__requestContent[$type])) {
 			$cType = null;
@@ -646,7 +609,6 @@ class RequestHandlerComponent extends Object {
 			} else {
 				return false;
 			}
-
 			if (is_array($cType)) {
 				if ($this->prefers($cType)) {
 					$cType = $this->prefers($cType);
@@ -665,21 +627,22 @@ class RequestHandlerComponent extends Object {
 				$header .= '; charset=' . $options['charset'];
 			}
 			if (!empty($options['attachment'])) {
-				header("Content-Disposition: attachment; filename=\"{$options['attachment']}\"");
+				header('Content-Disposition: attachment; filename="' . $options['attachment'] . '"');
 			}
 			if (Configure::read() < 2 && !defined('CAKEPHP_SHELL')) {
 				@header($header);
 			}
 			$this->__responseTypeSet = $cType;
 			return true;
+		} else {
+			return false;
 		}
-		return false;
 	}
 /**
  * Returns the current response type (Content-type header), or null if none has been set
  *
  * @return mixed A string content type alias, or raw content type if no alias map exists,
- *    otherwise null
+ *               otherwise null
  * @access public
  */
 	function responseType() {

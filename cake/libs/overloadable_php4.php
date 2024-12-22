@@ -1,35 +1,42 @@
 <?php
-/* SVN FILE: $Id$ */
+/* SVN FILE: $Id: overloadable_php4.php 6311 2008-01-02 06:33:52Z phpnut $ */
 /**
  * Overload abstraction interface.  Merges differences between PHP4 and 5.
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
+ * Copyright 2005-2008, Cake Software Foundation, Inc.
+ *								1785 E. Sahara Avenue, Suite 490-204
+ *								Las Vegas, Nevada 89104
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @package       cake
- * @subpackage    cake.cake.libs
- * @since         CakePHP(tm) v 1.2
- * @version       $Revision$
- * @modifiedby    $LastChangedBy$
- * @lastmodified  $Date$
- * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @filesource
+ * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
+ * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
+ * @package			cake
+ * @subpackage		cake.cake.libs
+ * @since			CakePHP(tm) v 1.2
+ * @version			$Revision: 6311 $
+ * @modifiedby		$LastChangedBy: phpnut $
+ * @lastmodified	$Date: 2008-01-01 22:33:52 -0800 (Tue, 01 Jan 2008) $
+ * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 /**
  * Overloadable class selector
  *
+ * @package		cake
+ * @subpackage	cake.cake.libs
+ */
+
+/**
  * Load the interface class based on the version of PHP.
  *
- * @package       cake
- * @subpackage    cake.cake.libs
  */
 class Overloadable extends Object {
+
 /**
  * Constructor.
  *
@@ -39,6 +46,7 @@ class Overloadable extends Object {
 		$this->overload();
 		parent::__construct();
 	}
+
 /**
  * Overload implementation.
  *
@@ -79,15 +87,8 @@ class Overloadable extends Object {
 }
 Overloadable::overload('Overloadable');
 
-/**
- * Overloadable2 class selector
- *
- * Load the interface class based on the version of PHP.
- *
- * @package       cake
- * @subpackage    cake.cake.libs
- */
 class Overloadable2 extends Object {
+
 /**
  * Constructor
  *
@@ -97,6 +98,7 @@ class Overloadable2 extends Object {
 		$this->overload();
 		parent::__construct();
 	}
+
 /**
  * Overload implementation.
  *
@@ -117,6 +119,7 @@ class Overloadable2 extends Object {
 			}
 		}
 	}
+
 /**
  * Magic method handler.
  *
@@ -133,6 +136,7 @@ class Overloadable2 extends Object {
 		$return = $this->call__($method, $params);
 		return true;
 	}
+
 /**
  * Getter.
  *
@@ -145,6 +149,7 @@ class Overloadable2 extends Object {
 		$value = $this->get__($name);
 		return true;
 	}
+
 /**
  * Setter.
  *

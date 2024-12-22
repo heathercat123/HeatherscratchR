@@ -1,31 +1,35 @@
 <?php
-/* SVN FILE: $Id$ */
+/* SVN FILE: $Id: theme.php 7296 2008-06-27 09:09:03Z gwoo $ */
 /**
  * A custom view class that is used for themeing
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
+ * Copyright 2005-2008, Cake Software Foundation, Inc.
+ *								1785 E. Sahara Avenue, Suite 490-204
+ *								Las Vegas, Nevada 89104
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @package       cake
- * @subpackage    cake.cake.libs.view
- * @since         CakePHP(tm) v 0.10.0.1076
- * @version       $Revision$
- * @modifiedby    $LastChangedBy$
- * @lastmodified  $Date$
- * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @filesource
+ * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
+ * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
+ * @package			cake
+ * @subpackage		cake.cake.libs.view
+ * @since			CakePHP(tm) v 0.10.0.1076
+ * @version			$Revision: 7296 $
+ * @modifiedby		$LastChangedBy: gwoo $
+ * @lastmodified	$Date: 2008-06-27 02:09:03 -0700 (Fri, 27 Jun 2008) $
+ * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
  */
+
 /**
  * Theme view class
  *
- * @package       cake
- * @subpackage    cake.cake.libs.view
+ * @package			cake
+ * @subpackage		cake.cake.libs.view
  */
 class ThemeView extends View {
 /**
@@ -46,13 +50,14 @@ class ThemeView extends View {
  * @var string
  */
 	var $themePath = null;
+
 /**
  * Enter description here...
  *
  * @param unknown_type $controller
  */
-	function __construct (&$controller, $register = true) {
-		parent::__construct($controller, $register);
+	function __construct (&$controller) {
+		parent::__construct($controller);
 		$this->theme =& $controller->theme;
 
 		if (!empty($this->theme)) {
@@ -84,7 +89,7 @@ class ThemeView extends View {
 			$paths = array_merge($themePaths, $paths);
 		}
 
-		if (empty($this->__paths)) {
+		if(empty($this->__paths)) {
 			$this->__paths = $paths;
 		}
 

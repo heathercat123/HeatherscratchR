@@ -1,47 +1,51 @@
 <?php
-/* SVN FILE: $Id$ */
+/* SVN FILE: $Id: file.php 7296 2008-06-27 09:09:03Z gwoo $ */
 /**
  * Convenience class for reading, writing and appending to files.
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
+ * Copyright 2005-2008, Cake Software Foundation, Inc.
+ *								1785 E. Sahara Avenue, Suite 490-204
+ *								Las Vegas, Nevada 89104
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @package       cake
- * @subpackage    cake.cake.libs
- * @since         CakePHP(tm) v 0.2.9
- * @version       $Revision$
- * @modifiedby    $LastChangedBy$
- * @lastmodified  $Date$
- * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @filesource
+ * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
+ * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
+ * @package			cake
+ * @subpackage		cake.cake.libs
+ * @since			CakePHP(tm) v 0.2.9
+ * @version			$Revision: 7296 $
+ * @modifiedby		$LastChangedBy: gwoo $
+ * @lastmodified	$Date: 2008-06-27 02:09:03 -0700 (Fri, 27 Jun 2008) $
+ * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 /**
  * Included libraries.
  *
  */
 if (!class_exists('Object')) {
-	uses('object');
+	uses ('object');
 }
+
 if (!class_exists('Folder')) {
-	require LIBS . 'folder.php';
+	uses('folder');
 }
 /**
  * Convenience class for reading, writing and appending to files.
  *
- * @package       cake
- * @subpackage    cake.cake.libs
+ * @package		cake
+ * @subpackage	cake.cake.libs
  */
 class File extends Object {
 /**
  * Folder object of the File
  *
- * @var Folder
+ * @var object
  * @access public
  */
 	var $Folder = null;
@@ -74,21 +78,12 @@ class File extends Object {
  */
 	var $lock = null;
 /**
- * path property
- *
- * Current file's absolute path
- *
- * @var mixed null
- * @access public
- */
-	var $path = null;
-/**
  * Constructor
  *
  * @param string $path Path to file
  * @param boolean $create Create file if it does not exist (if true)
  * @param integer $mode Mode to apply to the folder holding the file
- * @access public
+ * @access private
  */
 	function __construct($path, $create = false, $mode = 0755) {
 		parent::__construct();
@@ -96,13 +91,21 @@ class File extends Object {
 		if (!is_dir($path)) {
 			$this->name = basename($path);
 		}
-		$this->pwd();
-		!$this->exists() && $create && $this->safe($path) && $this->create();
+
+		if (!$this->exists()) {
+			if ($create === true) {
+				if ($this->safe($path) && $this->create() === false) {
+					return false;
+				}
+			} else {
+				return false;
+			}
+		}
 	}
 /**
  * Closes the current file if it is opened
  *
- * @access public
+ * @access private
  */
 	function __destruct() {
 		$this->close();
@@ -116,9 +119,7 @@ class File extends Object {
 	function create() {
 		$dir = $this->Folder->pwd();
 		if (is_dir($dir) && is_writable($dir) && !$this->exists()) {
-			$old = umask(0);
-			if (touch($this->path)) {
-				umask($old);
+			if (touch($this->pwd())) {
 				return true;
 			}
 		}
@@ -136,14 +137,13 @@ class File extends Object {
 		if (!$force && is_resource($this->handle)) {
 			return true;
 		}
-		clearstatcache();
 		if ($this->exists() === false) {
 			if ($this->create() === false) {
 				return false;
 			}
 		}
 
-		$this->handle = fopen($this->path, $mode);
+		$this->handle = fopen($this->pwd(), $mode);
 		if (is_resource($this->handle)) {
 			return true;
 		}
@@ -159,32 +159,29 @@ class File extends Object {
  * @access public
  */
 	function read($bytes = false, $mode = 'rb', $force = false) {
-		if ($bytes === false && $this->lock === null) {
-			return file_get_contents($this->path);
+		$success = false;
+		if ($this->lock !== null) {
+			if (flock($this->handle, LOCK_SH) === false) {
+				return false;
+			}
 		}
-		if ($this->open($mode, $force) === false) {
-			return false;
+		if ($bytes === false) {
+			$success = file_get_contents($this->pwd());
+		} elseif ($this->open($mode, $force) === true) {
+			if (is_int($bytes)) {
+				$success = fread($this->handle, $bytes);
+			} else {
+				$data = '';
+				while (!feof($this->handle)) {
+					$data .= fgets($this->handle, 4096);
+				}
+				$success = trim($data);
+			}
 		}
-		if ($this->lock !== null && flock($this->handle, LOCK_SH) === false) {
-			return false;
-		}
-		if (is_int($bytes)) {
-			return fread($this->handle, $bytes);
-		}
-
-		$data = '';
-		while (!feof($this->handle)) {
-			$data .= fgets($this->handle, 4096);
-		}
-		$data = trim($data);
-
 		if ($this->lock !== null) {
 			flock($this->handle, LOCK_UN);
 		}
-		if ($bytes === false) {
-			$this->close();
-		}
-		return $data;
+		return $success;
 	}
 /**
  * Sets or gets the offset for the currently opened file.
@@ -214,7 +211,7 @@ class File extends Object {
  */
 	function prepare($data, $forceWindows = false) {
 		$lineBreak = "\n";
-		if (DIRECTORY_SEPARATOR == '\\' || $forceWindows === true) {
+		if (substr(PHP_OS,0,3) == "WIN" || $forceWindows === true) {
 			$lineBreak = "\r\n";
 		}
 		return strtr($data, array("\r\n" => $lineBreak, "\n" => $lineBreak, "\r" => $lineBreak));
@@ -232,8 +229,8 @@ class File extends Object {
 	function write($data, $mode = 'w', $force = false) {
 		$success = false;
 		if ($this->open($mode, $force) === true) {
-			if ($this->lock !== null) {
-				if (flock($this->handle, LOCK_EX) === false) {
+			if($this->lock !== null) {
+				if(flock($this->handle, LOCK_EX) === false) {
 					return false;
 				}
 			}
@@ -277,13 +274,8 @@ class File extends Object {
  * @access public
  */
 	function delete() {
-		clearstatcache();
-		if (is_resource($this->handle)) {
-			fclose($this->handle);
-			$this->handle = null;
-		}
 		if ($this->exists()) {
-			return unlink($this->path);
+			return unlink($this->pwd());
 		}
 		return false;
 	}
@@ -295,7 +287,7 @@ class File extends Object {
  */
 	function info() {
 		if ($this->info == null) {
-			$this->info = pathinfo($this->path);
+			$this->info = pathinfo($this->pwd());
 		}
 		if (!isset($this->info['filename'])) {
 			$this->info['filename'] = $this->name();
@@ -348,7 +340,7 @@ class File extends Object {
 		if (!$ext) {
 			$ext = $this->ext();
 		}
-		return preg_replace( "/(?:[^\w\.-]+)/", "_", basename($name, $ext));
+		return preg_replace( "/[^\w\.-]+/", "_", basename($name, $ext));
 	}
 /**
  * Get md5 Checksum of file with previous check of Filesize
@@ -359,27 +351,23 @@ class File extends Object {
  */
 	function md5($maxsize = 5) {
 		if ($maxsize === true) {
-			return md5_file($this->path);
+			return md5_file($this->pwd());
+		} else {
+			$size = $this->size();
+			if ($size && $size < ($maxsize * 1024) * 1024) {
+				return md5_file($this->pwd());
+			}
 		}
-
-		$size = $this->size();
-		if ($size && $size < ($maxsize * 1024) * 1024) {
-			return md5_file($this->path);
-		}
-
 		return false;
 	}
 /**
- * Returns the full path of the File.
- *
- * @return string Full path to file
- * @access public
- */
+* Returns the full path of the File.
+*
+* @return string Full path to file
+* @access public
+*/
 	function pwd() {
-		if (is_null($this->path)) {
-			$this->path = $this->Folder->slashTerm($this->Folder->pwd()) . $this->name;
-		}
-		return $this->path;
+		return $this->Folder->slashTerm($this->Folder->pwd()) . $this->name;
 	}
 /**
  * Returns true if the File exists.
@@ -388,7 +376,8 @@ class File extends Object {
  * @access public
  */
 	function exists() {
-		return (file_exists($this->path) && is_file($this->path));
+		$exists = (file_exists($this->pwd()) && is_file($this->pwd()));
+		return $exists;
 	}
 /**
  * Returns the "chmod" (permissions) of the File.
@@ -398,19 +387,20 @@ class File extends Object {
  */
 	function perms() {
 		if ($this->exists()) {
-			return substr(sprintf('%o', fileperms($this->path)), -4);
+			return substr(sprintf('%o', fileperms($this->pwd())), -4);
 		}
 		return false;
 	}
 /**
- * Returns the Filesize
+ * Returns the Filesize, either in bytes or in human-readable format.
  *
- * @return integer size of the file in bytes, or false in case of an error
+ * @param boolean $humanReadeble	Data to write to this File.
+ * @return string|int filesize as int or as a human-readable string
  * @access public
  */
 	function size() {
 		if ($this->exists()) {
-			return filesize($this->path);
+			return filesize($this->pwd());
 		}
 		return false;
 	}
@@ -421,7 +411,7 @@ class File extends Object {
  * @access public
  */
 	function writable() {
-		return is_writable($this->path);
+		return is_writable($this->pwd());
 	}
 /**
  * Returns true if the File is executable.
@@ -430,7 +420,7 @@ class File extends Object {
  * @access public
  */
 	function executable() {
-		return is_executable($this->path);
+		return is_executable($this->pwd());
 	}
 /**
  * Returns true if the File is readable.
@@ -439,17 +429,16 @@ class File extends Object {
  * @access public
  */
 	function readable() {
-		return is_readable($this->path);
+		return is_readable($this->pwd());
 	}
 /**
  * Returns the File's owner.
  *
  * @return integer the Fileowner
- * @access public
  */
 	function owner() {
 		if ($this->exists()) {
-			return fileowner($this->path);
+			return fileowner($this->pwd());
 		}
 		return false;
 	}
@@ -461,7 +450,7 @@ class File extends Object {
  */
 	function group() {
 		if ($this->exists()) {
-			return filegroup($this->path);
+			return filegroup($this->pwd());
 		}
 		return false;
 	}
@@ -473,7 +462,7 @@ class File extends Object {
  */
 	function lastAccess() {
 		if ($this->exists()) {
-			return fileatime($this->path);
+			return fileatime($this->pwd());
 		}
 		return false;
 	}
@@ -485,7 +474,7 @@ class File extends Object {
  */
 	function lastChange() {
 		if ($this->exists()) {
-			return filemtime($this->path);
+			return filemtime($this->pwd());
 		}
 		return false;
 	}

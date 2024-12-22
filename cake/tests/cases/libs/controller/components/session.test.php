@@ -1,103 +1,47 @@
 <?php
-/* SVN FILE: $Id$ */
+/* SVN FILE: $Id: session.test.php 7296 2008-06-27 09:09:03Z gwoo $ */
 /**
- * SessionComponentTest file
+ * Short description for file.
  *
  * Long description for file
  *
  * PHP versions 4 and 5
  *
  * CakePHP(tm) Tests <https://trac.cakephp.org/wiki/Developement/TestSuite>
- * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * Copyright 2005-2008, Cake Software Foundation, Inc.
+ *								1785 E. Sahara Avenue, Suite 490-204
+ *								Las Vegas, Nevada 89104
  *
  *  Licensed under The Open Group Test Suite License
  *  Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
- * @package       cake
- * @subpackage    cake.tests.cases.libs.controller.components
- * @since         CakePHP(tm) v 1.2.0.5436
- * @version       $Revision$
- * @modifiedby    $LastChangedBy$
- * @lastmodified  $Date$
- * @license       http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
+ * @filesource
+ * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
+ * @link				https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
+ * @package			cake.tests
+ * @subpackage		cake.tests.cases.libs.controller.components
+ * @since			CakePHP(tm) v 1.2.0.5436
+ * @version			$Revision: 7296 $
+ * @modifiedby		$LastChangedBy: gwoo $
+ * @lastmodified	$Date: 2008-06-27 02:09:03 -0700 (Fri, 27 Jun 2008) $
+ * @license			http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
  */
-App::import('Core', array('Controller', 'Object'));
+App::import('Core', 'Controller');
 App::import('Component', 'Session');
 /**
  * SessionTestController class
  *
- * @package       cake
- * @subpackage    cake.tests.cases.libs.controller.components
+ * @package              cake
+ * @subpackage           cake.tests.cases.libs.controller.components
  */
-class SessionTestController extends Controller {
+class SessionTestController extends Controller {}
 /**
- * uses property
+ * Short description for class.
  *
- * @var array
- * @access public
- */
-	var $uses = array();
-/**
- * session_id method
- *
- * @return string
- * @access public
- */
-	function session_id() {
-		return $this->Session->id();
-	}
-}
-/**
- * OrangeSessionTestController class
- *
- * @package       cake
- * @subpackage    cake.tests.cases.libs.controller.components
- */
-class OrangeSessionTestController extends Controller {
-/**
- * uses property
- *
- * @var array
- * @access public
- */
-	var $uses = array();
-/**
- * session_id method
- *
- * @return string
- * @access public
- */
-	function session_id() {
-		return $this->Session->id();
-	}
-}
-/**
- * SessionComponentTest class
- *
- * @package       cake
- * @subpackage    cake.tests.cases.libs.controller.components
+ * @package    cake.tests
+ * @subpackage cake.tests.cases.libs.controller.components
  */
 class SessionComponentTest extends CakeTestCase {
-/**
- * setUp method
- *
- * @access public
- * @return void
- */
-	function setUp() {
-		$this->_session = Configure::read('Session');
-	}
-/**
- * tearDown method
- *
- * @access public
- * @return void
- */
-	function tearDown() {
-		Configure::write('Session', $this->_session);
-	}
 /**
  * testSessionAutoStart method
  *
@@ -108,26 +52,15 @@ class SessionComponentTest extends CakeTestCase {
 		Configure::write('Session.start', false);
 		$Session =& new SessionComponent();
 		$this->assertFalse($Session->__active);
-		$this->assertFalse($Session->started());
+		$this->assertFalse($Session->__started);
 		$Session->startup(new SessionTestController());
 
 		Configure::write('Session.start', true);
 		$Session =& new SessionComponent();
 		$this->assertTrue($Session->__active);
-		$this->assertFalse($Session->started());
+		$this->assertFalse($Session->__started);
 		$Session->startup(new SessionTestController());
 		$this->assertTrue(isset($_SESSION));
-
-		$Object = new Object();
-		$Session =& new SessionComponent();
-		$Session->start();
-		$expected = $Session->id();
-
-		$result = $Object->requestAction('/session_test/session_id');
-		$this->assertEqual($result, $expected);
-
-		$result = $Object->requestAction('/orange_session_test/session_id');
-		$this->assertEqual($result, $expected);
 	}
 /**
  * testSessionInitialize method
@@ -188,16 +121,6 @@ class SessionComponentTest extends CakeTestCase {
 		$this->assertFalse($Session->__active);
 		$this->assertFalse($Session->valid());
 		Configure::write('Session.start', true);
-
-		$Session =& new SessionComponent();
-		$Session->time = $Session->read('Config.time') + 1;
-		$this->assertFalse($Session->valid());
-
-		Configure::write('Session.checkAgent', false);
-		$Session =& new SessionComponent();
-		$Session->time = $Session->read('Config.time') + 1;
-		$this->assertFalse($Session->valid());
-		Configure::write('Session.checkAgent', true);
 	}
 /**
  * testSessionError method
@@ -339,8 +262,6 @@ class SessionComponentTest extends CakeTestCase {
 
 		$Session->setFlash('This is a test message', 'non_existing_layout');
 		$this->assertEqual($Session->read('Message.myFlash'), array('message' => 'This is a test message', 'layout' => 'default', 'params' => array()));
-
-		$Session->del('Message');
 	}
 /**
  * testSessionId method

@@ -1,48 +1,41 @@
 <?php
-/* SVN FILE: $Id$ */
+/* SVN FILE: $Id: debugger.test.php 7296 2008-06-27 09:09:03Z gwoo $ */
 /**
- * DebuggerTest file
+ * Short description for file.
  *
  * Long description for file
  *
  * PHP versions 4 and 5
  *
  * CakePHP(tm) Tests <https://trac.cakephp.org/wiki/Developement/TestSuite>
- * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * Copyright 2005-2008, Cake Software Foundation, Inc.
+ *								1785 E. Sahara Avenue, Suite 490-204
+ *								Las Vegas, Nevada 89104
  *
  *  Licensed under The Open Group Test Suite License
  *  Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
- * @package       cake
- * @subpackage    cake.tests.cases.libs
- * @since         CakePHP(tm) v 1.2.0.5432
- * @version       $Revision$
- * @modifiedby    $LastChangedBy$
- * @lastmodified  $Date$
- * @license       http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
+ * @filesource
+ * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
+ * @link				https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
+ * @package			cake.tests
+ * @subpackage		cake.tests.cases.libs
+ * @since			CakePHP(tm) v 1.2.0.5432
+ * @version			$Revision: 7296 $
+ * @modifiedby		$LastChangedBy: gwoo $
+ * @lastmodified	$Date: 2008-06-27 02:09:03 -0700 (Fri, 27 Jun 2008) $
+ * @license			http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
  */
 App::import('Core', 'Debugger');
 /**
- * DebugggerTestCaseDebuggger class
+ * Short description for class.
  *
- * @package       cake
- * @subpackage    cake.tests.cases.libs
+ * @package    cake.tests
+ * @subpackage cake.tests.cases.libs
  */
-class DebuggerTestCaseDebugger extends Debugger {
-}
-/**
- * DebuggerTest class
- *
- * @package       cake
- * @subpackage    cake.tests.cases.libs
- */
-class DebuggerTest extends CakeTestCase {
-// !!!
-// !!! Be careful with changing code below as it may
-// !!! change line numbers which are used in the tests
-// !!!
+class DebuggerTest extends UnitTestCase {
+
+//do not move code below or it change line numbers which are used in the tests
 /**
  * setUp method
  *
@@ -60,15 +53,6 @@ class DebuggerTest extends CakeTestCase {
 		}
 	}
 /**
- * tearDown method
- *
- * @access public
- * @return void
- */
-	function tearDown() {
-		Configure::write('log', true);
-	}
-/**
  * testDocRef method
  *
  * @access public
@@ -79,21 +63,6 @@ class DebuggerTest extends CakeTestCase {
 		$this->assertEqual(ini_get('docref_root'), '');
 		$debugger = new Debugger();
 		$this->assertEqual(ini_get('docref_root'), 'http://php.net/');
-	}
-/**
- * test Excerpt writing
- *
- * @access public
- * @return void
- */
-	function testExcerpt() {
-		$return = Debugger::excerpt(__FILE__, 2, 2);
-		$this->assertTrue(is_array($return));
-		$this->assertEqual(count($return), 4);
-		$this->assertPattern('#/*&nbsp;SVN&nbsp;FILE:&nbsp;\$Id\$#', $return[1]);
-
-		$return = Debugger::excerpt('[internal]', 2, 2);
-		$this->assertTrue(empty($return));
 	}
 /**
  * testOutput method
@@ -217,15 +186,15 @@ class DebuggerTest extends CakeTestCase {
 
 		Debugger::log('cool');
 		$result = file_get_contents(LOGS . 'debug.log');
-		$this->assertPattern('/DebuggerTest\:\:testLog/', $result);
+		$this->assertPattern('/DebuggerTest::testLog/', $result);
 		$this->assertPattern('/"cool"/', $result);
 
 		unlink(TMP . 'logs' . DS . 'debug.log');
 
 		Debugger::log(array('whatever', 'here'));
 		$result = file_get_contents(TMP . 'logs' . DS . 'debug.log');
-		$this->assertPattern('/DebuggerTest\:\:testLog/', $result);
-		$this->assertPattern('/\[main\]/', $result);
+
+		$this->assertPattern('/DebuggerTest::testLog/', $result);
 		$this->assertPattern('/array/', $result);
 		$this->assertPattern('/"whatever",/', $result);
 		$this->assertPattern('/"here"/', $result);
@@ -257,23 +226,14 @@ class DebuggerTest extends CakeTestCase {
 		$this->assertEqual($expected, $result);
 	}
 /**
- * test getInstance.
+ * tearDown method
  *
  * @access public
  * @return void
  */
-	function testGetInstance() {
-		$result = Debugger::getInstance();
-		$this->assertIsA($result, 'Debugger');
-
-		$result = Debugger::getInstance('DebuggerTestCaseDebugger');
-		$this->assertIsA($result, 'DebuggerTestCaseDebugger');
-
-		$result = Debugger::getInstance();
-		$this->assertIsA($result, 'DebuggerTestCaseDebugger');
-
-		$result = Debugger::getInstance('Debugger');
-		$this->assertIsA($result, 'Debugger');
+	function tearDown() {
+		Configure::write('log', true);
 	}
+
 }
 ?>

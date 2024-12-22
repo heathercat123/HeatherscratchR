@@ -1,5 +1,5 @@
 <?php
-/* SVN FILE: $Id$ */
+/* SVN FILE: $Id: session.php 7296 2008-06-27 09:09:03Z gwoo $ */
 /**
  * Short description for file.
  *
@@ -7,32 +7,35 @@
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
+ * Copyright 2005-2008, Cake Software Foundation, Inc.
+ *								1785 E. Sahara Avenue, Suite 490-204
+ *								Las Vegas, Nevada 89104
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @package       cake
- * @subpackage    cake.cake.libs.controller.components
- * @since         CakePHP(tm) v 0.10.0.1232
- * @version       $Revision$
- * @modifiedby    $LastChangedBy$
- * @lastmodified  $Date$
- * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @filesource
+ * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
+ * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
+ * @package			cake
+ * @subpackage		cake.cake.libs.controller.components
+ * @since			CakePHP(tm) v 0.10.0.1232
+ * @version			$Revision: 7296 $
+ * @modifiedby		$LastChangedBy: gwoo $
+ * @lastmodified	$Date: 2008-06-27 02:09:03 -0700 (Fri, 27 Jun 2008) $
+ * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 if (!class_exists('cakesession')) {
-	require LIBS . 'session.php';
+	uses('session');
 }
 /**
  * Session Component.
  *
  * Session handling from the controller.
  *
- * @package       cake
- * @subpackage    cake.cake.libs.controller.components
+ * @package		cake
+ * @subpackage	cake.cake.libs.controller.components
  *
  */
 class SessionComponent extends CakeSession {
@@ -43,6 +46,13 @@ class SessionComponent extends CakeSession {
  * @access private
  */
 	var $__active = true;
+/**
+ * Used to determine if Session has been started
+ *
+ * @var boolean
+ * @access private
+ */
+	var $__started = false;
 /**
  * Used to determine if request are from an Ajax request
  *
@@ -66,7 +76,6 @@ class SessionComponent extends CakeSession {
  * Initializes the component, gets a reference to Controller::$param['bare'].
  *
  * @param object $controller A reference to the controller
- * @return void
  * @access public
  */
 	function initialize(&$controller) {
@@ -78,11 +87,10 @@ class SessionComponent extends CakeSession {
  * Startup method.
  *
  * @param object $controller Instantiating controller
- * @return void
  * @access public
  */
 	function startup(&$controller) {
-		if ($this->started() === false && $this->__active === true) {
+		if ($this->__started === false && $this->__active === true) {
 			$this->__start();
 		}
 	}
@@ -90,7 +98,6 @@ class SessionComponent extends CakeSession {
  * Starts Session on if 'Session.start' is set to false in core.php
  *
  * @param string $base The base path for the Session
- * @return void
  * @access public
  */
 	function activate($base = null) {
@@ -108,7 +115,6 @@ class SessionComponent extends CakeSession {
  * @param string $name The name of the key your are setting in the session.
  * 							This should be in a Controller.key format for better organizing
  * @param string $value The value you want to store in a session.
- * @return boolean Success
  * @access public
  */
 	function write($name, $value = null) {
@@ -233,7 +239,6 @@ class SessionComponent extends CakeSession {
  *
  * In your controller: $this->Session->renew();
  *
- * @return void
  * @access public
  */
 	function renew() {
@@ -262,7 +267,6 @@ class SessionComponent extends CakeSession {
  *
  * In your controller: $this->Session->destroy();
  *
- * @return void
  * @access public
  */
 	function destroy() {
@@ -288,18 +292,18 @@ class SessionComponent extends CakeSession {
  * Starts Session if SessionComponent is used in Controller::beforeFilter(),
  * or is called from
  *
- * @return boolean
  * @access private
  */
 	function __start() {
-		if ($this->started() === false) {
+		if ($this->__started === false) {
 			if (!$this->id() && parent::start()) {
+				$this->__started = true;
 				parent::_checkValid();
 			} else {
-				parent::start();
+				$this->__started = parent::start();
 			}
 		}
-		return $this->started();
+		return $this->__started;
 	}
 }
 

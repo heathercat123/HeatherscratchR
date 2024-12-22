@@ -1,5 +1,6 @@
 <?php
-/* SVN FILE: $Id$ */
+/* SVN FILE: $Id: dbo_adodb.php 7296 2008-06-27 09:09:03Z gwoo $ */
+
 /**
  * AdoDB layer for DBO.
  *
@@ -7,33 +8,38 @@
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
+ * Copyright 2005-2008, Cake Software Foundation, Inc.
+ *								1785 E. Sahara Avenue, Suite 490-204
+ *								Las Vegas, Nevada 89104
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @package       cake
- * @subpackage    cake.cake.libs.model.datasources.dbo
- * @since         CakePHP(tm) v 0.2.9
- * @version       $Revision$
- * @modifiedby    $LastChangedBy$
- * @lastmodified  $Date$
- * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @filesource
+ * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
+ * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
+ * @package			cake
+ * @subpackage		cake.cake.libs.model.datasources.dbo
+ * @since			CakePHP(tm) v 0.2.9
+ * @version			$Revision: 7296 $
+ * @modifiedby		$LastChangedBy: gwoo $
+ * @lastmodified	$Date: 2008-06-27 02:09:03 -0700 (Fri, 27 Jun 2008) $
+ * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
  */
+
 /**
  * Include AdoDB files.
  */
 App::import('Vendor', 'NewADOConnection', array('file' => 'adodb' . DS . 'adodb.inc.php'));
+
 /**
  * AdoDB DBO implementation.
  *
  * Database abstraction implementation for the AdoDB library.
  *
- * @package       cake
- * @subpackage    cake.cake.libs.model.datasources.dbo
+ * @package		cake
+ * @subpackage	cake.cake.libs.model.datasources.dbo
  */
 class DboAdodb extends DboSource {
 /**
@@ -101,9 +107,7 @@ class DboAdodb extends DboSource {
 			$adodb_driver = substr($config['connect'], 0, $persistent);
 			$connect = 'PConnect';
 		}
-		if (!$this->enabled()) {
-			return false;
-		}
+
 		$this->_adodb = NewADOConnection($adodb_driver);
 
 		$this->_adodbDataDict = NewDataDictionary($this->_adodb, $adodb_driver);
@@ -114,14 +118,6 @@ class DboAdodb extends DboSource {
 		$this->connected = $this->_adodb->$connect($config['host'], $config['login'], $config['password'], $config['database']);
 		$this->_adodbMetatyper = &$this->_adodb->execute('Select 1');
 		return $this->connected;
-	}
-/**
- * Check that AdoDB is available.
- *
- * @return boolean
- **/
-	function enabled() {
-		return function_exists('NewADOConnection');
 	}
 /**
  * Disconnects from database.
@@ -143,11 +139,17 @@ class DboAdodb extends DboSource {
 		return $this->_adodb->execute($sql);
 	}
 /**
+ * Returns a row from given resultset as an array .
+ *
+ * @return array The fetched row as an array
+ */
+/**
  * Returns a row from current resultset as an array .
  *
  * @return array The fetched row as an array
  */
 	function fetchRow($sql = null) {
+
 		if (!empty($sql) && is_string($sql) && strlen($sql) > 5) {
 			if (!$this->execute($sql)) {
 				return null;
@@ -215,7 +217,7 @@ class DboAdodb extends DboSource {
 	function listSources() {
 		$tables = $this->_adodb->MetaTables('TABLES');
 
-		if (!count($tables) > 0) {
+		if (!sizeof($tables) > 0) {
 			trigger_error(ERROR_NO_TABLE_LIST, E_USER_NOTICE);
 			exit;
 		}
@@ -423,27 +425,21 @@ class DboAdodb extends DboSource {
  * @return unknown
  */
 	function fetchResult() {
-		if (!empty($this->results)) {
-			$row = $this->results;
-			$this->results = null;
+		if (!empty($this->results) && $row = $this->results) {
+			$resultRow = array();
+			$fields = array_keys($row);
+			$count = count($fields);
+			$i = 0;
+			for ($i = 0; $i < $count; $i++) { //$row as $index => $field) {
+				list($table, $column) = $this->map[$i];
+				$resultRow[$table][$column] = $row[$fields[$i]];
+			}
+			return $resultRow;
 		} else {
-			$row = $this->_result->FetchRow();
-		}
-
-		if (empty($row)) {
 			return false;
 		}
-
-		$resultRow = array();
-		$fields = array_keys($row);
-		$count = count($fields);
-		$i = 0;
-		for ($i = 0; $i < $count; $i++) { //$row as $index => $field) {
-			list($table, $column) = $this->map[$i];
-			$resultRow[$table][$column] = $row[$fields[$i]];
-		}
-		return $resultRow;
 	}
+
 /**
  * Generate a database-native column schema string
  *

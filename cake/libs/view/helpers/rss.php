@@ -1,43 +1,45 @@
 <?php
-/* SVN FILE: $Id$ */
+/* SVN FILE: $Id: rss.php 7296 2008-06-27 09:09:03Z gwoo $ */
 /**
  * RSS Helper class file.
  *
  * Simplifies the output of RSS feeds.
  *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
+ * Copyright 2005-2008, Cake Software Foundation, Inc.
+ *								1785 E. Sahara Avenue, Suite 490-204
+ *								Las Vegas, Nevada 89104
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @package       cake
- * @subpackage    cake.cake.libs.view.helpers
- * @since         CakePHP(tm) v 1.2
- * @version       $Revision$
- * @modifiedby    $LastChangedBy$
- * @lastmodified  $Date$
- * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @filesource
+ * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
+ * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
+ * @package			cake
+ * @subpackage		cake.cake.libs.view.helpers
+ * @since			CakePHP(tm) v 1.2
+ * @version			$Revision: 7296 $
+ * @modifiedby		$LastChangedBy: gwoo $
+ * @lastmodified	$Date: 2008-06-27 02:09:03 -0700 (Fri, 27 Jun 2008) $
+ * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
  */
-App::import('Helper', 'Xml');
-
 /**
  * XML Helper class for easy output of XML structures.
  *
  * XmlHelper encloses all methods needed while working with XML documents.
  *
- * @package       cake
- * @subpackage    cake.cake.libs.view.helpers
+ * @package		cake
+ * @subpackage	cake.cake.libs.view.helpers
  */
+App::import('Helper', 'Xml');
+
 class RssHelper extends XmlHelper {
-/**
- * Helpers used by RSS Helper
- *
- * @var array
- * @access public
- **/
+
+	var $Html = null;
+
+	var $Time = null;
+
 	var $helpers = array('Time');
 /**
  * Base URL
@@ -137,20 +139,9 @@ class RssHelper extends XmlHelper {
 		$elems = '';
 		foreach ($elements as $elem => $data) {
 			$attributes = array();
-			if (is_array($data)) {
-				if (strtolower($elem) == 'cloud') {
-					$attributes = $data;
-					$data = array();
-				} elseif (isset($data['attrib']) && is_array($data['attrib'])) {
-					$attributes = $data['attrib'];
-					unset($data['attrib']);
-				} else {
-					$innerElements = '';
-					foreach ($data as $subElement => $value) {
-						$innerElements .= $this->elem($subElement, array(), $value);
-					}
-					$data = $innerElements;
-				}
+			if (is_array($data) && isset($data['attrib']) && is_array($data['attrib'])) {
+				$attributes = $data['attrib'];
+				unset($data['attrib']);
 			}
 			$elems .= $this->elem($elem, $attributes, $data);
 		}
@@ -194,32 +185,9 @@ class RssHelper extends XmlHelper {
 
 		foreach ($elements as $key => $val) {
 			$attrib = array();
-			
-			$escape = true;
-			if (is_array($val) && isset($val['convertEntities'])) {
-				$escape = $val['convertEntities'];
-				unset($val['convertEntities']);
-			}
-			
 			switch ($key) {
 				case 'pubDate' :
 					$val = $this->time($val);
-				break;
-				case 'category' :
-					if (is_array($val) && !empty($val[0])) {
-						foreach ($val as $category) {
-							$attrib = array();
-							if (isset($category['domain'])) {
-								$attrib['domain'] = $category['domain'];
-								unset($category['domain']);
-							}
-							$categories[] = $this->elem($key, $attrib, $category);
-						}
-						$elements[$key] = implode('', $categories);
-						continue 2;
-					} else if (is_array($val) && isset($val['domain'])) {
-						$attrib['domain'] = $val['domain'];
-					}
 				break;
 				case 'link':
 				case 'guid':
@@ -254,13 +222,19 @@ class RssHelper extends XmlHelper {
 					$val = null;
 				break;
 			}
+			$escape = true;
+			if (is_array($val) && isset($val['convertEntities'])) {
+				$escape = $val['convertEntities'];
+				unset($val['convertEntities']);
+			}
 			if (!is_null($val) && $escape) {
 				$val = h($val);
 			}
 			$elements[$key] = $this->elem($key, $attrib, $val);
 		}
+
 		if (!empty($elements)) {
-			$content = implode('', $elements);
+			$content = join('', $elements);
 		}
 		return $this->output($this->elem('item', $att, $content, !($content === null)));
 	}

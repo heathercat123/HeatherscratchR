@@ -1,5 +1,5 @@
 <?php
-/* SVN FILE: $Id$ */
+/* SVN FILE: $Id: extract.php 7296 2008-06-27 09:09:03Z gwoo $ */
 /**
  * Short description for file.
  *
@@ -7,21 +7,24 @@
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
+ * Copyright 2005-2008, Cake Software Foundation, Inc.
+ *                              1785 E. Sahara Avenue, Suite 490-204
+ *                              Las Vegas, Nevada 89104
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @package       cake
- * @subpackage    cake.cake.console.libs
- * @since         CakePHP(tm) v 1.2.0.5012
- * @version       $Revision$
- * @modifiedby    $LastChangedBy$
- * @lastmodified  $Date$
- * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @filesource
+ * @copyright       Copyright 2005-2008, Cake Software Foundation, Inc.
+ * @link                http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
+ * @package         cake
+ * @subpackage      cake.cake.console.libs
+ * @since           CakePHP(tm) v 1.2.0.5012
+ * @version         $Revision: 7296 $
+ * @modifiedby      $LastChangedBy: gwoo $
+ * @lastmodified    $Date: 2008-06-27 02:09:03 -0700 (Fri, 27 Jun 2008) $
+ * @license         http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 /**
  * Only used when -debug option
@@ -53,8 +56,8 @@
 /**
  * Language string extractor
  *
- * @package       cake
- * @subpackage    cake.cake.console.libs
+ * @package     cake
+ * @subpackage  cake.cake.console.libs
  */
 class ExtractTask extends Shell{
 /**
@@ -134,7 +137,7 @@ class ExtractTask extends Shell{
 		} else {
 			$response = '';
 			while ($response == '') {
-				$response = $this->in("What is the full path you would like to extract?\nExample: " . $this->params['root'] . DS . "myapp\n[Q]uit", null, $this->params['working']);
+				$response = $this->in("What is the full path you would like to extract?\nExample: " . $this->params['root'] . DS . "myapp\n[Q]uit", null, 'Q');
 				if (strtoupper($response) === 'Q') {
 					$this->out('Extract Aborted');
 					$this->_stop();
@@ -262,9 +265,9 @@ class ExtractTask extends Shell{
 				}
 
 				if (is_array($token)) {
-					$lineNumber += count(explode("\n", $token[1])) - 1;
+					$lineNumber += count(split("\n", $token[1])) - 1;
 				} else {
-					$lineNumber += count(explode("\n", $token)) - 1;
+					$lineNumber += count(split("\n", $token)) - 1;
 				}
 			}
 			unset($allTokens);
@@ -413,13 +416,13 @@ class ExtractTask extends Shell{
 
 			if ($this->__oneFile === true) {
 				foreach ($fileInfo as $file => $lines) {
-					$occured[] = "$file:" . implode(';', $lines);
+					$occured[] = "$file:" . join(';', $lines);
 
 					if (isset($this->__fileVersions[$file])) {
 						$fileList[] = $this->__fileVersions[$file];
 					}
 				}
-				$occurances = implode("\n#: ", $occured);
+				$occurances = join("\n#: ", $occured);
 				$occurances = str_replace($this->path, '', $occurances);
 				$output = "#: $occurances\n";
 				$filename = $this->__filename;
@@ -438,12 +441,12 @@ class ExtractTask extends Shell{
 			} else {
 				foreach ($fileInfo as $file => $lines) {
 					$filename = $str;
-					$occured = array("$str:" . implode(';', $lines));
+					$occured = array("$str:" . join(';', $lines));
 
 					if (isset($this->__fileVersions[$str])) {
 						$fileList[] = $this->__fileVersions[$str];
 					}
-					$occurances = implode("\n#: ", $occured);
+					$occurances = join("\n#: ", $occured);
 					$occurances = str_replace($this->path, '', $occurances);
 					$output .= "#: $occurances\n";
 
@@ -510,9 +513,9 @@ class ExtractTask extends Shell{
 			$fileList = str_replace(array($this->path), '', $fileList);
 
 			if (count($fileList) > 1) {
-				$fileList = "Generated from files:\n#  " . implode("\n#  ", $fileList);
+				$fileList = "Generated from files:\n#  " . join("\n#  ", $fileList);
 			} elseif (count($fileList) == 1) {
-				$fileList = 'Generated from file: ' . implode('', $fileList);
+				$fileList = 'Generated from file: ' . join('', $fileList);
 			} else {
 				$fileList = 'No version information was available in the source files.';
 			}
@@ -534,7 +537,7 @@ class ExtractTask extends Shell{
 				}
 			}
 			$fp = fopen($this->__output . $file, 'w');
-			fwrite($fp, str_replace('--VERSIONS--', $fileList, implode('', $content)));
+			fwrite($fp, str_replace('--VERSIONS--', $fileList, join('', $content)));
 			fclose($fp);
 		}
 	}
@@ -618,7 +621,6 @@ class ExtractTask extends Shell{
 		} else {
 			$string = strtr($string, array("\\'" => "'", "\\\\" => "\\"));
 		}
-		$string = str_replace("\r\n", "\n", $string);
 		return addcslashes($string, "\0..\37\\\"");
 	}
 /**
@@ -666,9 +668,6 @@ class ExtractTask extends Shell{
 		}
 		$files = glob("$path*.{php,ctp,thtml,inc,tpl}", GLOB_BRACE);
 		$dirs = glob("$path*", GLOB_ONLYDIR);
-
-		$files = $files ? $files : array();
-		$dirs = $dirs ? $dirs : array();
 
 		foreach ($dirs as $dir) {
 			if (!preg_match("!(^|.+/)(CVS|.svn)$!", $dir)) {

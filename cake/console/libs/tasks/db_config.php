@@ -1,5 +1,5 @@
 <?php
-/* SVN FILE: $Id$ */
+/* SVN FILE: $Id: db_config.php 7118 2008-06-04 20:49:29Z gwoo $ */
 /**
  * The DbConfig Task handles creating and updating the database.php
  *
@@ -7,21 +7,24 @@
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
+ * Copyright 2005-2008, Cake Software Foundation, Inc.
+ *								1785 E. Sahara Avenue, Suite 490-204
+ *								Las Vegas, Nevada 89104
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @package       cake
- * @subpackage    cake.cake.console.libs.tasks
- * @since         CakePHP(tm) v 1.2
- * @version       $Revision$
- * @modifiedby    $LastChangedBy$
- * @lastmodified  $Date$
- * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @filesource
+ * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
+ * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
+ * @package			cake
+ * @subpackage		cake.cake.console.libs.tasks
+ * @since			CakePHP(tm) v 1.2
+ * @version			$Revision: 7118 $
+ * @modifiedby		$LastChangedBy: gwoo $
+ * @lastmodified	$Date: 2008-06-04 13:49:29 -0700 (Wed, 04 Jun 2008) $
+ * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 if (!class_exists('File')) {
 	uses('file');
@@ -29,8 +32,8 @@ if (!class_exists('File')) {
 /**
  * Task class for creating and updating the database configuration file.
  *
- * @package       cake
- * @subpackage    cake.cake.console.libs.tasks
+ * @package		cake
+ * @subpackage	cake.cake.console.libs.tasks
  */
 class DbConfigTask extends Shell {
 /**
@@ -108,7 +111,7 @@ class DbConfigTask extends Shell {
 				$persistent = $this->in('Persistent Connection?', array('y', 'n'), 'n');
 			}
 
-			if (strtolower($persistent) == 'n') {
+			if (low($persistent) == 'n') {
 				$persistent = 'false';
 			} else {
 				$persistent = 'true';
@@ -124,7 +127,7 @@ class DbConfigTask extends Shell {
 				$port = $this->in('Port?', null, 'n');
 			}
 
-			if (strtolower($port) == 'n') {
+			if (low($port) == 'n') {
 				$port = null;
 			}
 			$login = '';
@@ -157,7 +160,7 @@ class DbConfigTask extends Shell {
 				$prefix = $this->in('Table Prefix?', null, 'n');
 			}
 
-			if (strtolower($prefix) == 'n') {
+			if (low($prefix) == 'n') {
 				$prefix = null;
 			}
 			$encoding = '';
@@ -166,7 +169,7 @@ class DbConfigTask extends Shell {
 				$encoding = $this->in('Table encoding?', null, 'n');
 			}
 
-			if (strtolower($encoding) == 'n') {
+			if (low($encoding) == 'n') {
 				$encoding = null;
 			}
 			$schema = '';
@@ -177,7 +180,7 @@ class DbConfigTask extends Shell {
 				}
 			}
 
-			if (strtolower($schema) == 'n') {
+			if (low($schema) == 'n') {
 				$schema = null;
 			}
 
@@ -189,7 +192,7 @@ class DbConfigTask extends Shell {
 			$dbConfigs[] = $config;
 			$doneYet = $this->in('Do you wish to add another database configuration?', null, 'n');
 
-			if (strtolower($doneYet == 'n')) {
+			if (low($doneYet == 'n')) {
 				$done = true;
 			}
 		}
@@ -239,7 +242,7 @@ class DbConfigTask extends Shell {
 		$this->hr();
 		$looksGood = $this->in('Look okay?', array('y', 'n'), 'y');
 
-		if (strtolower($looksGood) == 'y' || strtolower($looksGood) == 'yes') {
+		if (low($looksGood) == 'y' || low($looksGood) == 'yes') {
 			return $config;
 		}
 		return false;
@@ -277,10 +280,10 @@ class DbConfigTask extends Shell {
 					$info['port'] = null;
 				}
 
-				if ($info['persistent'] === false) {
+				if($info['persistent'] === false) {
 					$info['persistent'] = 'false';
 				} else {
-					$info['persistent'] = ($info['persistent'] == true) ? 'true' : 'false';
+					$info['persistent'] = 'false';
 				}
 
 				$oldConfigs[] = array(
