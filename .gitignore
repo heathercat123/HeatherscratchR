@@ -8,7 +8,7 @@
 # https://github.com/scratchfoundation/ScratchWikiSkin
 /app/webroot/w2
 
-# Contains Mediawiki 1.26 with my backported ScratchWikiSkin2.
+# Contains Mediawiki 1.26 with the backported ScratchWikiSkin2.
 # It can be found here:
 # https://github.com/heathercat123/ScratchWikiSkin2-PHP5.3
 /app/webroot/w3
