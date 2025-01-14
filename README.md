@@ -15,7 +15,8 @@ For an exact list of modified file, see [here](https://github.com/heathercat123/
 
 ## Installation
 There are currently two installation guides. One is made by Andrés (andresmh), one is by me.
-- [WIP new guide by me](https://github.com/heathercat123/HeatherscratchR/blob/master/how%20to%20scratchr.txt). Use this one!
-- [Old INSTALL.TXT by Andrés](https://github.com/heathercat123/HeatherscratchR/blob/master/INSTALL.txt). One step is mentionned in the new guide, but other than that, don't use this guide!
+- [ScratchR Setup Guides guide](https://heathercat123.github.io/ScratchR-setup-guides/heatherscratchr/xampp/). It's the best one yet, use this one. It's still a WIP and the end was kind of rushed, but the guide mostly has images. You can contribute to it [here](https://github.com/heathercat123/ScratchR-setup-guides).
+- [Incomplete guide by me](https://github.com/heathercat123/HeatherscratchR/blob/master/how%20to%20scratchr.txt). Used to be the best guide, but not anymore.
+- [Old INSTALL.TXT by Andrés](https://github.com/heathercat123/HeatherscratchR/blob/master/INSTALL.txt). One step is mentionned in the guide above, but other than that, don't use this guide.
 
 For now, the installation instructions don't include how to get the forums, the tbg forums, the wiki or the stats.
