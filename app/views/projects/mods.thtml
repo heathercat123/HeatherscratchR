@@ -1,7 +1,7 @@
 <link type="text/css" href="/stats/remixtree/css/remixtree.css" rel="stylesheet" />
 <script language="javascript" type="text/javascript" src="/stats/remixtree/js/jit.js"></script>
 <script language="javascript" type="text/javascript" src="/stats/remixtree/js/remixtree.js"></script>
-<script language="javascript" type="text/javascript" src="/statss/remixtree/js/excanvas.js"></script>
+<script language="javascript" type="text/javascript" src="/stats/remixtree/js/excanvas.js"></script>
 
 <div class="fullcontent">
 <h2><?php ___('Remix Visualization');?></h2>
