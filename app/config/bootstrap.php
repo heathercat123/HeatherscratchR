@@ -15,7 +15,7 @@ then skip declarations:
 $this->params['webservices']
 *------------------------------------*/
 
-Configure::write('App.maintenance', true);
+Configure::write('App.maintenance', false);
 
 /**
  * home page configs

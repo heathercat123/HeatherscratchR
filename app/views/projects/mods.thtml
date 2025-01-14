@@ -1,7 +1,7 @@
-<link type="text/css" href="http://stats.scratch.mit.edu/remixtree/css/remixtree.css" rel="stylesheet" />
-<script language="javascript" type="text/javascript" src="http://stats.scratch.mit.edu/remixtree/js/jit.js"></script>
-<script language="javascript" type="text/javascript" src="http://stats.scratch.mit.edu/remixtree/js/remixtree.js"></script>
-<script language="javascript" type="text/javascript" src="http://stats.scratch.mit.edu/remixtree/js/excanvas.js"></script>
+<link type="text/css" href="/stats/remixtree/css/remixtree.css" rel="stylesheet" />
+<script language="javascript" type="text/javascript" src="/stats/remixtree/js/jit.js"></script>
+<script language="javascript" type="text/javascript" src="/stats/remixtree/js/remixtree.js"></script>
+<script language="javascript" type="text/javascript" src="/statss/remixtree/js/excanvas.js"></script>
 
 <div class="fullcontent">
 <h2><?php ___('Remix Visualization');?></h2>
