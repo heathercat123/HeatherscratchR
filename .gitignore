@@ -13,7 +13,7 @@
 # https://github.com/heathercat123/ScratchWikiSkin2-PHP5.3
 /app/webroot/w3
 
-# Can be found at https://app.assembla.com/spaces/scratchstats/
+# Patched https://app.assembla.com/spaces/scratchstats/
 /app/webroot/stats
 
 # Can be found at https://app.assembla.com/spaces/scratchforums/
@@ -39,6 +39,6 @@
 /app/webroot/dev
 
 # The downloads servers
-# They aren't included due to their size, but you can get them from here:
+# They aren't included due to their size, but you can get part of them from here:
 # https://github.com/heathercat123/ScratchDownload
 /app/webroot/ScratchDownload
