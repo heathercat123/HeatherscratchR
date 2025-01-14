@@ -140,7 +140,7 @@
 		You have to replace Heathercat123 by your username
 		- Log out then log back in
 
-You can now enjoy the admin-specific stuff, such as http://localhost/administration/
+You can now enjoy the admin-specific stuff, such as http://localhost/administration/ or http://localhost/users/loginsu/<USERNAME> to hack into another account
 If you want to manipulate the database further, open http://localhost/phpmyadmin/ and avoid breaking everything!
 To upload projects, go to http://localhost/services/share_project
 
