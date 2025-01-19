@@ -109,4 +109,9 @@ Ubuntu: sudo chmod -r 777 app/tmp
 
 12. You can configure email addresses and other constants from app/config/bootstrap.php
 
-13. Open http://localhost in your web browser and admire your work.
+13. Send an email to andresmh@media.mit.edu letting us know that you have
+succeded and how you're planning to use the site, we'll be very happy to hear from you. 
+Don't forget to read the LICENSE.TXT!!!
+
+If you make any improvements to the source code let us know so we 
+can all benefit from your improvements.
