@@ -1,20 +1,19 @@
 ALTER TABLE `remix_notifications` CHANGE `ntype` `ntype` ENUM( 'positive', 'neutral', 'generosity', 'conformity', 'reputation', 'fairness', 'nonotification' ) NOT NULL DEFAULT 'neutral';
 
-INSERT INTO `notification_types` ( `id` , `type` , `template` , `is_admin` , `negative` ) 
+INSERT INTO `notification_types` ( `id` , `type` , `template` , `is_admin` , `negative` )
 VALUES (
-NULL , 'project_remixed_fairness','Your project <a href="/projects/{to_user_name}/{project_id}">{project_name}</a> was remixed. Scratch is about sharing and it is great that you are giving back by letting others use your projects!Ê<a href="/projects/{from_user_name}/%s">Check out the remix</a>.','0', '0'
+NULL , 'project_remixed_fairness','Your project <a href="/projects/{to_user_name}/{project_id}">{project_name}</a> was remixed. Scratch is about sharing and it is great that you are giving back by letting others use your projects!ï¾Š<a href="/projects/{from_user_name}/%s">Check out the remix</a>.','0', '0'
 );
 
-UPDATE `notification_types` SET `template` = 'Congratulations! Your projectÊ<a href="/projects/{to_user_name}/{project_id}">{project_name}</a>Êwas remixed.Ê<a href="/projects/{from_user_name}/%s">Check out the remix</a>.' WHERE `type` ='project_remixed_positive';
+UPDATE `notification_types` SET `template` = 'Congratulations! Your projectï¾Š<a href="/projects/{to_user_name}/{project_id}">{project_name}</a>ï¾Šwas remixed.ï¾Š<a href="/projects/{from_user_name}/%s">Check out the remix</a>.' WHERE `type` ='project_remixed_positive';
 
-UPDATE `notification_types` SET `template` = 'Your projectÊ<a href="/projects/{to_user_name}/{project_id}">{project_name}</a>Êwas remixed.Ê<a href="/projects/{from_user_name}/%s">Check out the remix</a>.' WHERE `type`= 'project_remixed_neutral';
-
-
-UPDATE `notification_types` SET `template` ='Your projectÊ<a href="/projects/{to_user_name}/{project_id}">{project_name}</a>Êwas remixed. Sharing your work is a generous thing to do and a good thing for the Scratch community!Ê<a href="/projects/{from_user_name}/%s">Check out the remix</a>.' WHERE `type` = 'project_remixed_generosity';
-
-UPDATE `notification_types` SET `template` ='Your projectÊ<a href="/projects/{to_user_name}/{project_id}">{project_name}</a>Êwas remixed. A lot of people enjoy having their projects remixed!Ê<a href="/projects/{from_user_name}/%s">Check out the remix</a>.' WHERE`type` = 'project_remixed_conformity';
-
-UPDATE `notification_types` SET `template` ='Your projectÊ<a href="/projects/{to_user_name}/{project_id}">{project_name}</a>Êwas remixed. People respect your work and get inspired by it!Ê<a href="/projects/{from_user_name}/%s">Check out the remix</a>.' WHERE`type` = 'project_remixed_reputation';
+UPDATE `notification_types` SET `template` = 'Your projectï¾Š<a href="/projects/{to_user_name}/{project_id}">{project_name}</a>ï¾Šwas remixed.ï¾Š<a href="/projects/{from_user_name}/%s">Check out the remix</a>.' WHERE `type`= 'project_remixed_neutral';
 
 
-DELETE FROM remix_notifications;
+UPDATE `notification_types` SET `template` ='Your projectï¾Š<a href="/projects/{to_user_name}/{project_id}">{project_name}</a>ï¾Šwas remixed. Sharing your work is a generous thing to do and a good thing for the Scratch community!ï¾Š<a href="/projects/{from_user_name}/%s">Check out the remix</a>.' WHERE `type` = 'project_remixed_generosity';
+
+UPDATE `notification_types` SET `template` ='Your projectï¾Š<a href="/projects/{to_user_name}/{project_id}">{project_name}</a>ï¾Šwas remixed. A lot of people enjoy having their projects remixed!ï¾Š<a href="/projects/{from_user_name}/%s">Check out the remix</a>.' WHERE`type` = 'project_remixed_conformity';
+
+UPDATE `notification_types` SET `template` ='Your projectï¾Š<a href="/projects/{to_user_name}/{project_id}">{project_name}</a>ï¾Šwas remixed. People respect your work and get inspired by it!ï¾Š<a href="/projects/{from_user_name}/%s">Check out the remix</a>.' WHERE`type` = 'project_remixed_reputation';
+
+
