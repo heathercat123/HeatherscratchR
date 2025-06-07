@@ -28,8 +28,8 @@
 /app/webroot/static/icons
 /app/webroot/static/projects
 
-# The temp folder
-/app/tmp
+# Logs
+/app/tmp/logs
 
 # Contains database info
 # To set it up, rename database.php.default and set up the values

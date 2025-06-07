@@ -143,7 +143,6 @@ Class ServicesController extends AppController {
 		array_push($this->data['Project']['tags'],$this->data['Project']['more_tags3']);
 		if(!empty($this->data['Project']['more_tags4']))
 		array_push($this->data['Project']['tags'],$this->data['Project']['more_tags4']);
-
 		if(!empty($this->data))
 		{
 			$project_name =  null;
@@ -151,22 +150,24 @@ Class ServicesController extends AppController {
 				$project_name =  strip_tags(trim($this->data['Project']['project_name']));
 			}
 
-			$binary_file = (!empty($this->params["form"]["binary_file"])) ? $this->params["form"]["binary_file"]:null;
-        	$thumbnail_file = (!empty($this->params["form"]["priview_image"])) ? $this->params["form"]["priview_image"]:null;
-        	$preview_file = (!empty($this->params["form"]["priview_image"])) ? $this->params["form"]["priview_image"]:null;
+			$binary_file = (!empty($this->data["form"]["binary_file"])) ? $this->data["form"]["binary_file"]:null;
+        	$thumbnail_file = (!empty($this->params["form"]["priview_image"])) ? $this->data["form"]["priview_image"]:null;
+        	$preview_file = (!empty($this->data["form"]["priview_image"])) ? $this->data["form"]["priview_image"]:null;
 
 			// binary file required
 			if (!isset($binary_file['error']) || $binary_file['error'])
 			{
-				$this->setFlash(___("Select a scratch file", true));
-					$this->redirect('/services/share_project');
+                echo("Select a scratch file");
+				//$this->setFlash(___("Select a scratch file", true));
+                //$this->redirect('/services/share_project');
 
 			}
 			$banary_file_type = explode('.',$binary_file['name']);
 			if($banary_file_type['1'] !='sb')
 			{
-					$this->setFlash(___("Select a scratch file with extension .sb only", true));
-					$this->redirect('/services/share_project');
+                    echo("Select a scratch file with extension .sb only");
+					// $this->setFlash(___("Select a scratch file with extension .sb only", true));
+					// $this->redirect('/services/share_project');
 			}
 
 			//Make sure  Scratch file contains string "Scratch"
@@ -177,28 +178,31 @@ Class ServicesController extends AppController {
 			if($pos===0){
 			}
 			else{
-					$this->setFlash(___("Invalid scratch file", true));
-					$this->redirect('/services/share_project');
+                    echo("Invalid scratch file");
+					//$this->setFlash(___("Invalid scratch file", true));
+					//$this->redirect('/services/share_project');
 			}
 
 
 			if (!isset($preview_file['error']) || $preview_file['error'])
 			{
-				$this->setFlash(___("Select a priview image", true));
-					$this->redirect('/services/share_project');
+                    echo("Select a preview image");
+                    // $this->setFlash(___("Select a priview image", true));
+					// $this->redirect('/services/share_project');
 
 			}
 			if($preview_file['type'] == "image/png"){
 			}
 			else{
-					$this->setFlash(___("Upload only a PNG image", true));
-					$this->redirect('/services/share_project');
+                    echo("Upload only a PNG image");
+					// $this->setFlash(___("Upload only a PNG image", true));
+					// $this->redirect('/services/share_project');
 			}
 			if (empty($project_name))
 			{
-
-				$this->setFlash(___("Please Enter Project name", true));
-				$this->redirect('/services/share_project');
+                echo("Please Enter Project name");
+				// $this->setFlash(___("Please Enter Project name", true));
+				// $this->redirect('/services/share_project');
 
 			}
 
@@ -241,14 +245,16 @@ Class ServicesController extends AppController {
 			if (!empty($project))
 			{
 				// update existing
+                echo("update existin");
 				$project_id = $project['Project']['id'];
 				$project_version = ((int)$project['Project']['version']); // + 1;
 				$this->Project->id = $project_id;
 				$data['Project']['version'] = $project_version + 1;
 				if($project['Project']['proj_visibility']=='delbyadmin' || $project['Project']['proj_visibility']=='censbyadmin' ||$project['Project']['proj_visibility']=='censbycomm')
 				{
-					$this->setFlash(___("Invalid Project", true), FLASH_NOTICE_KEY);
-					$this->redirect('/services/share_project');
+                    echo("Invalid Project (censor)");
+					// $this->setFlash(___("Invalid Project", true), FLASH_NOTICE_KEY);
+					// $this->redirect('/services/share_project');
 				}
 				else
 				{
@@ -280,8 +286,9 @@ Class ServicesController extends AppController {
 			$data['Project']['upload_ip'] = ip2long($client_ip);
 
 			if (!$this->Project->save($data['Project'])) {
-				$this->setFlash(___("Error with project saving", true));
-				$this->redirect('/services/share_project');
+                echo("Error with project saving");
+				// $this->setFlash(___("Error with project saving", true));
+				// $this->redirect('/services/share_project');
 			}
 
 
@@ -320,8 +327,9 @@ Class ServicesController extends AppController {
 				}
 
 				if (!move_uploaded_file($binary_file['tmp_name'], $bin_file)) {
-				$this->setFlash(___("Binary upload error", true));
-				$this->redirect('/services/share_project');
+                    echo("Binary upload error");
+				//$this->setFlash(___("Binary upload error", true));
+				//$this->redirect('/services/share_project');
 			}
 
 			if (isset($preview_file['error']) && !$preview_file['error']) {

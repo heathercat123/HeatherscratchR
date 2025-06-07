@@ -423,6 +423,12 @@ define('WELCOMING_COMMITTEE_GALLERY_ID', '146521');
 **/
 define('GET_LATEST_PROJECT_AUTH_KEY','xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
 
+// Cake 1.3 compat
+define('VALID_NOT_EMPTY', '/.+/');
+define('VALID_EMAIL', "/^[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:[a-z]{2,4}|museum|travel)$/i");
+define('PEAR', VENDORS.'Pear'.DS);
+
+
 /**
   * Returns theme url for html link destination
   */

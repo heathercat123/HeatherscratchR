@@ -34,6 +34,7 @@
 
 <div id="main">
     <div id="messages">
+    <?php if ($notify_count > 0): ?>
 	<?php foreach($notifications as $notification):?>
 	<?php
 		$notification = $notification[0]; 
@@ -44,7 +45,7 @@
 		<div id='notification_<?php echo $id; ?>' class="notification" style='display:block;' align='left'>
 			<?php echo $ajax->link($html->image('delete.png'), '#', 
 				array("url"=>"/notifications/hide/".$id, "update"=>"notification_$id", 
-				"complete"=>"updateNotificationsCounter()"), NULL, false); ?>
+				"complete"=>"updateNotificationsCounter()", "escape"=>false), NULL, false); ?>
 			<?php echo $message; ?>
 	    </div>
 	<?php else: ?>
@@ -52,12 +53,13 @@
 			<?php
 				echo $ajax->link($html->image('delete.png'), '#', 
 				array("url" => '/requests/decline?type=friend&rid='.$id, "update"=>"request_$id",
-				"complete"=>"updateNotificationsCounter()"), NULL, false); 
+				"complete"=>"updateNotificationsCounter()", "escape"=>false), NULL, false); 
 			?>
 			<?php echo $message; ?>
 	    </div>
 	<?php endif; ?>
     <?php endforeach; ?>
+    <?php endif; ?>
 	
 	<?php if($notify_count > 0): ?>
 	<?php

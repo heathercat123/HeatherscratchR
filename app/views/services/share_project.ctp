@@ -9,13 +9,14 @@
 				endif;
 				echo "</div>";
 ?>
-<form id="create_gallery" action="<?php echo $html->url('/services/share_project/')?>" method="post" enctype='multipart/form-data'>
+<?php echo $form->create('Services', array('action' => 'share_project', 'type' => 'file')); ?>
+<!--<form id="create_gallery" action="<?php echo $html->url('/services/share_project/')?>" method="post" enctype='multipart/form-data'>-->s
 <div class = "project_share_form">
 	<div class = "project_share_item_left">
 		<label for="create_gallery_name"><?php ___('Scratch file'); ?></label>
 	</div>
 	<div class = "project_share_item_right">
-	<?php echo $form->file('binary_file',array('name'=>'binary_file'))?>
+	<?php echo $form->file('binary_file',array('name'=>'data[form][binary_file]'))?>
 		
 	</div>
 </div>
@@ -25,7 +26,7 @@
 		<label for="create_gallery_name"><?php ___('Preview image'); ?></label>
 	</div>
 	<div class = "project_share_item_right">
-	<?php echo $form->file('priview_image',array('name'=>'priview_image'))?>
+	<?php echo $form->file('priview_image',array('name'=>'data[form][priview_image]'))?>
 		
 	</div>
 </div>
@@ -66,9 +67,14 @@
 	</div>
 	<div class = "project_share_item_right">
 	
-	<?php $tagsarray =array('Animation'=>'Animation', 'Art'=>'Art','Game'=>'Game','Music'=>'Music','Simulation'=>'Simulation','Story'=>'Story');?>
-	<?php  echo $form->input('Project.tags', array('type'=>'select', 'multiple'=>'checkbox', 'name'=>'tags','options'=>$tagsarray,'label'=>''));?>
-		
+	<div class="input select"><label for="ProjectTags"></label><input type="hidden" name="data[Project][tags]" value="" />
+<div class="checkbox"><input type="checkbox" name="data[Project][tags][]" value="Animation" id="ProjectTagsAnimation" /><label for="ProjectTagsAnimation">Animation</label></div>
+<div class="checkbox"><input type="checkbox" name="data[Project][tags][]" value="Art" id="ProjectTagsArt" /><label for="ProjectTagsArt">Art</label></div>
+<div class="checkbox"><input type="checkbox" name="data[Project][tags][]" value="Game" id="ProjectTagsGame" /><label for="ProjectTagsGame">Game</label></div>
+<div class="checkbox"><input type="checkbox" name="data[Project][tags][]" value="Music" id="ProjectTagsMusic" /><label for="ProjectTagsMusic">Music</label></div>
+<div class="checkbox"><input type="checkbox" name="data[Project][tags][]" value="Simulation" id="ProjectTagsSimulation" /><label for="ProjectTagsSimulation">Simulation</label></div>
+<div class="checkbox"><input type="checkbox" name="data[Project][tags][]" value="Story" id="ProjectTagsStory" /><label for="ProjectTagsStory">Story</label></div>
+</div>
 	</div>
 </div>
 

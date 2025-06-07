@@ -166,9 +166,11 @@ class UsersController extends AppController {
 			$view_stats = $this->ViewStat->findAll("ViewStat.ipaddress = INET_ATON('$client_ip')", 'DISTINCT user_id');
 
             $user_ids_accessing_same_ip = array();
-			foreach($view_stats as $view_stat) {
-				array_push($user_ids_accessing_same_ip, $view_stat['ViewStat']['user_id']);
-			}
+            if ($view_stats) {
+                foreach($view_stats as $view_stat) {
+                    array_push($user_ids_accessing_same_ip, $view_stat['ViewStat']['user_id']);
+                }
+            }
 			$user_ids_accessing_same_ip = implode(',', $user_ids_accessing_same_ip);
 
 			if(!empty($user_ids_accessing_same_ip)) {
@@ -1065,20 +1067,22 @@ class UsersController extends AppController {
 		$featured_count = 0;
 		$featureProlectList = array();
 		$image_name='';
-		foreach($allUserProject as $userProject) {
-			if(isset($userProject['FeaturedProject']['id'] )) {
-				$featured_count+=1;
-				if(SHOW_RIBBON ==1):
-				$text =$this->convertDate($userProject['FeaturedProject']['timestamp']);
-			 	$image_name =$this->ribbonImageName($userProject['FeaturedProject']['timestamp']);
-			 	$this->Thumb->generateThumb($ribbon_image='ribbon.gif',$text,$dir="small_ribbon",$image_name,$dimension='40x30',125,125);
+        if ($allUserProject) {
+            foreach($allUserProject as $userProject) {
+                if(isset($userProject['FeaturedProject']['id'] )) {
+                    $featured_count+=1;
+                    if(SHOW_RIBBON ==1):
+                    $text =$this->convertDate($userProject['FeaturedProject']['timestamp']);
+                    $image_name =$this->ribbonImageName($userProject['FeaturedProject']['timestamp']);
+                    $this->Thumb->generateThumb($ribbon_image='ribbon.gif',$text,$dir="small_ribbon",$image_name,$dimension='40x30',125,125);
 				
-				$id = $userProject['Project']['id'];
-				$image_name =$image_name; 
-				$featureProlectList[$id] = $image_name;
-				endif;
-			}
-		}
+                    $id = $userProject['Project']['id'];
+                    $image_name =$image_name; 
+                    $featureProlectList[$id] = $image_name;
+                    endif;
+                }
+            }
+        }
 		$this->set('featureProlectList',$featureProlectList);
 		
 		$this->set('featured_count', $featured_count);
@@ -1113,16 +1117,18 @@ class UsersController extends AppController {
 		//count the number of visible comments on each project
 		$final_projects = Array();
 		$counter = 0;
-		foreach($myProjects as $project)
-		{
-			$pid = $project['Project']['id'];
-			
-			$total_comments = $this->Pcomment->findCount(array('Pcomment.project_id'=>$pid,'Pcomment.comment_visibility'=>'visible')); 
-			$temp_project = $project;
-			$temp_project['Project']['totalComments'] = $total_comments;
-			$final_projects[$counter] = $temp_project;
-			$counter++;
-		}
+        if ($myProjects) {
+            foreach($myProjects as $project)
+            {
+                $pid = $project['Project']['id'];
+
+                $total_comments = $this->Pcomment->findCount(array('Pcomment.project_id'=>$pid,'Pcomment.comment_visibility'=>'visible')); 
+                $temp_project = $project;
+                $temp_project['Project']['totalComments'] = $total_comments;
+                $final_projects[$counter] = $temp_project;
+                $counter++;
+            }
+        }
 		
 		$this->set('projects', $final_projects);
 		$this->set('user_id', $user_id);
@@ -1137,21 +1143,21 @@ class UsersController extends AppController {
 		
 		$final_favorites = Array();
 		$counter = 0;
-		foreach ($favorites as $favorite) {
-		$current_favorite = $favorite;
-			
-		if ($favorite['Project']['status'] != 'safe') {
-		if ($content_status == 'all') {
-			$final_favorites[$counter] = $current_favorite;
-			$counter++;
-			} else {
-				
-			}
-			} else {
-				$final_favorites[$counter] = $current_favorite;
-				$counter++;
-			}
-		}
+        if ($favorites) {
+            foreach ($favorites as $favorite) {
+                $current_favorite = $favorite;
+
+                if ($favorite['Project']['status'] != 'safe') {
+                    if ($content_status == 'all') {
+                        $final_favorites[$counter] = $current_favorite;
+                        $counter++;
+                    } else {
+                        $final_favorites[$counter] = $current_favorite;
+                        $counter++;
+                    }
+                }
+            }
+    }
 		$this->set('favorites', $final_favorites);
 
 		// get all friends of user
@@ -1183,6 +1189,7 @@ class UsersController extends AppController {
 					$this->set("friendDeclined", false);
 
 					$fr = $this->FriendRequest->find(array("user_id"=>$user_id, "to_id"=>$session_UID));
+                    echo($fr['FriendRequest']['status']);
 
 					if (!empty($fr)) {
 						$this->set("friendPending", ($fr['FriendRequest']['status'] == "pending"));
@@ -2157,8 +2164,10 @@ class UsersController extends AppController {
                                 ." AND GalleryMembership.user_id = $user_id"
                                 ." AND ( GalleryMembership.type = 0 OR GalleryMembership.type = 3 )");
 		
-		$return_array = array_splice($gallery_membership, 0, 5);
-		return $return_array;
+        if ($gallery_membership) {
+            $return_array = array_splice($gallery_membership, 0, 5);
+            return $return_array;
+        }
 	}
 	/********************************* KARMA ***********************************/
 	/**

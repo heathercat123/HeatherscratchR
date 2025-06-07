@@ -482,7 +482,7 @@ function langList($countries) {
 	<div class="sidecontainer">
 	  <h4>
 	  <?php
-		$nf = count($friends);
+		$nf = count($friends) - 1;
 		if ($nf == 0) {
 			___('No friends yet.');
 		}
@@ -496,6 +496,7 @@ function langList($countries) {
 	  </h4>
       <ul class="sidelist">
 		<?php
+        if ($friends):
 	  	foreach ($friends as $friend):
 		$relationship_id = $friend['Relationship']['relationship_type_id'];
 		$rel_id = $friend['Relationship']['id'];
@@ -520,6 +521,7 @@ function langList($countries) {
 		?>
 		</li>
         <?php endforeach; ?>
+        <?php endif; ?>
       </ul>
 	  <?php if ($showmorefriends): ?>
   	   <p class="more"><a href="<?php echo $html->url('/users/showfriends/')?><?php e($user['id']); ?>"><?php ___('See more');?></a> </p>

@@ -5,7 +5,7 @@
  */
 class AppController extends Controller {
 
-    var $helpers = array("head",'Time', "Util");
+    var $helpers = array("head",'Time', "Util", "session");
     var $uses = array('UserEvent', 'AdminTag', 'Relationship', 'Project', 'Pcomment', 'Gcomment', 'Gallery', 'GalleryProject', 'GalleryMembership', 'BlockedUser', 'Notification', 'User', 'Announcement', 'BlockedIp', 'FriendRequest');
 	var $components = array('RequestHandler', 'Cookie', 'Session', 'Thumb', 'GeoIp');
 	var $layout = 'scratchr_default';
@@ -958,6 +958,9 @@ ini_restore ("memory_limit");
 	* Sets additional variables needed by galleries
 	**/
 	function finalize_galleries($galleries) {
+        if (!$galleries)
+            return Array();
+
 		$final_array = Array();
 		foreach ($galleries as $gallery) {
 			$gallery_id = $gallery['Gallery']['id'];

@@ -453,6 +453,7 @@ e($tagcloud->getTagCloud($tags, '/tagged/toploved', null, 3, 'scratch_tag',', ',
 		/**
 		 * Populate recent visitors
 		 */
+        if ($recentvisitors):
 		foreach ($recentvisitors as $visitor):
 		$username = $visitor['User']['urlname'];
 		$user_role = $visitor['User']['role'];
@@ -463,6 +464,7 @@ e($tagcloud->getTagCloud($tags, '/tagged/toploved', null, 3, 'scratch_tag',', ',
 		?>
 		<li><img src="<?php e($buddy_icon)?>" title="<?php e($username)?>" alt="<?php e($username)?>" width="28" height="28"><?php echo $util->username($username, $user_role);?></li>
         <?php endforeach;?>
+        <?php endif; ?>
       </ul>
     </div>
 

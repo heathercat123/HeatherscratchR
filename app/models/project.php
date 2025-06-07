@@ -820,12 +820,13 @@ Class Project extends AppModel
             $mysqli = new mysqli($config['host'], $config['login'],
                                 $config['password'], $config['database']);
             $rs = $mysqli->query( "CALL latest1friendproject($user_id)" );
-            
-            while($project_count <= MAX_FRIENDS_PROJECTS && $row = $rs->fetch_object()) {
-                array_push($project_ids, $row->id);
-                $project_count++;
+            if ($rs) {
+                while($project_count <= MAX_FRIENDS_PROJECTS && $row = $rs->fetch_object()) {
+                    array_push($project_ids, $row->id);
+                    $project_count++;
+                }
+                mysqli_free_result($rs);
             }
-            mysqli_free_result($rs);
             mysqli_close($mysqli);
             $project_data = array($project_count, $project_ids);
             $this->mc_set('friends_projects_data', $project_data, $user_id, HOME_FRIENDS_PROJECTS_TTL);
