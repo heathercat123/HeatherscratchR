@@ -7,32 +7,30 @@
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) : Rapid Development Framework <http://www.cakephp.org/>
- * Copyright 2005-2008, Cake Software Foundation, Inc.
- *								1785 E. Sahara Avenue, Suite 490-204
- *								Las Vegas, Nevada 89104
+ * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
+ * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @filesource
- * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
- * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
- * @package			cake
- * @subpackage		cake.cake.libs.controller.components
- * @since			CakePHP(tm) v 0.10.8.2156
- * @version			$Revision$
- * @modifiedby		$LastChangedBy$
- * @lastmodified	$Date$
- * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link          http://cakephp.org CakePHP(tm) Project
+ * @package       cake
+ * @subpackage    cake.cake.libs.controller.components
+ * @since         CakePHP(tm) v 0.10.8.2156
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
+ * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
+App::import('Core', 'String');
 /**
  * Short description for file.
  *
  * Long description for file
  *
- * @package		cake
- * @subpackage	cake.cake.libs.controller.components
+ * @package       cake
+ * @subpackage    cake.cake.libs.controller.components
  */
 class SecurityComponent extends Object {
 /**
@@ -108,7 +106,6 @@ class SecurityComponent extends Object {
 	var $loginOptions = array('type' => '', 'prompt' => null);
 /**
  * An associative array of usernames/passwords used for HTTP-authenticated logins.
- * If using digest authentication, passwords should be MD5-hashed.
  *
  * @var array
  * @access public
@@ -311,7 +308,7 @@ class SecurityComponent extends Object {
 		return null;
 	}
 /**
- * Generates the text of an HTTP-authentication request header from an array of options..
+ * Generates the text of an HTTP-authentication request header from an array of options.
  *
  * @param array $options Set of options for header
  * @return string HTTP-authentication request header
@@ -325,11 +322,11 @@ class SecurityComponent extends Object {
 
 		if (strtolower($options['type']) == 'digest') {
 			$out[] = 'qop="auth"';
-			$out[] = 'nonce="' . uniqid() . '"'; //str_replace('-', '', String::uuid())
+			$out[] = 'nonce="' . uniqid("") . '"';
 			$out[] = 'opaque="' . md5($options['realm']).'"';
 		}
 
-		return $auth . ' ' . join(',', $out);
+		return $auth . ' ' . implode(',', $out);
 	}
 /**
  * Parses an HTTP digest authentication response, and returns an array of the data, or null on failure.
@@ -345,7 +342,7 @@ class SecurityComponent extends Object {
 		$keys = array();
 		$match = array();
 		$req = array('nonce' => 1, 'nc' => 1, 'cnonce' => 1, 'qop' => 1, 'username' => 1, 'uri' => 1, 'response' => 1);
-		preg_match_all('@(\w+)=([\'"]?)([a-zA-Z0-9=./\_-]+)\2@', $digest, $match, PREG_SET_ORDER);
+		preg_match_all('/(\w+)=([\'"]?)([a-zA-Z0-9@=.\/_-]+)\2/', $digest, $match, PREG_SET_ORDER);
 
 		foreach ($match as $i) {
 			$keys[$i[1]] = $i[3];
@@ -383,12 +380,11 @@ class SecurityComponent extends Object {
  * @see SecurityComponent::$blackHoleCallback
  */
 	function blackHole(&$controller, $error = '') {
-		$this->Session->del('_Token');
-
 		if ($this->blackHoleCallback == null) {
 			$code = 404;
 			if ($error == 'login') {
 				$code = 401;
+				$controller->header($this->loginRequest());
 			}
 			$controller->redirect(null, $code, true);
 		} else {
@@ -501,8 +497,7 @@ class SecurityComponent extends Object {
 				$login = $this->loginCredentials($this->loginOptions['type']);
 
 				if ($login == null) {
-					// User hasn't been authenticated yet
-					header($this->loginRequest());
+					$controller->header($this->loginRequest());
 
 					if (!empty($this->loginOptions['prompt'])) {
 						$this->_callback($controller, $this->loginOptions['prompt']);
@@ -514,7 +509,6 @@ class SecurityComponent extends Object {
 						$this->_callback($controller, $this->loginOptions['login'], array($login));
 					} else {
 						if (strtolower($this->loginOptions['type']) == 'digest') {
-							// Do digest authentication
 							if ($login && isset($this->loginUsers[$login['username']])) {
 								if ($login['response'] == $this->generateDigestResponseHash($login)) {
 									return true;
@@ -548,7 +542,7 @@ class SecurityComponent extends Object {
 		}
 		$data = $controller->data;
 
-		if (!isset($data['_Token']) || !isset($data['_Token']['fields'])) {
+		if (!isset($data['_Token']) || !isset($data['_Token']['fields']) || !isset($data['_Token']['key'])) {
 			return false;
 		}
 		$token = $data['_Token']['key'];
@@ -559,6 +553,8 @@ class SecurityComponent extends Object {
 			if ($tokenData['expires'] < time() || $tokenData['key'] !== $token) {
 				return false;
 			}
+		} else {
+			return false;
 		}
 
 		$locked = null;
@@ -570,10 +566,22 @@ class SecurityComponent extends Object {
 		}
 		unset($check['_Token']);
 
+		$locked = explode('|', $locked);
+
 		$lockedFields = array();
 		$fields = Set::flatten($check);
 		$fieldList = array_keys($fields);
-		$locked = unserialize(str_rot13($locked));
+		$multi = array();
+
+		foreach ($fieldList as $i => $key) {
+			if (preg_match('/\.\d+$/', $key)) {
+				$multi[$i] = preg_replace('/\.\d+$/', '', $key);
+				unset($fieldList[$i]);
+			}
+		}
+		if (!empty($multi)) {
+			$fieldList += array_unique($multi);
+		}
 
 		foreach ($fieldList as $i => $key) {
 			$isDisabled = false;
@@ -613,6 +621,10 @@ class SecurityComponent extends Object {
  */
 	function _generateToken(&$controller) {
 		if (isset($controller->params['requested']) && $controller->params['requested'] === 1) {
+			if ($this->Session->check('_Token')) {
+				$tokenData = unserialize($this->Session->read('_Token'));
+				$controller->params['_Token'] = $tokenData;
+			}
 			return false;
 		}
 		$authKey = Security::generateAuthKey();
@@ -643,7 +655,6 @@ class SecurityComponent extends Object {
 		}
 		$controller->params['_Token'] = $token;
 		$this->Session->write('_Token', serialize($token));
-
 		return true;
 	}
 /**

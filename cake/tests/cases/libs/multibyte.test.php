@@ -1,37 +1,34 @@
 <?php
 /* SVN FILE: $Id$ */
 /**
- * Short description for file.
+ * MultibyteTest file
  *
  * Long description for file
  *
  * PHP versions 4 and 5
  *
  * CakePHP(tm) Tests <https://trac.cakephp.org/wiki/Developement/TestSuite>
- * Copyright 2005-2008, Cake Software Foundation, Inc.
- *								1785 E. Sahara Avenue, Suite 490-204
- *								Las Vegas, Nevada 89104
+ * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  *  Licensed under The Open Group Test Suite License
  *  Redistributions of files must retain the above copyright notice.
  *
- * @filesource
- * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
- * @link				https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
- * @package			cake.tests
- * @subpackage		cake.tests.cases.libs
- * @since			CakePHP(tm) v 1.2.0.6833
- * @version			$Revision$
- * @modifiedby		$LastChangedBy$
- * @lastmodified	$Date$
- * @license			http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
+ * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link          https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
+ * @package       cake
+ * @subpackage    cake.tests.cases.libs
+ * @since         CakePHP(tm) v 1.2.0.6833
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
+ * @license       http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
  */
 App::import('Core', 'Multibyte');
 /**
- * Short description for class.
+ * MultibyteTest class
  *
- * @package    cake.tests
- * @subpackage cake.tests.cases.libs
+ * @package       cake
+ * @subpackage    cake.tests.cases.libs
  */
 class MultibyteTest extends CakeTestCase {
 /**
@@ -4788,6 +4785,10 @@ class MultibyteTest extends CakeTestCase {
  * @return void
  */
 	function testUsingMbStrrpos() {
+		$skip = extension_loaded('mbstring') && version_compare(PHP_VERSION, '5.2.0', '<');
+		if ($this->skipIf($skip, '%s PHP version does not support $offset parameter in mb_strrpos().')) {
+			return;
+		}
 		$string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 		$find = 'F';
 		$result = mb_strrpos($string, $find);

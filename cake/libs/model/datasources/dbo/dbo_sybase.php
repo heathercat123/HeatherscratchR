@@ -7,32 +7,29 @@
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
- * Copyright 2005-2008, Cake Software Foundation, Inc.
- *								1785 E. Sahara Avenue, Suite 490-204
- *								Las Vegas, Nevada 89104
+ * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
+ * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @filesource
- * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
- * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
- * @package			cake
- * @subpackage		cake.cake.libs.model.datasources.dbo
- * @since			CakePHP(tm) v 1.2.0.3097
- * @version			$Revision$
- * @modifiedby		$LastChangedBy$
- * @lastmodified	$Date$
- * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link          http://cakephp.org CakePHP(tm) Project
+ * @package       cake
+ * @subpackage    cake.cake.libs.model.datasources.dbo
+ * @since         CakePHP(tm) v 1.2.0.3097
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
+ * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 /**
  * Short description for class.
  *
  * Long description for class
  *
- * @package		cake
- * @subpackage	cake.cake.libs.model.datasources.dbo
+ * @package       cake
+ * @subpackage    cake.cake.libs.model.datasources.dbo
  */
 class DboSybase extends DboSource {
 /**
@@ -91,18 +88,26 @@ class DboSybase extends DboSource {
  */
 	function connect() {
 		$config = $this->config;
-		$this->connected = false;
 
-		if (!$config['persistent']) {
-			$this->connection = sybase_connect($config['host'], $config['login'], $config['password'], true);
+		$port = '';
+		if ($config['port'] !== null) {
+			$port = ':' . $config['port'];
+		}
+		if ($config['persistent']) {
+			$this->connection = sybase_pconnect($config['host'] . $port, $config['login'], $config['password']);
 		} else {
-			$this->connection = sybase_pconnect($config['host'], $config['login'], $config['password']);
+			$this->connection = sybase_connect($config['host'] . $port, $config['login'], $config['password'], true);
 		}
-
-		if (sybase_select_db($config['database'], $this->connection)) {
-			$this->connected = true;
-		}
+		$this->connected = sybase_select_db($config['database'], $this->connection);
 		return $this->connected;
+	}
+/**
+ * Check that one of the sybase extensions is installed
+ *
+ * @return boolean
+ **/
+	function enabled() {
+		return extension_loaded('sybase') || extension_loaded('sybase_ct');
 	}
 /**
  * Disconnects from database.
@@ -134,7 +139,7 @@ class DboSybase extends DboSource {
 			return $cache;
 		}
 
-		$result = $this->_execute("select name from sysobjects where type='U'");
+		$result = $this->_execute("SELECT name FROM sysobjects WHERE type IN ('U', 'V')");
 		if (!$result) {
 			return array();
 		} else {
@@ -170,10 +175,11 @@ class DboSybase extends DboSource {
 				$column[0] = $column[$colKey[0]];
 			}
 			if (isset($column[0])) {
-				$fields[$column[0]['Field']] = array('type' => $this->column($column[0]['Type']),
-													'null' => $column[0]['Null'],
-													'length' => $this->length($column[0]['Type']),
-													);
+				$fields[$column[0]['Field']] = array(
+					'type' => $this->column($column[0]['Type']),
+					'null' => $column[0]['Null'],
+					'length' => $this->length($column[0]['Type']),
+				);
 			}
 		}
 
@@ -383,5 +389,4 @@ class DboSybase extends DboSource {
 		}
 	}
 }
-
 ?>

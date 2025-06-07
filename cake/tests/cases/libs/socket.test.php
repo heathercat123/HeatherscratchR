@@ -1,42 +1,39 @@
 <?php
 /* SVN FILE: $Id$ */
 /**
- * Short description for file.
+ * SocketTest file
  *
  * Long description for file
  *
  * PHP versions 4 and 5
  *
  * CakePHP(tm) Tests <https://trac.cakephp.org/wiki/Developement/TestSuite>
- * Copyright 2005-2008, Cake Software Foundation, Inc.
- *								1785 E. Sahara Avenue, Suite 490-204
- *								Las Vegas, Nevada 89104
+ * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  *  Licensed under The Open Group Test Suite License
  *  Redistributions of files must retain the above copyright notice.
  *
- * @filesource
- * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
- * @link				https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
- * @package			cake.tests
- * @subpackage		cake.tests.cases.libs
- * @since			CakePHP(tm) v 1.2.0.4206
- * @version			$Revision$
- * @modifiedby		$LastChangedBy$
- * @lastmodified	$Date$
- * @license			http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
+ * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link          https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
+ * @package       cake
+ * @subpackage    cake.tests.cases.libs
+ * @since         CakePHP(tm) v 1.2.0.4206
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
+ * @license       http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
  */
 App::import('Core', 'Socket');
 /**
- * Short description for class.
+ * SocketTest class
  *
- * @package		cake.tests
- * @subpackage	cake.tests.cases.libs
+ * @package       cake
+ * @subpackage    cake.tests.cases.libs
  */
 class SocketTest extends CakeTestCase {
 /**
  * setUp method
- * 
+ *
  * @access public
  * @return void
  */
@@ -44,8 +41,17 @@ class SocketTest extends CakeTestCase {
 		$this->Socket = new CakeSocket();
 	}
 /**
+ * tearDown method
+ *
+ * @access public
+ * @return void
+ */
+	function tearDown() {
+		unset($this->Socket);
+	}
+/**
  * testConstruct method
- * 
+ *
  * @access public
  * @return void
  */
@@ -77,7 +83,7 @@ class SocketTest extends CakeTestCase {
 	}
 /**
  * testSocketConnection method
- * 
+ *
  * @access public
  * @return void
  */
@@ -98,7 +104,7 @@ class SocketTest extends CakeTestCase {
 	}
 /**
  * testSocketHost method
- * 
+ *
  * @access public
  * @return void
  */
@@ -119,7 +125,7 @@ class SocketTest extends CakeTestCase {
 	}
 /**
  * testSocketWriting method
- * 
+ *
  * @access public
  * @return void
  */
@@ -129,7 +135,7 @@ class SocketTest extends CakeTestCase {
 	}
 /**
  * testSocketReading method
- * 
+ *
  * @access public
  * @return void
  */
@@ -137,10 +143,22 @@ class SocketTest extends CakeTestCase {
 		$this->Socket = new CakeSocket(array('timeout' => 5));
 		$this->Socket->connect();
 		$this->assertEqual($this->Socket->read(26), null);
+
+		$config = array('host' => 'www.cakephp.org', 'timeout' => 1);
+		$this->Socket = new CakeSocket($config);
+		$this->assertTrue($this->Socket->connect());
+		$this->assertFalse($this->Socket->read(1024 * 1024));
+		$this->assertEqual($this->Socket->lastError(), '2: ' . __('Connection timed out', true));
+
+		$config = array('host' => 'www.cakephp.org', 'timeout' => 30);
+		$this->Socket = new CakeSocket($config);
+		$this->assertTrue($this->Socket->connect());
+		$this->assertEqual($this->Socket->read(26), null);
+		$this->assertEqual($this->Socket->lastError(), null);
 	}
 /**
  * testLastError method
- * 
+ *
  * @access public
  * @return void
  */
@@ -151,7 +169,7 @@ class SocketTest extends CakeTestCase {
 	}
 /**
  * testReset method
- * 
+ *
  * @access public
  * @return void
  */
@@ -166,15 +184,6 @@ class SocketTest extends CakeTestCase {
 		$anotherSocket = new CakeSocket($config);
 		$anotherSocket->reset();
 		$this->assertEqual(array(), $anotherSocket->config);
-	}
-/**
- * tearDown method
- * 
- * @access public
- * @return void
- */
-	function tearDown() {
-		unset($this->Socket);
 	}
 }
 ?>

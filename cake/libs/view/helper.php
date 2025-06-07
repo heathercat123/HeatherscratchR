@@ -1,6 +1,5 @@
 <?php
 /* SVN FILE: $Id$ */
-
 /**
  * Backend for helpers.
  *
@@ -8,26 +7,22 @@
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
- * Copyright 2005-2008, Cake Software Foundation, Inc.
- *								1785 E. Sahara Avenue, Suite 490-204
- *								Las Vegas, Nevada 89104
+ * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
+ * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @filesource
- * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
- * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
- * @package			cake
- * @subpackage		cake.cake.libs.view
- * @since			CakePHP(tm) v 0.2.9
- * @version			$Revision$
- * @modifiedby		$LastChangedBy$
- * @lastmodified	$Date$
- * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link          http://cakephp.org CakePHP(tm) Project
+ * @package       cake
+ * @subpackage    cake.cake.libs.view
+ * @since         CakePHP(tm) v 0.2.9
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
+ * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
-
 /**
  * Included libs
  */
@@ -38,11 +33,10 @@ App::import('Core', 'Overloadable');
  *
  * Long description for class
  *
- * @package		cake
- * @subpackage	cake.cake.libs.view
+ * @package       cake
+ * @subpackage    cake.cake.libs.view
  */
 class Helper extends Overloadable {
-
 /**
  * List of helpers used by this helper
  *
@@ -180,7 +174,7 @@ class Helper extends Overloadable {
  * @return string  Full translated URL with base path.
  */
 	function url($url = null, $full = false) {
-		return Router::url($url, $full);
+		return h(Router::url($url, $full));
 	}
 /**
  * Checks if a file exists when theme is used, if no file is found default location is returned
@@ -318,7 +312,7 @@ class Helper extends Overloadable {
 
 		if ($setScope) {
 			$view->modelScope = false;
-		} elseif (join('.', $view->entity()) == $entity) {
+		} elseif (implode('.', $view->entity()) == $entity) {
 			return;
 		}
 
@@ -371,11 +365,11 @@ class Helper extends Overloadable {
 
 		switch (count($parts)) {
 			case 1:
-				if($view->modelScope === false) {
+				if ($view->modelScope === false) {
 					$view->model = $parts[0];
 				} else {
 					$view->field = $parts[0];
-					if($sameScope === false) {
+					if ($sameScope === false) {
 						$view->association = $parts[0];
 					}
 				}
@@ -535,7 +529,7 @@ class Helper extends Overloadable {
 				$name = $field;
 			break;
 			default:
-				$name = 'data[' . join('][', $view->entity()) . ']';
+				$name = 'data[' . implode('][', $view->entity()) . ']';
 			break;
 		}
 
@@ -572,20 +566,31 @@ class Helper extends Overloadable {
 
 		$result = null;
 
-		if (isset($this->data[$this->model()][$this->field()])) {
-			$result = $this->data[$this->model()][$this->field()];
-		} elseif (isset($this->data[$this->field()]) && is_array($this->data[$this->field()])) {
-			if (ClassRegistry::isKeySet($this->field())) {
-				$model =& ClassRegistry::getObject($this->field());
-				$result = $this->__selectedArray($this->data[$this->field()], $model->primaryKey);
+		$modelName = $this->model();
+		$fieldName = $this->field();
+		$modelID = $this->modelID();
+
+		if (is_null($fieldName)) {
+			$fieldName = $modelName;
+			$modelName = null;
+		}
+
+		if (isset($this->data[$fieldName]) && $modelName === null) {
+			$result = $this->data[$fieldName];
+		} elseif (isset($this->data[$modelName][$fieldName])) {
+			$result = $this->data[$modelName][$fieldName];
+		} elseif (isset($this->data[$fieldName]) && is_array($this->data[$fieldName])) {
+			if (ClassRegistry::isKeySet($fieldName)) {
+				$model =& ClassRegistry::getObject($fieldName);
+				$result = $this->__selectedArray($this->data[$fieldName], $model->primaryKey);
 			}
-		} elseif (isset($this->data[$this->model()][$this->modelID()][$this->field()])) {
-			$result = $this->data[$this->model()][$this->modelID()][$this->field()];
+		} elseif (isset($this->data[$modelName][$modelID][$fieldName])) {
+			$result = $this->data[$modelName][$modelID][$fieldName];
 		}
 
 		if (is_array($result)) {
 			$view =& ClassRegistry::getObject('view');
-			if(isset($result[$view->fieldSuffix])) {
+			if (array_key_exists($view->fieldSuffix, $result)) {
 				$result = $result[$view->fieldSuffix];
 			}
 		}

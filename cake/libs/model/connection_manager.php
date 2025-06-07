@@ -1,50 +1,44 @@
 <?php
 /* SVN FILE: $Id$ */
-
 /**
- * Short description for file.
+ * Datasource connection manager
  *
- * Long description for file
+ * Provides an interface for loading and enumerating connections defined in app/config/database.php
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
- * Copyright 2005-2008, Cake Software Foundation, Inc.
- *								1785 E. Sahara Avenue, Suite 490-204
- *								Las Vegas, Nevada 89104
+ * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
+ * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @filesource
- * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
- * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
- * @package			cake
- * @subpackage		cake.cake.libs.model
- * @since			CakePHP(tm) v 0.10.x.1402
- * @version			$Revision$
- * @modifiedby		$LastChangedBy$
- * @lastmodified	$Date$
- * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link          http://cakephp.org CakePHP(tm) Project
+ * @package       cake
+ * @subpackage    cake.cake.libs.model
+ * @since         CakePHP(tm) v 0.10.x.1402
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
+ * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
+uses ('model' . DS . 'datasources' . DS . 'datasource');
+config('database');
 
 /**
  * Manages loaded instances of DataSource objects
  *
  * Long description for file
  *
- * @package		cake
- * @subpackage	cake.cake.libs.model
+ * @package       cake
+ * @subpackage    cake.cake.libs.model
  */
-
-uses ('model' . DS . 'datasources' . DS . 'datasource');
-config('database');
-
 class ConnectionManager extends Object {
 /**
  * Holds a loaded instance of the Connections object
  *
- * @var object
+ * @var DATABASE_CONFIG
  * @access public
  */
 	var $config = null;
@@ -90,7 +84,7 @@ class ConnectionManager extends Object {
 /**
  * Gets a reference to a DataSource object
  *
- * @param string $name The name of the DataSource, as defined in app/config/connections
+ * @param string $name The name of the DataSource, as defined in app/config/database.php
  * @return object Instance
  * @access public
  * @static
@@ -140,7 +134,7 @@ class ConnectionManager extends Object {
 	function getSourceName(&$source) {
 		$_this =& ConnectionManager::getInstance();
 		$names = array_keys($_this->_dataSources);
-		for ($i = 0; $i < count($names); $i++) {
+		for ($i = 0, $count = count($names); $i < $count; $i++) {
 			if ($_this->_dataSources[$names[$i]] === $source) {
 				return $names[$i];
 			}
@@ -150,8 +144,9 @@ class ConnectionManager extends Object {
 /**
  * Loads the DataSource class for the given connection name
  *
- * @param mixed $connName A string name of the connection, as defined in Connections config,
- *                        or an array containing the file and class name of the object.
+ * @param mixed $connName A string name of the connection, as defined in app/config/database.php,
+ *                        or an array containing the filename (without extension) and class name of the object,
+ *                        to be found in app/models/datasources/ or cake/libs/model/datasources/.
  * @return boolean True on success, null on failure or false if the class is already loaded
  * @access public
  * @static
@@ -179,9 +174,12 @@ class ConnectionManager extends Object {
 		} elseif (fileExistsInPath(LIBS . 'model' . DS . 'datasources' . DS . $conn['filename'] . '.php')) {
 			require (LIBS . 'model' . DS . 'datasources' . DS . $conn['filename'] . '.php');
 		} else {
-			trigger_error(sprintf(__('Unable to load DataSource file %s.php', true), $conn['filename']), E_USER_ERROR);
+		    $error = __('Unable to load DataSource file %s.php', true);
+			trigger_error(sprintf($error, $conn['filename']), E_USER_ERROR);
 			return null;
 		}
+
+		return true;
 	}
 /**
  * Gets a list of class and file names associated with the user-defined DataSource connections
@@ -237,8 +235,6 @@ class ConnectionManager extends Object {
  * @access private
  */
 	function __getDriver($config) {
-		$_this =& ConnectionManager::getInstance();
-
 		if (!isset($config['datasource'])) {
 			$config['datasource'] = 'dbo';
 		}
@@ -246,7 +242,7 @@ class ConnectionManager extends Object {
 		if (isset($config['driver']) && $config['driver'] != null && !empty($config['driver'])) {
 			$filename = $config['datasource'] . DS . $config['datasource'] . '_' . $config['driver'];
 			$classname = Inflector::camelize(strtolower($config['datasource'] . '_' . $config['driver']));
-			$parent = $_this->__getDriver(array('datasource' => $config['datasource']));
+			$parent = $this->__getDriver(array('datasource' => $config['datasource']));
 		} else {
 			$filename = $config['datasource'] . '_source';
 			$classname = Inflector::camelize(strtolower($config['datasource'] . '_source'));

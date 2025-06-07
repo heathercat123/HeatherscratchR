@@ -1,38 +1,34 @@
 <?php
 /* SVN FILE: $Id$ */
 /**
- * Short description for file.
+ * SetTest file
  *
  * Long description for file
  *
  * PHP versions 4 and 5
  *
  * CakePHP(tm) Tests <https://trac.cakephp.org/wiki/Developement/TestSuite>
- * Copyright 2005-2008, Cake Software Foundation, Inc.
- *								1785 E. Sahara Avenue, Suite 490-204
- *								Las Vegas, Nevada 89104
+ * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  *  Licensed under The Open Group Test Suite License
  *  Redistributions of files must retain the above copyright notice.
  *
- * @filesource
- * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
- * @link				https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
- * @package			cake.tests
- * @subpackage		cake.tests.cases.libs
- * @since			CakePHP(tm) v 1.2.0.4206
- * @version			$Revision$
- * @modifiedby		$LastChangedBy$
- * @lastmodified	$Date$
- * @license			http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
+ * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link          https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
+ * @package       cake
+ * @subpackage    cake.tests.cases.libs
+ * @since         CakePHP(tm) v 1.2.0.4206
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
+ * @license       http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
  */
 App::import('Core', 'Set');
-
 /**
- * UnitTestCase for the Set class
+ * SetTest class
  *
- * @package		cake.tests
- * @subpackage	cake.tests.cases.libs
+ * @package       cake
+ * @subpackage    cake.tests.cases.libs
  */
 class SetTest extends CakeTestCase {
 /**
@@ -337,8 +333,23 @@ class SetTest extends CakeTestCase {
 			0 => array('Shirt' => array('color' => 'black')),
 			1 => array('Person' => array('name' => 'Jeff')),
 		);
-		$a = Set::sort($a, '{n}.Person.name', 'asc');
+		$a = Set::sort($a, '{n}.Person.name', 'ASC');
 		$this->assertIdentical($a, $b);
+
+		$names = array(
+			array('employees' => array(array('name' => array('first' => 'John', 'last' => 'Doe')))),
+			array('employees' => array(array('name' => array('first' => 'Jane', 'last' => 'Doe')))),
+			array('employees' => array(array('name' => array()))),
+			array('employees' => array(array('name' => array())))
+		);
+		$result = Set::sort($names, '{n}.employees.0.name', 'asc', 1);
+		$expected = array(
+			array('employees' => array(array('name' => array('first' => 'John', 'last' => 'Doe')))),
+			array('employees' => array(array('name' => array('first' => 'Jane', 'last' => 'Doe')))),
+			array('employees' => array(array('name' => array()))),
+			array('employees' => array(array('name' => array())))
+		);
+		$this->assertEqual($result, $expected);
 	}
 /**
  * testExtract method
@@ -397,39 +408,29 @@ class SetTest extends CakeTestCase {
 		);
 		$b = array('Deep' => $a[0]['Deep']);
 		$c = array(
-			array(
-				'a' => array(
-					'I' => array(
-						'a' => 1
-					)
-				)
-			),
+			array('a' => array('I' => array('a' => 1))),
 			array(
 				'a' => array(
 					2
 				)
 			),
-			array(
-				'a' => array(
-					'II' => array(
-						'a' => 3,
-						'III' => array(
-							'a' => array('foo' => 4)
-						)
-					)
-				)
-			),
+			array('a' => array('II' => array('a' => 3, 'III' => array('a' => array('foo' => 4))))),
 		);
 
 		$expected = array(array('a' => $c[2]['a']));
 		$r = Set::extract('/a/II[a=3]/..', $c);
 		$this->assertEqual($r, $expected);
 
-		$expected = array(1,2,3,4,5);
-		$r = Set::extract('/User/id', $a);
-		$this->assertEqual($r, $expected);
+		$expected = array(1, 2, 3, 4, 5);
+		$this->assertEqual(Set::extract('/User/id', $a), $expected);
 
-		$expected = array(array('id' => 1), array('id' => 2), array('id' => 3), array('id' => 4), array('id' => 5));
+		$expected = array(1, 2, 3, 4, 5);
+		$this->assertEqual(Set::extract('/User/id', $a), $expected);
+
+		$expected = array(
+			array('id' => 1), array('id' => 2), array('id' => 3), array('id' => 4), array('id' => 5)
+		);
+
 		$r = Set::extract('/User/id', $a, array('flatten' => false));
 		$this->assertEqual($r, $expected);
 
@@ -683,10 +684,291 @@ class SetTest extends CakeTestCase {
 
 		$r = Set::extract('/Comment/User[name=/bob|tod/]/..', $habtm);
 		$this->assertEqual($r[0]['Comment']['User']['name'], 'bob');
-		// Currently failing, needs fix
-		// $this->assertEqual($r[1]['Comment']['User']['name'], 'tod');
+
+		$this->assertEqual($r[1]['Comment']['User']['name'], 'tod');
 		$this->assertEqual(count($r), 2);
 
+		$tree = array(
+			array(
+				'Category' => array('name' => 'Category 1'),
+				'children' => array(array('Category' => array('name' => 'Category 1.1')))
+			),
+			array(
+				'Category' => array('name' => 'Category 2'),
+				'children' => array(
+					array('Category' => array('name' => 'Category 2.1')),
+					array('Category' => array('name' => 'Category 2.2'))
+				)
+			),
+			array(
+				'Category' => array('name' => 'Category 3'),
+				'children' => array(array('Category' => array('name' => 'Category 3.1')))
+			)
+		);
+
+		$expected = array(array('Category' => $tree[1]['Category']));
+		$r = Set::extract('/Category[name=Category 2]', $tree);
+		$this->assertEqual($r, $expected);
+
+		$expected = array(
+			array('Category' => $tree[1]['Category'], 'children' => $tree[1]['children'])
+		);
+		$r = Set::extract('/Category[name=Category 2]/..', $tree);
+		$this->assertEqual($r, $expected);
+
+		$expected = array(
+			array('children' => $tree[1]['children'][0]),
+			array('children' => $tree[1]['children'][1])
+		);
+		$r = Set::extract('/Category[name=Category 2]/../children', $tree);
+		$this->assertEqual($r, $expected);
+
+		$habtm = array(
+			array(
+				'Post' => array(
+					'id' => 1,
+					'title' => 'great post',
+				),
+				'Comment' => array(
+					array(
+						'id' => 1,
+						'text' => 'foo',
+						'User' => array(
+							'id' => 1,
+							'name' => 'bob'
+						),
+					),
+					array(
+						'id' => 2,
+						'text' => 'bar',
+						'User' => array(
+							'id' => 2,
+							'name' => 'tod'
+						),
+					),
+				),
+			),
+			array(
+				'Post' => array(
+					'id' => 2,
+					'title' => 'fun post',
+				),
+				'Comment' => array(
+					array(
+						'id' => 3,
+						'text' => '123',
+						'User' => array(
+							'id' => 3,
+							'name' => 'dan'
+						),
+					),
+					array(
+						'id' => 4,
+						'text' => '987',
+						'User' => array(
+							'id' => 4,
+							'name' => 'jim'
+						),
+					),
+				),
+			),
+		);
+
+		$r = Set::extract('/Comment/User[name=/\w+/]/..', $habtm);
+		$this->assertEqual($r[0]['Comment']['User']['name'], 'bob');
+		$this->assertEqual($r[1]['Comment']['User']['name'], 'tod');
+		$this->assertEqual($r[2]['Comment']['User']['name'], 'dan');
+		$this->assertEqual($r[3]['Comment']['User']['name'], 'dan');
+		$this->assertEqual(count($r), 4);
+
+		$r = Set::extract('/Comment/User[name=/[a-z]+/]/..', $habtm);
+		$this->assertEqual($r[0]['Comment']['User']['name'], 'bob');
+		$this->assertEqual($r[1]['Comment']['User']['name'], 'tod');
+		$this->assertEqual($r[2]['Comment']['User']['name'], 'dan');
+		$this->assertEqual($r[3]['Comment']['User']['name'], 'dan');
+		$this->assertEqual(count($r), 4);
+
+		$r = Set::extract('/Comment/User[name=/bob|dan/]/..', $habtm);
+		$this->assertEqual($r[0]['Comment']['User']['name'], 'bob');
+		$this->assertEqual($r[1]['Comment']['User']['name'], 'dan');
+		$this->assertEqual(count($r), 2);
+
+		$r = Set::extract('/Comment/User[name=/bob|tod/]/..', $habtm);
+		$this->assertEqual($r[0]['Comment']['User']['name'], 'bob');
+		$this->assertEqual($r[1]['Comment']['User']['name'], 'tod');
+		$this->assertEqual(count($r), 2);
+
+		$mixedKeys = array(
+			'User' => array(
+				0 => array(
+					'id' => 4,
+					'name' => 'Neo'
+				),
+				1 => array(
+					'id' => 5,
+					'name' => 'Morpheus'
+				),
+				'stringKey' => array()
+			)
+		);
+		$expected = array('Neo', 'Morpheus');
+		$r = Set::extract('/User/name', $mixedKeys);
+		$this->assertEqual($r, $expected);
+
+		$f = array(
+			array(
+				'file' => array(
+					'name' => 'zipfile.zip',
+					'type' => 'application/zip',
+					'tmp_name' => '/tmp/php178.tmp',
+					'error' => 0,
+					'size' => '564647'
+				)
+			),
+			array(
+				'file' => array(
+					'name' => 'zipfile2.zip',
+					'type' => 'application/x-zip-compressed',
+					'tmp_name' => '/tmp/php179.tmp',
+					'error' => 0,
+					'size' => '354784'
+				)
+			),
+			array(
+				'file' => array(
+					'name' => 'picture.jpg',
+					'type' => 'image/jpeg',
+					'tmp_name' => '/tmp/php180.tmp',
+					'error' => 0,
+					'size' => '21324'
+				)
+			)
+		);
+		$expected = array(array('name' => 'zipfile2.zip','type' => 'application/x-zip-compressed','tmp_name' => '/tmp/php179.tmp','error' => 0,'size' => '354784'));
+		$r = Set::extract('/file/.[type=application/x-zip-compressed]', $f);
+		$this->assertEqual($r, $expected);
+
+		$expected = array(array('name' => 'zipfile.zip','type' => 'application/zip','tmp_name' => '/tmp/php178.tmp','error' => 0,'size' => '564647'));
+		$r = Set::extract('/file/.[type=application/zip]', $f);
+		$this->assertEqual($r, $expected);
+
+		$f = array(
+			array(
+				'file' => array(
+					'name' => 'zipfile.zip',
+					'type' => 'application/zip',
+					'tmp_name' => '/tmp/php178.tmp',
+					'error' => 0,
+					'size' => '564647'
+				)
+			),
+			array(
+				'file' => array(
+					'name' => 'zipfile2.zip',
+					'type' => 'application/x zip compressed',
+					'tmp_name' => '/tmp/php179.tmp',
+					'error' => 0,
+					'size' => '354784'
+				)
+			),
+			array(
+				'file' => array(
+					'name' => 'picture.jpg',
+					'type' => 'image/jpeg',
+					'tmp_name' => '/tmp/php180.tmp',
+					'error' => 0,
+					'size' => '21324'
+				)
+			)
+		);
+		$expected = array(array('name' => 'zipfile2.zip','type' => 'application/x zip compressed','tmp_name' => '/tmp/php179.tmp','error' => 0,'size' => '354784'));
+		$r = Set::extract('/file/.[type=application/x zip compressed]', $f);
+		$this->assertEqual($r, $expected);
+
+		$hasMany = array(
+			'Node' => array(
+				'id' => 1,
+				'name' => 'First',
+				'state' => 50
+			),
+			'ParentNode' => array(
+				0 => array(
+					'id' => 2,
+					'name' => 'Second',
+					'state' => 60,
+				)
+			)
+		);
+		$result = Set::extract('/ParentNode/name', $hasMany);
+		$expected = array('Second');
+		$this->assertEqual($result, $expected);
+
+		$data = array(
+			array(
+				'Category' => array(
+					'id' => 1,
+					'name' => 'First'
+				),
+				0 => array(
+					'value' => 50
+				)
+			),
+			array(
+				'Category' => array(
+					'id' => 2,
+					'name' => 'Second'
+				),
+				0 => array(
+					'value' => 60
+				)
+			)
+		);
+		$expected = array(
+			array(
+				'Category' => array(
+					'id' => 1,
+					'name' => 'First'
+				),
+				0 => array(
+					'value' => 50
+				)
+			)
+		);
+		$result = Set::extract('/Category[id=1]/..', $data);
+		$this->assertEqual($result, $expected);
+
+		$data = array(
+			array(
+				'ChildNode' => array('id' => 1),
+				array('name' => 'Item 1')
+			),
+			array(
+				'ChildNode' => array('id' => 2),
+				array('name' => 'Item 2')
+			),
+		);
+
+		$expected = array(
+			'Item 1',
+			'Item 2'
+		);
+		$result = Set::extract('/0/name', $data);
+		$this->assertEqual($result, $expected);
+
+		$data = array(
+			array('A1', 'B1'),
+			array('A2', 'B2')
+		);
+		$expected = array('A1', 'A2');
+		$result =  Set::extract('/0', $data);
+		$this->assertEqual($result, $expected);
+	}
+/**
+ * test parent selectors with extract
+ *
+ * @return void
+ */
+	function testExtractParentSelector() {
 		$tree = array(
 			array(
 				'Category' => array(
@@ -730,7 +1012,6 @@ class SetTest extends CakeTestCase {
 				)
 			)
 		);
-
 		$expected = array(array('Category' => $tree[1]['Category']));
 		$r = Set::extract('/Category[name=Category 2]', $tree);
 		$this->assertEqual($r, $expected);
@@ -742,7 +1023,290 @@ class SetTest extends CakeTestCase {
 		$expected = array(array('children' => $tree[1]['children'][0]), array('children' => $tree[1]['children'][1]));
 		$r = Set::extract('/Category[name=Category 2]/../children', $tree);
 		$this->assertEqual($r, $expected);
+
+		$single = array(
+			array(
+				'CallType' => array(
+					'name' => 'Internal Voice'
+				),
+				'x' => array(
+					'hour' => 7
+				)
+			)
+		);
+
+		$expected = array(7);
+		$r = Set::extract('/CallType[name=Internal Voice]/../x/hour', $single);
+		$this->assertEqual($r, $expected);
+
+		$multiple = array(
+			array(
+				'CallType' => array(
+					'name' => 'Internal Voice'
+				),
+				'x' => array(
+					'hour' => 7
+				)
+			),
+			array(
+				'CallType' => array(
+					'name' => 'Internal Voice'
+				),
+				'x' => array(
+					'hour' => 2
+				)
+			),
+			array(
+				'CallType' => array(
+					'name' => 'Internal Voice'
+				),
+				'x' => array(
+					'hour' => 1
+				)
+			)
+		);
+
+		$expected = array(7,2,1);
+		$r = Set::extract('/CallType[name=Internal Voice]/../x/hour', $multiple);
+		$this->assertEqual($r, $expected);
+
+		$a = array(
+			'Model' => array(
+				'0' => array(
+					'id' => 18,
+					'SubModelsModel' => array(
+						'id' => 1,
+						'submodel_id' => 66,
+						'model_id' => 18,
+						'type' => 1
+					),
+				),
+				'1' => array(
+					'id' => 0,
+					'SubModelsModel' => array(
+						'id' => 2,
+						'submodel_id' => 66,
+						'model_id' => 0,
+						'type' => 1
+					),
+				),
+				'2' => array(
+					'id' => 17,
+					'SubModelsModel' => array(
+						'id' => 3,
+						'submodel_id' => 66,
+						'model_id' => 17,
+						'type' => 2
+					),
+				),
+				'3' => array(
+					'id' => 0,
+					'SubModelsModel' => array(
+						'id' => 4,
+						'submodel_id' => 66,
+						'model_id' => 0,
+						'type' => 2
+					)
+				)
+			)
+		);
+
+		$expected = array(
+			array(
+				'Model' => array(
+					'id' => 17,
+					'SubModelsModel' => array(
+						'id' => 3,
+						'submodel_id' => 66,
+						'model_id' => 17,
+						'type' => 2
+					),
+				)
+			),
+			array(
+				'Model' => array(
+					'id' => 0,
+					'SubModelsModel' => array(
+						'id' => 4,
+						'submodel_id' => 66,
+						'model_id' => 0,
+						'type' => 2
+					)
+				)
+			)
+		);
+		$r = Set::extract('/Model/SubModelsModel[type=2]/..', $a);
+		$this->assertEqual($r, $expected);
 	}
+/**
+ * test that extract() still works when arrays don't contain a 0 index.
+ *
+ * @return void
+ */
+	function testExtractWithNonZeroArrays() {
+		$nonZero = array(
+			1 => array(
+				'User' => array(
+					'id' => 1,
+					'name' => 'John',
+				)
+			),
+			2 => array(
+				'User' => array(
+					'id' => 2,
+					'name' => 'Bob',
+				)
+			),
+			3 => array(
+				'User' => array(
+					'id' => 3,
+					'name' => 'Tony',
+				)
+			)
+		);
+		$expected = array(1, 2, 3);
+		$r = Set::extract('/User/id', $nonZero);
+		$this->assertEqual($r, $expected);
+
+		$expected = array(
+			array('User' => array('id' => 1, 'name' => 'John')),
+			array('User' => array('id' => 2, 'name' => 'Bob')),
+			array('User' => array('id' => 3, 'name' => 'Tony')),
+		);
+		$result = Set::extract('/User', $nonZero);
+		$this->assertEqual($result, $expected);
+
+		$nonSequential = array(
+			'User' => array(
+				0  => array('id' => 1),
+				2  => array('id' => 2),
+				6  => array('id' => 3),
+				9  => array('id' => 4),
+				3  => array('id' => 5),
+			),
+		);
+
+		$nonZero = array(
+			'User' => array(
+				2  => array('id' => 1),
+				4  => array('id' => 2),
+				6  => array('id' => 3),
+				9  => array('id' => 4),
+				3  => array('id' => 5),
+			),
+		);
+
+		$expected = array(1, 2, 3, 4, 5);
+		$this->assertEqual(Set::extract('/User/id', $nonSequential), $expected);
+
+		$result = Set::extract('/User/id', $nonZero);
+		$this->assertEqual($result, $expected, 'Failed non zero array key extract');
+
+		$expected = array(1, 2, 3, 4, 5);
+		$this->assertEqual(Set::extract('/User/id', $nonSequential), $expected);
+
+		$result = Set::extract('/User/id', $nonZero);
+		$this->assertEqual($result, $expected, 'Failed non zero array key extract');
+
+		$startingAtOne = array(
+			'Article' => array(
+				1 => array(
+					'id' => 1,
+					'approved' => 1,
+				),
+			)
+		);
+
+		$expected = array(0 => array('Article' => array('id' => 1, 'approved' => 1)));
+		$result = Set::extract('/Article[approved=1]', $startingAtOne);
+		$this->assertEqual($result, $expected);
+
+		$items = array(
+			240 => array(
+				'A' => array(
+					'field1' => 'a240',
+					'field2' => 'a240',
+				),
+				'B' => array(
+					'field1' => 'b240',
+					'field2' => 'b240'
+				),
+			)
+		);
+
+		$expected = array(
+			0 => 'b240'
+		);
+
+		$result = Set::extract('/B/field1', $items);
+		$this->assertIdentical($result, $expected);
+		$this->assertIdentical($result, Set::extract('{n}.B.field1', $items));
+	}
+/**
+ * testExtractWithArrays method
+ * 
+ * @access public
+ * @return void
+ */
+	function testExtractWithArrays() {
+		$data = array(
+			'Level1' => array(
+				'Level2' => array('test1', 'test2'),
+				'Level2bis' => array('test3', 'test4')
+			)
+		);
+		$this->assertEqual(Set::extract('/Level1/Level2', $data), array(array('Level2' => array('test1', 'test2'))));
+		$this->assertEqual(Set::extract('/Level1/Level2bis', $data), array(array('Level2bis' => array('test3', 'test4'))));
+	}
+
+/**
+ * test extract() with elements that have non-array children.
+ *
+ * @return void
+ */
+	function testExtractWithNonArrayElements() {
+		$data = array(
+			'node' => array(
+				array('foo'),
+				'bar'
+			)
+		);
+		$result = Set::extract('/node', $data);
+		$expected = array(
+			array('node' => array('foo')),
+			'bar'
+		);
+		$this->assertEqual($result, $expected);
+
+		$data = array(
+			'node' => array(
+				'foo' => array('bar'),
+				'bar' => array('foo')
+			)
+		);
+		$result = Set::extract('/node', $data);
+		$expected = array(
+			array('foo' => array('bar')),
+			array('bar' => array('foo')),
+		);
+		$this->assertEqual($result, $expected);
+
+		$data = array(
+			'node' => array(
+				'foo' => array(
+					'bar'
+				),
+				'bar' => 'foo'
+			)
+		);
+		$result = Set::extract('/node', $data);
+		$expected = array(
+			array('foo' => array('bar')),
+			'foo'
+		);
+		$this->assertEqual($result, $expected);
+	}
+
 /**
  * testMatches method
  *
@@ -753,7 +1317,8 @@ class SetTest extends CakeTestCase {
 		$a = array(
 			array('Article' => array('id' => 1, 'title' => 'Article 1')),
 			array('Article' => array('id' => 2, 'title' => 'Article 2')),
-			array('Article' => array('id' => 3, 'title' => 'Article 3')));
+			array('Article' => array('id' => 3, 'title' => 'Article 3'))
+		);
 
 		$this->assertTrue(Set::matches(array('id=2'), $a[1]['Article']));
 		$this->assertFalse(Set::matches(array('id>2'), $a[1]['Article']));
@@ -774,6 +1339,65 @@ class SetTest extends CakeTestCase {
 		$this->assertTrue(Set::matches('/Article[id=2]', $a));
 		$this->assertFalse(Set::matches('/Article[id=4]', $a));
 		$this->assertTrue(Set::matches(array(), $a));
+
+		$r = array(
+			'Attachment' => array(
+				'keep' => array()
+			),
+			'Comment' => array(
+				'keep' => array(
+					'Attachment' =>  array(
+						'fields' => array(
+							0 => 'attachment',
+						),
+					),
+				)
+			),
+			'User' => array(
+				'keep' => array()
+			),
+			'Article' => array(
+				'keep' => array(
+					'Comment' =>  array(
+						'fields' => array(
+							0 => 'comment',
+							1 => 'published',
+						),
+					),
+					'User' => array(
+						'fields' => array(
+							0 => 'user',
+						),
+					),
+				)
+			)
+		);
+
+		$this->assertTrue(Set::matches('/Article/keep/Comment', $r));
+		$this->assertEqual(Set::extract('/Article/keep/Comment/fields', $r), array('comment', 'published'));
+		$this->assertEqual(Set::extract('/Article/keep/User/fields', $r), array('user'));
+
+
+	}
+/**
+ * testSetExtractReturnsEmptyArray method
+ *
+ * @access public
+ * @return void
+ */
+	function testSetExtractReturnsEmptyArray() {
+
+		$this->assertIdentical(Set::extract(array(), '/Post/id'), array());
+
+		$this->assertIdentical(Set::extract('/Post/id', array()), array());
+
+		$this->assertIdentical(Set::extract('/Post/id', array(
+			array('Post' => array('name' => 'bob')),
+			array('Post' => array('name' => 'jim'))
+		)), array());
+
+		$this->assertIdentical(Set::extract(array(), 'Message.flash'), null);
+
 	}
 /**
  * testClassicExtract method
@@ -785,7 +1409,8 @@ class SetTest extends CakeTestCase {
 		$a = array(
 			array('Article' => array('id' => 1, 'title' => 'Article 1')),
 			array('Article' => array('id' => 2, 'title' => 'Article 2')),
-			array('Article' => array('id' => 3, 'title' => 'Article 3')));
+			array('Article' => array('id' => 3, 'title' => 'Article 3'))
+		);
 
 		$result = Set::extract($a, '{n}.Article.id');
 		$expected = array( 1, 2, 3 );
@@ -804,12 +1429,19 @@ class SetTest extends CakeTestCase {
 		$this->assertIdentical($result, $expected);
 
 		$a = array(
-			array('Article' => array('id' => 1, 'title' => 'Article 1',
-				'User' => array('id' => 1, 'username' => 'mariano.iglesias'))),
-			array('Article' => array('id' => 2, 'title' => 'Article 2',
-				'User' => array('id' => 1, 'username' => 'mariano.iglesias'))),
-			array('Article' => array('id' => 3, 'title' => 'Article 3',
-				'User' => array('id' => 2, 'username' => 'phpnut'))));
+			array(
+				'Article' => array('id' => 1, 'title' => 'Article 1',
+				'User' => array('id' => 1, 'username' => 'mariano.iglesias'))
+			),
+			array(
+				'Article' => array('id' => 2, 'title' => 'Article 2',
+				'User' => array('id' => 1, 'username' => 'mariano.iglesias'))
+			),
+			array(
+				'Article' => array('id' => 3, 'title' => 'Article 3',
+				'User' => array('id' => 2, 'username' => 'phpnut'))
+			)
+		);
 
 		$result = Set::extract($a, '{n}.Article.User.username');
 		$expected = array( 'mariano.iglesias', 'mariano.iglesias', 'phpnut' );
@@ -832,7 +1464,11 @@ class SetTest extends CakeTestCase {
 		$this->assertIdentical($result, $expected);
 
 		$result = Set::extract($a, '{n}.Article.Comment.{n}.title');
-		$expected = array (array('Comment 10', 'Comment 11', 'Comment 12'), array('Comment 13', 'Comment 14'), null);
+		$expected = array(
+			array('Comment 10', 'Comment 11', 'Comment 12'),
+			array('Comment 13', 'Comment 14'),
+			null
+		);
 		$this->assertIdentical($result, $expected);
 
 		$a = array(array('1day' => '20 sales'), array('1day' => '2 sales'));
@@ -865,7 +1501,12 @@ class SetTest extends CakeTestCase {
 		$this->assertIdentical($result, $expected);
 
 		$result = Set::extract($a,'{\w+}.{\w+}.name');
-		$expected = array(array('pages' => 'page'), array('fruites' => 'fruit'), 'test' => array('jippi'), 'dot.test' => array('jippi'));
+		$expected = array(
+			array('pages' => 'page'),
+			array('fruites' => 'fruit'),
+			'test' => array('jippi'),
+			'dot.test' => array('jippi')
+		);
 		$this->assertIdentical($result, $expected);
 
 		$result = Set::extract($a,'{\d+}.{\w+}.name');
@@ -885,7 +1526,10 @@ class SetTest extends CakeTestCase {
 		$this->assertIdentical($result, $expected);
 
 		$result = Set::extract($a,'{[a-z]}');
-		$expected = array('test' => array(array('name' => 'jippi')), 'dot.test' => array(array('name' => 'jippi')));
+		$expected = array(
+			'test' => array(array('name' => 'jippi')),
+			'dot.test' => array(array('name' => 'jippi'))
+		);
 		$this->assertIdentical($result, $expected);
 
 		$result = Set::extract($a, '{dot\.test}.{n}');
@@ -1242,6 +1886,9 @@ class SetTest extends CakeTestCase {
 		$result = Set::combine($b, 'users.{n}.User.id', 'users.{n}.User.non-existant');
 		$expected = array(2 => null, 14 => null, 25 => null);
 		$this->assertIdentical($result, $expected);
+
+		$result = Set::combine($a, 'fail', 'fail');
+		$this->assertEqual($result, array());
 	}
 /**
  * testMapReverse method
@@ -1451,7 +2098,7 @@ class SetTest extends CakeTestCase {
 		$model = new Model(array('id' => false, 'name' => 'Model', 'table' => false));
 		$expected = array(
 			'Behaviors' => array('modelName' => 'Model', '_attached' => array(), '_disabled' => array(), '__methods' => array(), '__mappedMethods' => array(), '_log' => null),
-			'useDbConfig' => 'default', 'useTable' => false, 'displayField' => null, 'id' => false, 'data' => array(), 'table' => false, 'primaryKey' => 'id', '_schema' => null, 'validate' => array(),
+			'useDbConfig' => 'default', 'useTable' => false, 'displayField' => null, 'id' => false, 'data' => array(), 'table' => 'models', 'primaryKey' => 'id', '_schema' => null, 'validate' => array(),
 			'validationErrors' => array(), 'tablePrefix' => null, 'name' => 'Model', 'alias' => 'Model', 'tableToModel' => array(), 'logTransactions' => false, 'transactional' => false, 'cacheQueries' => false,
 			'belongsTo' => array(), 'hasOne' =>  array(), 'hasMany' =>  array(), 'hasAndBelongsToMany' =>  array(), 'actsAs' => null, 'whitelist' =>  array(), 'cacheSources' => true,
 			'findQueryType' => null, 'recursive' => 1, 'order' => null, '__exists' => null,
@@ -1539,6 +2186,26 @@ class SetTest extends CakeTestCase {
 		$expected = array('Nate, 42', 'Larry, 0', 'Garrett, 0');
 		$this->assertEqual($result, $expected);
 	}
+/**
+ * testFormattingNullValues method
+ *
+ * @return void
+ */
+	public function testFormattingNullValues() {
+		$data = array(
+			array('Person' => array('first_name' => 'Nate', 'last_name' => 'Abele', 'city' => 'Boston', 'state' => 'MA', 'something' => '42')),
+			array('Person' => array('first_name' => 'Larry', 'last_name' => 'Masters', 'city' => 'Boondock', 'state' => 'TN', 'something' => null)),
+			array('Person' => array('first_name' => 'Garrett', 'last_name' => 'Woodworth', 'city' => 'Venice Beach', 'state' => 'CA', 'something' => null)));
+
+		$result = Set::format($data, '%s', array('{n}.Person.something'));
+		$expected = array('42', '', '');
+		$this->assertEqual($expected, $result);
+
+		$result = Set::format($data, '{0}, {1}', array('{n}.Person.city', '{n}.Person.something'));
+		$expected = array('Boston, 42', 'Boondock, ', 'Venice Beach, ');
+		$this->assertEqual($expected, $result);
+	}
+
 /**
  * testCountDim method
  *
@@ -1884,7 +2551,7 @@ class SetTest extends CakeTestCase {
 		$expected->Piece = array($piece, $piece2);
 
 		$this->assertIdentical($expected, $result);
-		
+
 		//Same data, but should work if _name_ has been manually defined:
 		$data = array(
 			'User' => array(
@@ -2088,7 +2755,7 @@ class SetTest extends CakeTestCase {
 			array(
 				'Item' => array(
 					'title' => 'An example of a correctly reversed XMLNode',
-					'Desc' => array(),
+					'desc' => array(),
 				)
 			)
 		);
@@ -2266,7 +2933,6 @@ class SetTest extends CakeTestCase {
 		$set = array('a' => 'hi');
 		$this->assertFalse(Set::check($set, 'a.b'));
 	}
-
 /**
  * Tests Set::flatten
  *
@@ -2303,5 +2969,4 @@ class SetTest extends CakeTestCase {
 		$this->assertEqual($result, $expected);
 	}
 }
-
 ?>

@@ -7,24 +7,21 @@
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
- * Copyright 2005-2008, Cake Software Foundation, Inc.
- *								1785 E. Sahara Avenue, Suite 490-204
- *								Las Vegas, Nevada 89104
+ * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
+ * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @filesource
- * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
- * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
- * @package			cake
- * @subpackage		cake.cake.libs.controller.components
- * @since			CakePHP(tm) v 0.10.0.1232
- * @version			$Revision$
- * @modifiedby		$LastChangedBy$
- * @lastmodified	$Date$
- * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link          http://cakephp.org CakePHP(tm) Project
+ * @package       cake
+ * @subpackage    cake.cake.libs.controller.components
+ * @since         CakePHP(tm) v 0.10.0.1232
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
+ * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 if (!class_exists('cakesession')) {
 	require LIBS . 'session.php';
@@ -34,8 +31,8 @@ if (!class_exists('cakesession')) {
  *
  * Session handling from the controller.
  *
- * @package		cake
- * @subpackage	cake.cake.libs.controller.components
+ * @package       cake
+ * @subpackage    cake.cake.libs.controller.components
  *
  */
 class SessionComponent extends CakeSession {
@@ -46,13 +43,6 @@ class SessionComponent extends CakeSession {
  * @access private
  */
 	var $__active = true;
-/**
- * Used to determine if Session has been started
- *
- * @var boolean
- * @access private
- */
-	var $__started = false;
 /**
  * Used to determine if request are from an Ajax request
  *
@@ -92,7 +82,7 @@ class SessionComponent extends CakeSession {
  * @access public
  */
 	function startup(&$controller) {
-		if ($this->__started === false && $this->__active === true) {
+		if ($this->started() === false && $this->__active === true) {
 			$this->__start();
 		}
 	}
@@ -302,15 +292,14 @@ class SessionComponent extends CakeSession {
  * @access private
  */
 	function __start() {
-		if ($this->__started === false) {
+		if ($this->started() === false) {
 			if (!$this->id() && parent::start()) {
-				$this->__started = true;
 				parent::_checkValid();
 			} else {
-				$this->__started = parent::start();
+				parent::start();
 			}
 		}
-		return $this->__started;
+		return $this->started();
 	}
 }
 

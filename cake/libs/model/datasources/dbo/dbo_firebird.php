@@ -7,32 +7,29 @@
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
- * Copyright 2005-2008, Cake Software Foundation, Inc.
- *								1785 E. Sahara Avenue, Suite 490-204
- *								Las Vegas, Nevada 89104
+ * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
+ * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @filesource
- * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
- * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
- * @package			cake
- * @subpackage		cake.cake.libs.model.dbo
- * @since			CakePHP(tm) v 1.2.0.5152
- * @version			$Revision$
- * @modifiedby		$LastChangedBy$
- * @lastmodified	$Date$
- * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link          http://cakephp.org CakePHP(tm) Project
+ * @package       cake
+ * @subpackage    cake.cake.libs.model.dbo
+ * @since         CakePHP(tm) v 1.2.0.5152
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
+ * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 /**
  * Short description for class.
  *
  * Long description for class
  *
- * @package		cake
- * @subpackage	cake.cake.libs.model.dbo
+ * @package       cake
+ * @subpackage    cake.cake.libs.model.dbo
  */
 class DboFirebird extends DboSource {
 /**
@@ -119,7 +116,6 @@ class DboFirebird extends DboSource {
 		'commit'   => 'COMMIT',
 		'rollback' => 'ROLLBACK'
 	);
-
 /**
  * Connects to the database using options in the given configuration array.
  *
@@ -130,8 +126,17 @@ class DboFirebird extends DboSource {
 		$connect = $config['connect'];
 
 		$this->connected = false;
+
 		$this->connection = $connect($config['host'] . ':' . $config['database'], $config['login'], $config['password']);
 		$this->connected = true;
+	}
+/**
+ * Check that the interbase extension is loaded
+ *
+ * @return boolean
+ **/
+	function enabled() {
+		return extension_loaded('interbase');
 	}
 /**
  * Disconnects from database.
@@ -150,9 +155,6 @@ class DboFirebird extends DboSource {
  * @access protected
  */
 	function _execute($sql) {
-		if (strpos(strtolower($sql),"update") > 0) {
-			break;
-		}
 		return @ibase_query($this->connection,	$sql);
 	}
 /**

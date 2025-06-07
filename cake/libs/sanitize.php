@@ -7,24 +7,21 @@
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
- * Copyright 2005-2008, Cake Software Foundation, Inc.
- *								1785 E. Sahara Avenue, Suite 490-204
- *								Las Vegas, Nevada 89104
+ * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
+ * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @filesource
- * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
- * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
- * @package			cake
- * @subpackage		cake.cake.libs
- * @since			CakePHP(tm) v 0.10.0.1076
- * @version			$Revision$
- * @modifiedby		$LastChangedBy$
- * @lastmodified	$Date$
- * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link          http://cakephp.org CakePHP(tm) Project
+ * @package       cake
+ * @subpackage    cake.cake.libs
+ * @since         CakePHP(tm) v 0.10.0.1076
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
+ * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 /**
  * Data Sanitization.
@@ -32,8 +29,8 @@
  * Removal of alpahnumeric characters, SQL-safe slash-added strings, HTML-friendly strings,
  * and all of the above on arrays.
  *
- * @package		cake
- * @subpackage	cake.cake.libs
+ * @package       cake
+ * @subpackage    cake.cake.libs
  */
 class Sanitize {
 /**
@@ -134,7 +131,7 @@ class Sanitize {
  * @static
  */
 	function stripScripts($str) {
-		return preg_replace('/(<link[^>]+rel="[^"]*stylesheet"[^>]*>|<img[^>]*>|style="[^"]*")|<script[^>]*>.*?<\/script>|<style[^>]*>.*?<\/style>|<!--.*?-->/i', '', $str);
+		return preg_replace('/(<link[^>]+rel="[^"]*stylesheet"[^>]*>|<img[^>]*>|style="[^"]*")|<script[^>]*>.*?<\/script>|<style[^>]*>.*?<\/style>|<!--.*?-->/is', '', $str);
 	}
 /**
  * Strips extra whitespace, images, scripts and stylesheets from output
@@ -163,8 +160,8 @@ class Sanitize {
 		$params = params(func_get_args());
 		$str = $params[0];
 
-		for ($i = 1; $i < count($params); $i++) {
-			$str = preg_replace('/<' . $params[$i] . '[^>]*>/i', '', $str);
+		for ($i = 1, $count = count($params); $i < $count; $i++) {
+			$str = preg_replace('/<' . $params[$i] . '\b[^>]*>/i', '', $str);
 			$str = preg_replace('/<\/' . $params[$i] . '[^>]*>/i', '', $str);
 		}
 		return $str;
@@ -267,7 +264,7 @@ class Sanitize {
 
 						if (isset($colData['formatter']) || isset($colData['format'])) {
 
-							switch(strtolower($colData['formatter'])) {
+							switch (strtolower($colData['formatter'])) {
 								case 'date':
 									$data = date($colData['format'], strtotime($data));
 								break;
@@ -284,7 +281,7 @@ class Sanitize {
 						}
 						$model->data[$name][$column]=$data;
 						/*
-						switch($colType) {
+						switch ($colType) {
 							case 'integer':
 							case 'int':
 								return  $data;

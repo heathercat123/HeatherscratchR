@@ -6,31 +6,28 @@
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
- * Copyright 2005-2008, Cake Software Foundation, Inc.
- *								1785 E. Sahara Avenue, Suite 490-204
- *								Las Vegas, Nevada 89104
+ * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
+ * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @filesource
- * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
- * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
- * @package			cake
- * @subpackage		cake.cake.libs.cache
- * @since			CakePHP(tm) v 1.2.0.4947
- * @version			$Revision$
- * @modifiedby		$LastChangedBy$
- * @lastmodified	$Date$
- * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link          http://cakephp.org CakePHP(tm) Project
+ * @package       cake
+ * @subpackage    cake.cake.libs.cache
+ * @since         CakePHP(tm) v 1.2.0.4947
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
+ * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 /**
  * Xcache storage engine for cache
  *
- * @link http://trac.lighttpd.net/xcache/ Xcache
- * @package		cake
- * @subpackage	cake.cake.libs.cache
+ * @link          http://trac.lighttpd.net/xcache/ Xcache
+ * @package       cake
+ * @subpackage    cake.cake.libs.cache
  */
 class XcacheEngine extends CacheEngine {
 /**
@@ -108,16 +105,13 @@ class XcacheEngine extends CacheEngine {
  * @access public
  */
 	function clear() {
-		$result = true;
 		$this->__auth();
-		for ($i = 0, $max = xcache_count(XC_TYPE_VAR); $i < $max; $i++) {
-			if (!xcache_clear_cache(XC_TYPE_VAR, $i)) {
-				$result = false;
-				break;
-			}
+		$max = xcache_count(XC_TYPE_VAR);
+		for ($i = 0; $i < $max; $i++) {
+			xcache_clear_cache(XC_TYPE_VAR, $i);
 		}
 		$this->__auth(true);
-		return $result;
+		return true;
 	}
 /**
  * Populates and reverses $_SERVER authentication values

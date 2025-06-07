@@ -1,6 +1,5 @@
 <?php
 /* SVN FILE: $Id$ */
-
 /**
  * SQLite layer for DBO
  *
@@ -8,35 +7,31 @@
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
- * Copyright 2005-2008, Cake Software Foundation, Inc.
- *								1785 E. Sahara Avenue, Suite 490-204
- *								Las Vegas, Nevada 89104
+ * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
+ * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @filesource
- * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
- * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
- * @package			cake
- * @subpackage		cake.cake.libs.model.datasources.dbo
- * @since			CakePHP(tm) v 0.9.0
- * @version			$Revision$
- * @modifiedby		$LastChangedBy$
- * @lastmodified	$Date$
- * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link          http://cakephp.org CakePHP(tm) Project
+ * @package       cake
+ * @subpackage    cake.cake.libs.model.datasources.dbo
+ * @since         CakePHP(tm) v 0.9.0
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
+ * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 /**
  * DBO implementation for the SQLite DBMS.
  *
  * Long description for class
  *
- * @package		cake
- * @subpackage	cake.cake.libs.model.datasources.dbo
+ * @package       cake
+ * @subpackage    cake.cake.libs.model.datasources.dbo
  */
 class DboSqlite extends DboSource {
-
 /**
  * Enter description here...
  *
@@ -92,7 +87,7 @@ class DboSqlite extends DboSource {
 		'primary_key' => array('name' => 'integer primary key'),
 		'string' => array('name' => 'varchar', 'limit' => '255'),
 		'text' => array('name' => 'text'),
-		'integer' => array('name' => 'integer', 'limit' => null, 'formatter' => 'intval'),
+		'integer' => array('name' => 'integer', 'limit' => 11, 'formatter' => 'intval'),
 		'float' => array('name' => 'float', 'formatter' => 'floatval'),
 		'datetime' => array('name' => 'datetime', 'format' => 'Y-m-d H:i:s', 'formatter' => 'date'),
 		'timestamp' => array('name' => 'timestamp', 'format' => 'Y-m-d H:i:s', 'formatter' => 'date'),
@@ -116,6 +111,14 @@ class DboSqlite extends DboSource {
 			$this->_execute('PRAGMA count_changes = 1;');
 		}
 		return $this->connected;
+	}
+/**
+ * Check that SQLite is enabled/installed
+ *
+ * @return boolean
+ **/
+	function enabled() {
+		return extension_loaded('sqlite');
 	}
 /**
  * Disconnects from database.
@@ -194,18 +197,19 @@ class DboSqlite extends DboSource {
 
 		foreach ($result as $column) {
 			$fields[$column[0]['name']] = array(
-				'type'		=> $this->column($column[0]['type']),
-				'null'		=> !$column[0]['notnull'],
-				'default'	=> $column[0]['dflt_value'],
-				'length'	=> $this->length($column[0]['type'])
+				'type' => $this->column($column[0]['type']),
+				'null' => !$column[0]['notnull'],
+				'default' => $column[0]['dflt_value'],
+				'length' => $this->length($column[0]['type'])
 			);
-			if($column[0]['pk'] == 1) {
+			if ($column[0]['pk'] == 1) {
+				$colLength = $this->length($column[0]['type']);
 				$fields[$column[0]['name']] = array(
-					'type'		=> $fields[$column[0]['name']]['type'],
-					'null'		=> false,
-					'default'	=> $column[0]['dflt_value'],
-					'key'		=> $this->index['PRI'],
-					'length'	=> 11
+					'type' => $fields[$column[0]['name']]['type'],
+					'null' => false,
+					'default' => $column[0]['dflt_value'],
+					'key' => $this->index['PRI'],
+					'length'=> ($colLength != null) ? $colLength : 11
 				);
 			}
 		}
@@ -416,7 +420,7 @@ class DboSqlite extends DboSource {
  * @param integer $offset Offset from which to start results
  * @return string SQL limit/offset statement
  */
-	function limit ($limit, $offset = null) {
+	function limit($limit, $offset = null) {
 		if ($limit) {
 			$rt = '';
 			if (!strpos(strtolower($limit), 'limit') || strpos(strtolower($limit), 'limit') === 0) {
@@ -453,34 +457,34 @@ class DboSqlite extends DboSource {
 		}
 
 		$real = $this->columns[$type];
-		if (isset($column['key']) && $column['key'] == 'primary') {
-			$out = $this->name($name) . ' ' . $this->columns['primary_key']['name'];
-		} else {
-			$out = $this->name($name) . ' ' . $real['name'];
-
-			if (isset($real['limit']) || isset($real['length']) || isset($column['limit']) || isset($column['length'])) {
-				if (isset($column['length'])) {
-					$length = $column['length'];
-				} elseif (isset($column['limit'])) {
-					$length = $column['limit'];
-				} elseif (isset($real['length'])) {
-					$length = $real['length'];
-				} else {
-					$length = $real['limit'];
-				}
-				$out .= '(' . $length . ')';
+		$out = $this->name($name) . ' ' . $real['name'];
+		if (isset($column['key']) && $column['key'] == 'primary' && $type == 'integer') {
+			return $this->name($name) . ' ' . $this->columns['primary_key']['name'];
+		}
+		if (isset($real['limit']) || isset($real['length']) || isset($column['limit']) || isset($column['length'])) {
+			if (isset($column['length'])) {
+				$length = $column['length'];
+			} elseif (isset($column['limit'])) {
+				$length = $column['limit'];
+			} elseif (isset($real['length'])) {
+				$length = $real['length'];
+			} else {
+				$length = $real['limit'];
 			}
-			if (isset($column['key']) && $column['key'] == 'primary') {
-				$out .= ' NOT NULL';
-			} elseif (isset($column['default']) && isset($column['null']) && $column['null'] == false) {
-				$out .= ' DEFAULT ' . $this->value($column['default'], $type) . ' NOT NULL';
-			} elseif (isset($column['default'])) {
-				$out .= ' DEFAULT ' . $this->value($column['default'], $type);
-			} elseif (isset($column['null']) && $column['null'] == true) {
-				$out .= ' DEFAULT NULL';
-			} elseif (isset($column['null']) && $column['null'] == false) {
-				$out .= ' NOT NULL';
-			}
+			$out .= '(' . $length . ')';
+		}
+		if (isset($column['key']) && $column['key'] == 'primary' && $type == 'integer') {
+			$out .= ' ' . $this->columns['primary_key']['name'];
+		} elseif (isset($column['key']) && $column['key'] == 'primary') {
+			$out .= ' NOT NULL';
+		} elseif (isset($column['default']) && isset($column['null']) && $column['null'] == false) {
+			$out .= ' DEFAULT ' . $this->value($column['default'], $type) . ' NOT NULL';
+		} elseif (isset($column['default'])) {
+			$out .= ' DEFAULT ' . $this->value($column['default'], $type);
+		} elseif (isset($column['null']) && $column['null'] == true) {
+			$out .= ' DEFAULT NULL';
+		} elseif (isset($column['null']) && $column['null'] == false) {
+			$out .= ' NOT NULL';
 		}
 		return $out;
 	}
@@ -524,7 +528,7 @@ class DboSqlite extends DboSource {
 				$out .= 'UNIQUE ';
 			}
 			if (is_array($value['column'])) {
-				$value['column'] = join(', ', array_map(array(&$this, 'name'), $value['column']));
+				$value['column'] = implode(', ', array_map(array(&$this, 'name'), $value['column']));
 			} else {
 				$value['column'] = $this->name($value['column']);
 			}
@@ -533,6 +537,43 @@ class DboSqlite extends DboSource {
 		}
 		return $join;
 	}
+/**
+ * Overrides DboSource::index to handle SQLite indexe introspection
+ * Returns an array of the indexes in given table name.
+ *
+ * @param string $model Name of model to inspect
+ * @return array Fields in table. Keys are column and unique
+ */
+	function index(&$model) {
+		$index = array();
+		$table = $this->fullTableName($model);
+		if ($table) {
+			$indexes = $this->query('PRAGMA index_list(' . $table . ')');
+			$tableInfo = $this->query('PRAGMA table_info(' . $table . ')');
+			foreach ($indexes as $i => $info) {
+				$key = array_pop($info);
+				$keyInfo = $this->query('PRAGMA index_info("' . $key['name'] . '")');
+				foreach ($keyInfo as $keyCol) {
+					if (!isset($index[$key['name']])) {
+						$col = array();
+						if (preg_match('/autoindex/', $key['name'])) {
+							$key['name'] = 'PRIMARY';
+						}
+						$index[$key['name']]['column'] = $keyCol[0]['name'];
+						$index[$key['name']]['unique'] = intval($key['unique'] == 1);
+					} else {
+						if (!is_array($index[$key['name']]['column'])) {
+							$col[] = $index[$key['name']]['column'];
+						}
+						$col[] = $keyCol[0]['name'];
+						$index[$key['name']]['column'] = $col;
+					}
+				}
+			}
+		}
+		return $index;
+	}
+	
 /**
  * Overrides DboSource::renderStatement to handle schema generation with SQLite-style indexes
  *
@@ -547,7 +588,7 @@ class DboSqlite extends DboSource {
 
 				foreach (array('columns', 'indexes') as $var) {
 					if (is_array(${$var})) {
-						${$var} = "\t" . join(",\n\t", array_filter(${$var}));
+						${$var} = "\t" . implode(",\n\t", array_filter(${$var}));
 					}
 				}
 				return "CREATE TABLE {$table} (\n{$columns});\n{$indexes}";
@@ -558,5 +599,4 @@ class DboSqlite extends DboSource {
 		}
 	}
 }
-
 ?>

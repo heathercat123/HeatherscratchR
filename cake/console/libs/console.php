@@ -7,28 +7,25 @@
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
- * Copyright 2005-2008, Cake Software Foundation, Inc.
- *								1785 E. Sahara Avenue, Suite 490-204
- *								Las Vegas, Nevada 89104
+ * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
+ * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @filesource
- * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
- * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
- * @package			cake
- * @subpackage		cake.cake.console.libs
- * @since			CakePHP(tm) v 1.2.0.5012
- * @version			$Revision$
- * @modifiedby		$LastChangedBy$
- * @lastmodified	$Date$
- * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link          http://cakephp.org CakePHP(tm) Project
+ * @package       cake
+ * @subpackage    cake.cake.console.libs
+ * @since         CakePHP(tm) v 1.2.0.5012
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
+ * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 /**
- * @package		cake
- * @subpackage	cake.cake.console.libs
+ * @package       cake
+ * @subpackage    cake.cake.console.libs
  */
 class ConsoleShell extends Shell {
 /**
@@ -95,7 +92,7 @@ class ConsoleShell extends Shell {
 				$command = trim($this->in(''));
 			}
 
-			switch($command) {
+			switch ($command) {
 				case 'help':
 					$this->out('Console help:');
 					$this->out('-------------');
@@ -254,8 +251,7 @@ class ConsoleShell extends Shell {
 					if ($this->__isValidModel($modelToSave)) {
 						// Extract the array of data we are trying to build
 						list($foo, $data) = explode("->save", $command);
-						$badChars = array("(", ")");
-						$data = str_replace($badChars, "", $data);
+						$data = preg_replace('/^\(*(array)?\(*(.+?)\)*$/i', '\\2', $data);
 						$saveCommand = "\$this->{$modelToSave}->save(array('{$modelToSave}' => array({$data})));";
 						@eval($saveCommand);
 						$this->out('Saved record for ' . $modelToSave);
@@ -289,7 +285,7 @@ class ConsoleShell extends Shell {
 				break;
 				case (preg_match("/^routes\s+show/i", $command, $tmp) == true):
 					$router =& Router::getInstance();
-					$this->out(join("\n", Set::extract($router->routes, '{n}.0')));
+					$this->out(implode("\n", Set::extract($router->routes, '{n}.0')));
 				break;
 				case (preg_match("/^route\s+(.*)/i", $command, $tmp) == true):
 					$this->out(var_export(Router::parse($tmp[1]), true));
@@ -320,7 +316,7 @@ class ConsoleShell extends Shell {
  */
 	function __loadRoutes() {
 		$router =& Router::getInstance();
-		
+
 		$router->reload();
 		extract($router->getNamedExpressions());
 

@@ -8,36 +8,31 @@
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
- * Copyright 2005-2008, Cake Software Foundation, Inc.
- *								1785 E. Sahara Avenue, Suite 490-204
- *								Las Vegas, Nevada 89104
+ * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
+ * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @filesource
- * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
- * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
- * @package			cake
- * @subpackage		cake.cake.libs.model.datasources.dbo
- * @since			CakePHP(tm) v 0.9.1.114
- * @version			$Revision$
- * @modifiedby		$LastChangedBy$
- * @lastmodified	$Date$
- * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link          http://cakephp.org CakePHP(tm) Project
+ * @package       cake
+ * @subpackage    cake.cake.libs.model.datasources.dbo
+ * @since         CakePHP(tm) v 0.9.1.114
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
+ * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
-
 /**
  * PostgreSQL layer for DBO.
  *
  * Long description for class
  *
- * @package		cake
- * @subpackage	cake.cake.libs.model.datasources.dbo
+ * @package       cake
+ * @subpackage    cake.cake.libs.model.datasources.dbo
  */
 class DboPostgres extends DboSource {
-
 /**
  * Driver description
  *
@@ -127,6 +122,14 @@ class DboPostgres extends DboSource {
 		return $this->connected;
 	}
 /**
+ * Check if PostgreSQL is enabled/loaded
+ *
+ * @return boolean
+ **/
+	function enabled() {
+		return extension_loaded('pgsql');
+	}
+/**
  * Disconnects from database.
  *
  * @return boolean True if the database could be disconnected, else false
@@ -180,7 +183,6 @@ class DboPostgres extends DboSource {
 			return $tables;
 		}
 	}
-
 /**
  * Returns an array of the fields in given table name.
  *
@@ -215,7 +217,12 @@ class DboPostgres extends DboSource {
 					if (!empty($c['char_length'])) {
 						$length = intval($c['char_length']);
 					} elseif (!empty($c['oct_length'])) {
-						$length = intval($c['oct_length']);
+						if ($c['type'] == 'character varying') {
+							$length = null;
+							$c['type'] = 'text';
+						} else {
+							$length = intval($c['oct_length']);
+						}
 					} else {
 						$length = $this->length($c['type']);
 					}
@@ -277,12 +284,6 @@ class DboPostgres extends DboSource {
 		}
 
 		switch($column) {
-			case 'inet':
-			case 'float':
-			case 'integer':
-				if ($data === '') {
-					return $read ? 'NULL' : 'DEFAULT';
-				}
 			case 'binary':
 				$data = pg_escape_bytea($data);
 			break;
@@ -294,6 +295,19 @@ class DboPostgres extends DboSource {
 				}
 				return (!empty($data) ? 'TRUE' : 'FALSE');
 			break;
+			case 'float':
+				if (is_float($data)) {
+					$data = sprintf('%F', $data);
+				}
+			case 'inet':
+			case 'integer':
+			case 'date':
+			case 'datetime':
+			case 'timestamp':
+			case 'time':
+				if ($data === '') {
+					return $read ? 'NULL' : 'DEFAULT';
+				}
 			default:
 				$data = pg_escape_string($data);
 			break;
@@ -309,7 +323,6 @@ class DboPostgres extends DboSource {
 		$error = pg_last_error($this->connection);
 		return ($error) ? $error : null;
 	}
-
 /**
  * Returns number of affected rows in previous database operation. If no previous operation exists, this returns false.
  *
@@ -388,7 +401,10 @@ class DboPostgres extends DboSource {
  * @return string SQL field
  */
 	function name($data) {
-		return parent::name(str_replace('"__"', '__', $data));
+		if (is_string($data)) {
+			$data = str_replace('"__"', '__', $data);
+		}
+		return parent::name($data);
 	}
 /**
  * Generates the fields list of an SQL query.
@@ -428,6 +444,157 @@ class DboPostgres extends DboSource {
 			}
 		}
 		return $fields;
+	}
+/**
+ * Returns an array of the indexes in given datasource name.
+ *
+ * @param string $model Name of model to inspect
+ * @return array Fields in table. Keys are column and unique
+ */
+	function index($model) {
+		$index = array();
+		$table = $this->fullTableName($model, false);
+		if ($table) {
+			$indexes = $this->query("SELECT c2.relname, i.indisprimary, i.indisunique, i.indisclustered, i.indisvalid, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true) as statement, c2.reltablespace
+			FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+			WHERE c.oid  = ( 
+				SELECT c.oid 
+				FROM pg_catalog.pg_class c LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace 
+				WHERE c.relname ~ '^(" . $table . ")$' 
+					AND pg_catalog.pg_table_is_visible(c.oid) 
+					AND n.nspname ~ '^(" . $this->config['schema'] . ")$'
+			) 
+			AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+			ORDER BY i.indisprimary DESC, i.indisunique DESC, c2.relname", false);
+			foreach ($indexes as $i => $info) {
+				$key = array_pop($info);
+				if ($key['indisprimary']) {
+					$key['relname'] = 'PRIMARY';
+				}
+				$col = array();
+				preg_match('/\(([^\)]+)\)/', $key['statement'], $indexColumns);
+				$parsedColumn = $indexColumns[1];
+				if (strpos($indexColumns[1], ',') !== false) {
+					$parsedColumn = explode(', ', $indexColumns[1]);
+				}
+				$index[$key['relname']]['unique'] = $key['indisunique'];
+				$index[$key['relname']]['column'] = $parsedColumn;
+			}
+		}
+		return $index;
+	}
+/**
+ * Alter the Schema of a table.
+ *
+ * @param array $compare Results of CakeSchema::compare()
+ * @param string $table name of the table
+ * @access public
+ * @return array
+ */
+	function alterSchema($compare, $table = null) {
+		if (!is_array($compare)) {
+			return false;
+		}
+		$out = '';
+		$colList = array();
+		foreach ($compare as $curTable => $types) {
+			$indexes = array();
+			if (!$table || $table == $curTable) {
+				$out .= 'ALTER TABLE ' . $this->fullTableName($curTable) . " \n";
+				foreach ($types as $type => $column) {
+					if (isset($column['indexes'])) {
+						$indexes[$type] = $column['indexes'];
+						unset($column['indexes']);
+					}
+					switch ($type) {
+						case 'add':
+							foreach ($column as $field => $col) {
+								$col['name'] = $field;
+								$alter = 'ADD COLUMN '.$this->buildColumn($col);
+								if (isset($col['after'])) {
+									$alter .= ' AFTER '. $this->name($col['after']);
+								}
+								$colList[] = $alter;
+							}
+						break;
+						case 'drop':
+							foreach ($column as $field => $col) {
+								$col['name'] = $field;
+								$colList[] = 'DROP COLUMN '.$this->name($field);
+							}
+						break;
+						case 'change':
+							foreach ($column as $field => $col) {
+								if (!isset($col['name'])) {
+									$col['name'] = $field;
+								}
+								$fieldName = $this->name($field);
+								$colList[] = 'ALTER COLUMN '. $fieldName .' TYPE ' . str_replace($fieldName, '', $this->buildColumn($col));
+							}
+						break;
+					}
+				}
+				if (isset($indexes['drop']['PRIMARY'])) {
+					$colList[] = 'DROP CONSTRAINT ' . $curTable . '_pkey';
+				}
+				if (isset($indexes['add']['PRIMARY'])) {
+					$cols = $indexes['add']['PRIMARY']['column'];
+					if (is_array($cols)) {
+						$cols = implode(', ', $cols);
+					}
+					$colList[] = 'ADD PRIMARY KEY (' . $cols . ')';
+				}
+				
+				if (!empty($colList)) {
+					$out .= "\t" . implode(",\n\t", $colList) . ";\n\n";
+				} else {
+					$out = '';
+				}
+				$out .= implode(";\n\t", $this->_alterIndexes($curTable, $indexes)) . ";";
+			}
+		}
+		return $out;
+	}
+/**
+ * Generate PostgreSQL index alteration statements for a table.
+ *
+ * @param string $table Table to alter indexes for
+ * @param array $new Indexes to add and drop
+ * @return array Index alteration statements
+ */	
+	function _alterIndexes($table, $indexes) {
+		$alter = array();
+		if (isset($indexes['drop'])) {
+			foreach($indexes['drop'] as $name => $value) {
+				$out = 'DROP ';
+				if ($name == 'PRIMARY') {
+					continue;
+				} else {
+					$out .= 'INDEX ' . $name;
+				}
+				$alter[] = $out;
+			}
+		}
+		if (isset($indexes['add'])) {
+			foreach ($indexes['add'] as $name => $value) {
+				$out = 'CREATE ';
+				if ($name == 'PRIMARY') {
+					continue;
+				} else {
+					if (!empty($value['unique'])) {
+						$out .= 'UNIQUE ';
+					}
+					$out .= 'INDEX ';
+				}
+				if (is_array($value['column'])) {
+					$out .= $name . ' ON ' . $table . ' (' . implode(', ', array_map(array(&$this, 'name'), $value['column'])) . ')';
+				} else {
+					$out .= $name . ' ON ' . $table . ' (' . $this->name($value['column']) . ')';
+				}
+				$alter[] = $out;
+			}
+		}
+		return $alter;
 	}
 /**
  * Returns a limit statement in the correct format for the particular database.
@@ -630,7 +797,13 @@ class DboPostgres extends DboSource {
 		}
 		$out = preg_replace('/integer\([0-9]+\)/', 'integer', parent::buildColumn($column));
 		$out = str_replace('integer serial', 'serial', $out);
-
+		if (strpos($out, 'timestamp DEFAULT')) {
+			if (isset($column['null']) && $column['null']) {
+				$out = str_replace('DEFAULT NULL', '', $out);
+			} else {
+				$out = str_replace('DEFAULT NOT NULL', '', $out);
+			}
+		}
 		if (strpos($out, 'DEFAULT DEFAULT')) {
 			if (isset($column['null']) && $column['null']) {
 				$out = str_replace('DEFAULT DEFAULT', 'DEFAULT NULL', $out);
@@ -651,7 +824,9 @@ class DboPostgres extends DboSource {
  */
 	function buildIndex($indexes, $table = null) {
 		$join = array();
-
+		if (!is_array($indexes)) {
+			return array();
+		}
 		foreach ($indexes as $name => $value) {
 			if ($name == 'PRIMARY') {
 				$out = 'PRIMARY KEY  (' . $this->name($value['column']) . ')';
@@ -661,7 +836,7 @@ class DboPostgres extends DboSource {
 					$out .= 'UNIQUE ';
 				}
 				if (is_array($value['column'])) {
-					$value['column'] = join(', ', array_map(array(&$this, 'name'), $value['column']));
+					$value['column'] = implode(', ', array_map(array(&$this, 'name'), $value['column']));
 				} else {
 					$value['column'] = $this->name($value['column']);
 				}
@@ -694,7 +869,7 @@ class DboPostgres extends DboSource {
 
 				foreach (array('columns', 'indexes') as $var) {
 					if (is_array(${$var})) {
-						${$var} = join($join[$var], array_filter(${$var}));
+						${$var} = implode($join[$var], array_filter(${$var}));
 					}
 				}
 				return "CREATE TABLE {$table} (\n\t{$columns}\n);\n{$indexes}";
@@ -705,5 +880,4 @@ class DboPostgres extends DboSource {
 		}
 	}
 }
-
 ?>

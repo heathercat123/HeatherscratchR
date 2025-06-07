@@ -8,24 +8,21 @@
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
- * Copyright 2005-2008, Cake Software Foundation, Inc.
- *								1785 E. Sahara Avenue, Suite 490-204
- *								Las Vegas, Nevada 89104
+ * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
+ * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @filesource
- * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
- * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
- * @package			cake
- * @subpackage		cake.cake.libs
- * @since			CakePHP(tm) v 0.2.9
- * @version			$Revision$
- * @modifiedby		$LastChangedBy$
- * @lastmodified	$Date$
- * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link          http://cakephp.org CakePHP(tm) Project
+ * @package       cake
+ * @subpackage    cake.cake.libs
+ * @since         CakePHP(tm) v 0.2.9
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
+ * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 /**
  * Object class, allowing __construct and __destruct in PHP4.
@@ -33,14 +30,14 @@
  * Also includes methods for logging and the special method RequestAction,
  * to call other Controllers' Actions from anywhere.
  *
- * @package		cake
- * @subpackage	cake.cake.libs
+ * @package       cake
+ * @subpackage    cake.cake.libs
  */
 class Object {
 /**
  * Log object
  *
- * @var object
+ * @var CakeLog
  * @access protected
  */
 	var $_log = null;
@@ -79,9 +76,10 @@ class Object {
 /**
  * Calls a controller's method from any location.
  *
- * @param string $url URL in the form of Cake URL ("/controller/method/parameter")
+ * @param mixed $url String or array-based url.
  * @param array $extra if array includes the key "return" it sets the AutoRender to true.
- * @return mixed Success (true/false) or contents if 'return' is set in $extra
+ * @return mixed Boolean true or false on success/failure, or contents
+ *               of rendered action if 'return' is set in $extra.
  * @access public
  */
 	function requestAction($url, $extra = array()) {
@@ -94,7 +92,10 @@ class Object {
 		if (in_array('return', $extra, true)) {
 			$extra = array_merge($extra, array('return' => 0, 'autoRender' => 1));
 		}
-		$params = array_merge(array('autoRender' => 0, 'return' => 1, 'bare' => 1, 'requested' => 1, 'url' => array()), $extra);
+		if (is_array($url) && !isset($extra['url'])) {
+			$extra['url'] = array();
+		}
+		$params = array_merge(array('autoRender' => 0, 'return' => 1, 'bare' => 1, 'requested' => 1), $extra);
 		$dispatcher = new Dispatcher;
 		return $dispatcher->dispatch($url, $params);
 	}
@@ -246,8 +247,12 @@ class Object {
 		$file = 'persistent' . DS . strtolower($name) . '.php';
 		$objectArray = array(&$object);
 		$data = str_replace('\\', '\\\\', serialize($objectArray));
-		$data = '<?php $' . $name . ' = \'' . str_replace('\'', '\\\'', $data) . '\' ?>';
-		cache($file, $data, '+1 day');
+		$data = '<?php $' . Inflector::slug($name) . ' = \'' . str_replace('\'', '\\\'', $data) . '\' ?>';
+		$duration = '+999 days';
+		if (Configure::read() >= 1) {
+			$duration = '+10 seconds';
+		}
+		cache($file, $data, $duration);
 	}
 /**
  * Open the persistent class file for reading
@@ -262,25 +267,27 @@ class Object {
 		$file = CACHE . 'persistent' . DS . strtolower($name) . '.php';
 		include($file);
 
-		switch($type) {
+		switch ($type) {
 			case 'registry':
 				$vars = unserialize(${$name});
 				foreach ($vars['0'] as $key => $value) {
-					App::import('Model', Inflector::classify($key));
+					if (strpos($key, '_behavior') !== false) {
+						App::import('Behavior', Inflector::classify(substr($key, 0, -9)));
+					} else {
+						App::import('Model', Inflector::camelize($key));
+					}
+					unset ($value);
 				}
 				unset($vars);
 				$vars = unserialize(${$name});
 				foreach ($vars['0'] as $key => $value) {
-					foreach ($vars['0'][$key]->Behaviors->_attached as $behavior) {
-						App::import('Behavior', $behavior);
-					}
 					ClassRegistry::addObject($key, $value);
 					unset ($value);
 				}
 				unset($vars);
 			break;
 			default:
-				$vars = unserialize(${$name});
+				$vars = unserialize(${Inflector::slug($name)});
 				$this->{$name} = $vars['0'];
 				unset($vars);
 			break;

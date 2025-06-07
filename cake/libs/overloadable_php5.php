@@ -5,45 +5,37 @@
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
- * Copyright 2005-2008, Cake Software Foundation, Inc.
- *								1785 E. Sahara Avenue, Suite 490-204
- *								Las Vegas, Nevada 89104
+ * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
+ * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @filesource
- * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
- * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
- * @package			cake
- * @subpackage		cake.cake.libs
- * @since			CakePHP(tm) v 1.2
- * @version			$Revision$
- * @modifiedby		$LastChangedBy$
- * @lastmodified	$Date$
- * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link          http://cakephp.org CakePHP(tm) Project
+ * @package       cake
+ * @subpackage    cake.cake.libs
+ * @since         CakePHP(tm) v 1.2
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
+ * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 /**
  * Overloadable class selector
  *
- * @package		cake
- * @subpackage	cake.cake.libs
- */
-
-/**
  * Load the interface class based on the version of PHP.
  *
+ * @package       cake
+ * @subpackage    cake.cake.libs
  */
 class Overloadable extends Object {
-
 /**
  * Overload implementation. No need for implementation in PHP5.
  *
  * @access public
  */
 	function overload() { }
-
 /**
  * Magic method handler.
  *
@@ -60,15 +52,20 @@ class Overloadable extends Object {
 	}
 }
 
+/**
+ * Overloadable2 class selector
+ *
+ * Load the interface class based on the version of PHP.
+ *
+ * @package       cake
+ */
 class Overloadable2 extends Object {
-
 /**
  * Overload implementation. No need for implementation in PHP5.
  *
  * @access public
  */
 	function overload() { }
-
 /**
  * Magic method handler.
  *
@@ -83,7 +80,6 @@ class Overloadable2 extends Object {
 		}
 		return $this->call__($method, $params);
 	}
-
 /**
  * Getter.
  *
@@ -95,7 +91,6 @@ class Overloadable2 extends Object {
 	function __get($name) {
 		return $this->get__($name);
 	}
-
 /**
  * Setter.
  *
@@ -108,5 +103,4 @@ class Overloadable2 extends Object {
 		return $this->set__($name, $value);
 	}
 }
-
 ?>

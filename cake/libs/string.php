@@ -6,31 +6,28 @@
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
- * Copyright 2005-2008, Cake Software Foundation, Inc.
- *			1785 E. Sahara Avenue, Suite 490-204
- *			Las Vegas, Nevada 89104
+ * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
+ * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @filesource
- * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
- * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
- * @package			cake
- * @subpackage		cake.cake.libs
- * @since			CakePHP(tm) v 1.2.0.5551
- * @version			$Revision$
- * @modifiedby		$LastChangedBy$
- * @lastmodified	$Date$
- * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link          http://cakephp.org CakePHP(tm) Project
+ * @package       cake
+ * @subpackage    cake.cake.libs
+ * @since         CakePHP(tm) v 1.2.0.5551
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
+ * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 /**
  * String handling methods.
  *
  *
- * @package		cake
- * @subpackage	cake.cake.libs
+ * @package       cake
+ * @subpackage    cake.cake.libs
  */
 class String extends Object {
 /**
@@ -129,7 +126,7 @@ class String extends Object {
  * @static
  */
 	function tokenize($data, $separator = ',', $leftBound = '(', $rightBound = ')') {
-		if(empty($data) || is_array($data)) {
+		if (empty($data) || is_array($data)) {
 			return $data;
 		}
 
@@ -210,12 +207,13 @@ class String extends Object {
  * @param string $options An array of options, see description above
  * @return string
  * @access public
+ * @static
  */
 	function insert($str, $data, $options = array()) {
-		$options = array_merge(
-			array('before' => ':', 'after' => null, 'escape' => '\\', 'format' => null, 'clean' => false),
-			$options
+		$defaults = array(
+			'before' => ':', 'after' => null, 'escape' => '\\', 'format' => null, 'clean' => false
 		);
+		$options += $defaults;
 		$format = $options['format'];
 
 		if (!isset($format)) {
@@ -232,14 +230,17 @@ class String extends Object {
 
 		if (array_keys($data) === array_keys(array_values($data))) {
 			$offset = 0;
-			while ($pos = strpos($str, '?', $offset)) {
+			while (($pos = strpos($str, '?', $offset)) !== false) {
 				$val = array_shift($data);
 				$offset = $pos + strlen($val);
 				$str = substr_replace($str, $val, $pos, 1);
 			}
 		} else {
+			asort($data);
+
 			$hashKeys = array_map('md5', array_keys($data));
 			$tempData = array_combine(array_keys($data), array_values($hashKeys));
+			krsort($tempData);
 			foreach ($tempData as $key => $hashVal) {
 				$key = sprintf($format, preg_quote($key, '/'));
 				$str = preg_replace($key, $hashVal, $str);
@@ -267,6 +268,7 @@ class String extends Object {
  * @param string $options
  * @return string
  * @access public
+ * @static
  */
 	function cleanInsert($str, $options) {
 		$clean = $options['clean'];
@@ -282,7 +284,7 @@ class String extends Object {
 		switch ($clean['method']) {
 			case 'html':
 				$clean = array_merge(array(
-					'word' => '[\w,]+',
+					'word' => '[\w,.]+',
 					'andText' => true,
 					'replacement' => '',
 				), $clean);
@@ -300,7 +302,7 @@ class String extends Object {
 				break;
 			case 'text':
 				$clean = array_merge(array(
-					'word' => '[\w,]+',
+					'word' => '[\w,.]+',
 					'gap' => '[\s]*(?:(?:and|or)[\s]*)?',
 					'replacement' => '',
 				), $clean);

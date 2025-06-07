@@ -5,35 +5,32 @@
  *
  * Simplifies the output of RSS feeds.
  *
- * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
- * Copyright 2005-2008, Cake Software Foundation, Inc.
- *								1785 E. Sahara Avenue, Suite 490-204
- *								Las Vegas, Nevada 89104
+ * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
+ * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @filesource
- * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
- * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
- * @package			cake
- * @subpackage		cake.cake.libs.view.helpers
- * @since			CakePHP(tm) v 1.2
- * @version			$Revision$
- * @modifiedby		$LastChangedBy$
- * @lastmodified	$Date$
- * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link          http://cakephp.org CakePHP(tm) Project
+ * @package       cake
+ * @subpackage    cake.cake.libs.view.helpers
+ * @since         CakePHP(tm) v 1.2
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
+ * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
+App::import('Helper', 'Xml');
+
 /**
  * XML Helper class for easy output of XML structures.
  *
  * XmlHelper encloses all methods needed while working with XML documents.
  *
- * @package		cake
- * @subpackage	cake.cake.libs.view.helpers
+ * @package       cake
+ * @subpackage    cake.cake.libs.view.helpers
  */
-App::import('Helper', 'Xml');
-
 class RssHelper extends XmlHelper {
 /**
  * Helpers used by RSS Helper
@@ -140,9 +137,20 @@ class RssHelper extends XmlHelper {
 		$elems = '';
 		foreach ($elements as $elem => $data) {
 			$attributes = array();
-			if (is_array($data) && isset($data['attrib']) && is_array($data['attrib'])) {
-				$attributes = $data['attrib'];
-				unset($data['attrib']);
+			if (is_array($data)) {
+				if (strtolower($elem) == 'cloud') {
+					$attributes = $data;
+					$data = array();
+				} elseif (isset($data['attrib']) && is_array($data['attrib'])) {
+					$attributes = $data['attrib'];
+					unset($data['attrib']);
+				} else {
+					$innerElements = '';
+					foreach ($data as $subElement => $value) {
+						$innerElements .= $this->elem($subElement, array(), $value);
+					}
+					$data = $innerElements;
+				}
 			}
 			$elems .= $this->elem($elem, $attributes, $data);
 		}
@@ -186,6 +194,13 @@ class RssHelper extends XmlHelper {
 
 		foreach ($elements as $key => $val) {
 			$attrib = array();
+			
+			$escape = true;
+			if (is_array($val) && isset($val['convertEntities'])) {
+				$escape = $val['convertEntities'];
+				unset($val['convertEntities']);
+			}
+			
 			switch ($key) {
 				case 'pubDate' :
 					$val = $this->time($val);
@@ -199,8 +214,8 @@ class RssHelper extends XmlHelper {
 								unset($category['domain']);
 							}
 							$categories[] = $this->elem($key, $attrib, $category);
-						}					
-						$elements[$key] = join('', $categories);
+						}
+						$elements[$key] = implode('', $categories);
 						continue 2;
 					} else if (is_array($val) && isset($val['domain'])) {
 						$attrib['domain'] = $val['domain'];
@@ -239,18 +254,13 @@ class RssHelper extends XmlHelper {
 					$val = null;
 				break;
 			}
-			$escape = true;
-			if (is_array($val) && isset($val['convertEntities'])) {
-				$escape = $val['convertEntities'];
-				unset($val['convertEntities']);
-			}
 			if (!is_null($val) && $escape) {
 				$val = h($val);
 			}
 			$elements[$key] = $this->elem($key, $attrib, $val);
 		}
 		if (!empty($elements)) {
-			$content = join('', $elements);
+			$content = implode('', $elements);
 		}
 		return $this->output($this->elem('item', $att, $content, !($content === null)));
 	}
