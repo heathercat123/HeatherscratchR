@@ -1,3 +1,3 @@
 <?php
-	echo $this->renderElement('admin/banned_user_list', array('data' => $data));
+	echo $this->element('admin/banned_user_list', array('data' => $data));
 ?>

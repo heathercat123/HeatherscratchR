@@ -1,3 +1,3 @@
 <?php
-	echo $this->renderElement('admin/rank_permissions', array('rank' => $rank));
+	echo $this->element('admin/rank_permissions', array('rank' => $rank));
 ?>

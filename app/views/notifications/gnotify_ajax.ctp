@@ -1,3 +1,3 @@
 <?php
-	e($this->renderElement('gnotify'));
+	e($this->element('gnotify'));
 ?>

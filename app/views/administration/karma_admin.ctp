@@ -1,5 +1,5 @@
 <?php
-	e($this->renderElement('admin/admin_index', Array()));
+	e($this->element('admin/admin_index', Array()));
 ?>
 <div class="fullcontent">
 	<div id="admin_project_header">
@@ -26,7 +26,7 @@
 	</div>
 	<div id="admin_banlist_results">
 		<?php
-			echo $this->renderElement('admin/karma_rank_list', Array('data' => $karma_ranks));
+			echo $this->element('admin/karma_rank_list', Array('data' => $karma_ranks));
 		?>
 	</div>
 </div>
@@ -36,7 +36,7 @@
 	</div>
 	<div id="admin_banlist_results">
 		<?php
-			echo $this->renderElement('admin/karma_events_list', Array('data' => $karma_events));
+			echo $this->element('admin/karma_events_list', Array('data' => $karma_events));
 		?>
 	</div>
 </div>

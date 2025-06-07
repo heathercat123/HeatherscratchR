@@ -38,7 +38,7 @@
         <a href="<?php echo $html->url('/projects/'.$urlname.'/'.$pid)?>">click here</a> to see all comments <br/>
         </div>
         <div id="ajax_pagination_secondary">
-            <?php e($this->renderElement('commentlist')); ?>
+            <?php e($this->element('commentlist')); ?>
         </div>
 	</div>
 	<?php endif; ?>

@@ -1,5 +1,5 @@
 <div id="admin_tags_wrapper">
 	<?php
-		echo $this->renderElement('admin/admin_tags');
+		echo $this->element('admin/admin_tags');
 	?>
 </div>

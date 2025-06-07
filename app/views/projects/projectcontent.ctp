@@ -294,16 +294,16 @@ else {
 <div id='pactions'>
     <div class="project_commands">
         <!-- ::: Begin loveit ::: -->
-        <div id="loveitDiv" class="loveit"><?php e($this->renderElement("loveit")); ?></div>
+        <div id="loveitDiv" class="loveit"><?php e($this->element("loveit")); ?></div>
         <!-- ::: End loveit ::: -->
 
         <!-- ::: Begin favorite ::: -->
-        <div id="favoriteDiv" class="favoriteit"><?php e($this->renderElement("favorite")); ?></div>
+        <div id="favoriteDiv" class="favoriteit"><?php e($this->element("favorite")); ?></div>
         <!-- ::: End favorite ::: -->
 
         <!--- ::: Flag it ::: -->
         <?php if (! $isMine && $pid != 22021) : ?>
-            <div id="flagDiv" class="flag"><?php e($this->renderElement("flag")); ?></div>
+            <div id="flagDiv" class="flag"><?php e($this->element("flag")); ?></div>
         <?php endif;?>
         <!-- ::: Flag it::: -->
     </div>
@@ -316,7 +316,7 @@ else {
         </div>
         <!--- ::: Lock it ::: -->
         <?php if ($isMine || $isAdmin): ?>
-            <div id="lockDiv" class="flag"><?php e($this->renderElement("projects/project_lock")); ?></div>
+            <div id="lockDiv" class="flag"><?php e($this->element("projects/project_lock")); ?></div>
         <?php endif;?>
         <!-- ::: Lock it::: -->
     <?php endif; ?>
@@ -337,7 +337,7 @@ else {
 <p>
   <div id="adminActions">
   <br />
-  <?php e($this->renderElement('project_admin_actions', array('admin_name'=> $admin_name, 'isCensored' => $isCensored, 'flags' => $flags, 'project_id' => $pid)));?>
+  <?php e($this->element('project_admin_actions', array('admin_name'=> $admin_name, 'isCensored' => $isCensored, 'flags' => $flags, 'project_id' => $pid)));?>
   </div>
 </p>
 <?php endif;?>
@@ -388,7 +388,7 @@ else {
     <div id="ajax_pagination_secondary">
     <?php
         e($ajax->div("project_comment_list"));
-        e($this->renderElement('commentlist'));
+        e($this->element('commentlist'));
         e($ajax->divEnd("project_comment_list"));
     ?>
     </div>
@@ -531,7 +531,7 @@ else {
        <h4><?php ___('Tags');?></h4>
 	    <?php
             e($ajax->div("project_tag_list"));
-				e($this->renderElement('taglist', array('tags'=>$project_tags)));
+				e($this->element('taglist', array('tags'=>$project_tags)));
             e($ajax->divEnd("project_tag_list"));
         ?>
 	  <br>
@@ -552,7 +552,7 @@ else {
 	<!-- ::: Begin share ::: -->
     <div id="share" class="sidecontainer">
         <h4><?php ___('Link to this Project'); ?></h4>
-        <?php  e($this->renderElement('projectshare')); ?>
+        <?php  e($this->element('projectshare')); ?>
         <!-- ADDTHIS BUTTON BEGIN -->
         <script type="text/javascript">
         addthis_pub = '[ACCOUNT-ID]';
@@ -568,7 +568,7 @@ else {
       <h4><?php ___('More Projects by'); ?> <?php e($html->link($urlname, '/users/'.$urlname))?></h4>
 	  <div id="moreProjContent">
 		<div id="ajax_pagination">
-			<?php e($this->renderElement('moreprojects')); ?>
+			<?php e($this->element('moreprojects')); ?>
 		</div>
 	  </div>
     </div>

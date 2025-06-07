@@ -76,7 +76,7 @@
 	</div>
 	<div class = "gallery_create_item_right">
 		<?php
-			echo $this->renderElement('gallery/creation_tags');
+			echo $this->element('gallery/creation_tags');
 		?>
 	</div>
 </div>

@@ -127,14 +127,14 @@ if(($isProjectOwner ||isset($users_permission['delete_project_comments'])) && !$
     
     <?php if($is_comment_reply_enabled): ?>
     <div class="comment_reply_main" id="reply_to_<?php echo $comment_id; ?>">
-        <?php echo $this->renderElement('projects/comment_reply_form', array('comment_id' => $comment_id, 'comment_level' => $comment_level)); ?>
+        <?php echo $this->element('projects/comment_reply_form', array('comment_id' => $comment_id, 'comment_level' => $comment_level)); ?>
     </div>
     <?php endif; ?>
     </div>
 	
     <div class="comment_reply_main_visible" id="reply_list_<?php echo $comment_id; ?>">
         <?php if(!empty($comment['Pcomment']['replylist'])): ?>
-            <?php echo $this->renderElement('projects/reply_list',
+            <?php echo $this->element('projects/reply_list',
                 array('comments' => $comment['Pcomment']['replylist'],
                     'ignored_commenters' => $ignored_commenters,
                     'ignored_comments' => $ignored_comments,
@@ -149,7 +149,7 @@ if(($isProjectOwner ||isset($users_permission['delete_project_comments'])) && !$
 <div class="project_pagination_container">
 	<?php
 		$pagination->setPaging($paging_secondary);
-		echo $this->renderElement('pagination_secondary');
+		echo $this->element('pagination_secondary');
 	?>
 </div>
 <?php endif; ?>

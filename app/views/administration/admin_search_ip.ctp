@@ -86,7 +86,7 @@ echo $is_allow_account_creation;
 <div class="gallery_pagination_container">
 	<?php 
 		//$pagination->setPaging($paging);
-		//echo $this->renderElement('pagination'); 
+		//echo $this->element('pagination'); 
 	?>
 </div>
 </div>

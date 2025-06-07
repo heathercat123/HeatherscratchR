@@ -21,7 +21,7 @@
 		
 	foreach($data as $rank) {
 		echo "<div class='gallerythumb clearme'>\n";
-			echo $this->renderElement('admin/karma_rank', Array('rank'=> $rank));
+			echo $this->element('admin/karma_rank', Array('rank'=> $rank));
 		echo "</div>\n";
 	}
 ?>

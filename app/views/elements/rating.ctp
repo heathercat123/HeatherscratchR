@@ -42,9 +42,9 @@
                 "style"=>"display:none;",
                 "name"=>"ratingForm",
             )));
-        e($html->hidden("Vote/project_id", array("value"=>$pid)));
-        e($html->hidden("Vote/user_id", array("value"=>$current_user_id)));
-        e($html->hidden("Vote/rating", array("value" => "", "id"=>"rating")));
+        e($this->Form->hidden("Vote/project_id", array("value"=>$pid)));
+        e($this->Form->hidden("Vote/user_id", array("value"=>$current_user_id)));
+        e($this->Form->hidden("Vote/rating", array("value" => "", "id"=>"rating")));
         e("<input type=\"hidden\" name=\"raters_count\" value=\"$raters_count\"/>");
         e($html->submit("rate", array("name"=>"rating_submit","id"=>"ratingSubmit")));
         e("\n</form>\n");

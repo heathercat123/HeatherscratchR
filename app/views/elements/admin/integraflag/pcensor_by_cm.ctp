@@ -14,7 +14,7 @@ switch($status) {
     </a>
     <a target='_blank' href='/projects/<?php echo $project['User']['urlname']; ?>/<?php echo $project['Project']['id'] ?>'>
         <?php echo $project['Project']['name'] ?></a> (<abbr title='<?php echo $abbrtitle; ?>'><?php echo $abbrcontent; ?></abbr>)  censored by a CM.
-        <?php e($this->renderElement('admin/integraflag/flagger_user_data', array('flag' => $flag, 'flaggers' => $flaggers))); ?>
+        <?php e($this->element('admin/integraflag/flagger_user_data', array('flag' => $flag, 'flaggers' => $flaggers))); ?>
     <blockquote><strong>Reason:</strong>  <?php echo $flag['flag_message'] ?></blockquote>
     <div style='float:right; font-size: 11px; margin-right: 10px'>
         Last modified: <?php echo $project['Project']['modified']; ?>

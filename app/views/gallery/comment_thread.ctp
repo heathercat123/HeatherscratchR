@@ -20,7 +20,7 @@
     <div id="ajax_pagination_secondary">
 	<?php
 		e($ajax->div("theme_comment_list"));
-			e($this->renderElement('discusslist'));
+			e($this->element('discusslist'));
 		e($ajax->divEnd("theme_comment_list"));
 	?>
 	</div>

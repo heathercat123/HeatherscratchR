@@ -1,3 +1,3 @@
 <?php
-	e($this->renderElement('discusslist'));
+	e($this->element('discusslist'));
 ?>

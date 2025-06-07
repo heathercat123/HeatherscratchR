@@ -31,7 +31,7 @@
 	<?php 
 		if(isset($paging_ternary)):
 		$pagination->setPaging($paging_ternary);
-		echo $this->renderElement('pagination_ternary');
+		echo $this->element('pagination_ternary');
 		endif; 
 	?>
 </div>

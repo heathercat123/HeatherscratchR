@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <?php
-	echo $this->renderElement('superheader');
+	echo $this->element('superheader');
 ?>
 <title> <?php echo "Scratch Application" ?></title>
 </head>
@@ -11,7 +11,7 @@
     <?php echo $content_for_layout?>
     </div>
 	<?php
-		echo $this->renderElement('ajax_indicator');
+		echo $this->element('ajax_indicator');
 	?>
 </body>
 </html>

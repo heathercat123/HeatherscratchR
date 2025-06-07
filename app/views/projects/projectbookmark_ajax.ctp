@@ -1,3 +1,3 @@
 <?php
-    e($this->renderElement('bookmark'));
+    e($this->element('bookmark'));
 ?>

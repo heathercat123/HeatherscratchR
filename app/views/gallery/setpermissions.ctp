@@ -58,7 +58,7 @@
 		<div id='gallery_permission_advanced'>
 			<?php 
 				e($ajax->div("gallery_users_ajax"));
-					e($this->renderElement('gallerypermissionusers', array('members'=> $members, 'friends'=> $friends, 'gallery_id' => $gallery_id)));
+					e($this->element('gallerypermissionusers', array('members'=> $members, 'friends'=> $friends, 'gallery_id' => $gallery_id)));
 				e($ajax->divEnd("gallery_users_ajax"));
 			?>
 		</div>
@@ -71,7 +71,7 @@
 	<?php
 		echo "<div class='gallery_permissions_search'>\n";
 			echo "<form action='psort' method='POST' accept-charset='UTF-8' name='downform' id='downform'>";
-			echo $html->input('Filter/key', array('type'=>'text', 'size'=>'24'));
+			echo $this->Form->input('Filter/key', array('type'=>'text', 'size'=>'24'));
 			echo "<div >";
 			echo "   <input type='submit' class='button' value='search'>";
 			echo "</form>";

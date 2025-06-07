@@ -2,7 +2,7 @@
     <span class='inflag'>    
     Gallery comment (on <a target='_blank' href='/galleries/view/<?php echo $gallery['Gallery']['id'] ?>'>
         <?php echo $gallery['Gallery']['name'] ?></a>) removed - flagged by a CM.
-    <?php e($this->renderElement('admin/integraflag/flagger_user_data', array('flag' => $flag, 'flaggers' => $flaggers))); ?>
+    <?php e($this->element('admin/integraflag/flagger_user_data', array('flag' => $flag, 'flaggers' => $flaggers))); ?>
     <blockquote><?php echo $flag['flagged_content'] ?></blockquote>
     <div style='float:right; font-size: 11px; margin-right: 10px'>
         Posted: <?php echo $gcomment['Gcomment']['created']; ?>

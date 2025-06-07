@@ -24,7 +24,7 @@
 			echo "\t<div class='admin_leftcolumn'>\n";
 				echo "<span>"; 
 				echo "<div id='rank_permissions_wrapper'>";
-					echo $this->renderElement('admin/rank_permissions', Array('rank' => $rank));
+					echo $this->element('admin/rank_permissions', Array('rank' => $rank));
 				echo "</div>";
 				echo "</span>";
 			echo "\t</div>";

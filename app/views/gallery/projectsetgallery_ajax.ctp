@@ -1,4 +1,4 @@
 <?php
     $params = array('user_name' => $user_name, 'project_id' => $project_id, 'project_name' => $project_name);
-    e($this->renderElement('galleryaddconnection', $params));
+    e($this->element('galleryaddconnection', $params));
 ?>

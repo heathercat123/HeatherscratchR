@@ -1,5 +1,5 @@
 <?php
-	e($this->renderElement('admin/admin_index', Array()));
+	e($this->element('admin/admin_index', Array()));
 ?>
 
 <style type='text/css'>
@@ -279,7 +279,7 @@ function saveAdminNote(flag_id)
 		<tr><td style='width:58%'>
 		<?php if($status == 'closed' || $status == 'search') {
 			$pagination->setPaging($paging);
-			echo "Flags " . str_replace('onclick=" event.returnValue = false; return false;"', '', $this->renderElement('pagination'));
+			echo "Flags " . str_replace('onclick=" event.returnValue = false; return false;"', '', $this->element('pagination'));
 		} else { echo "Flags"; } ?></td><td style='width:27%'>Flagged User</td><td style='width:15%'>Action</td></tr>
 		<?php
 		if(count($flag_data) == 0)
@@ -291,9 +291,9 @@ function saveAdminNote(flag_id)
 		foreach($flag_data as $fd)
 		{
 			echo "<tr" . (($fd['render'] == 'comment_action') ? ' style="background:#EEF"' : ' style="background:#FEE"') . " id='r_" . $fd['flag']['id'] . "'>";
-			e($this->renderElement("admin/integraflag/" . $fd['flag']['type'], $fd));
-			e($this->renderElement("admin/integraflag/flag_user_data", $fd));
-			e($this->renderElement("admin/integraflag/" . $fd['render'], $fd));
+			e($this->element("admin/integraflag/" . $fd['flag']['type'], $fd));
+			e($this->element("admin/integraflag/flag_user_data", $fd));
+			e($this->element("admin/integraflag/" . $fd['render'], $fd));
 			echo "</tr>";
 			
 		    $admin_notes = unserialize($fd['flag']['notes']) or array();
@@ -301,7 +301,7 @@ function saveAdminNote(flag_id)
 		        e('<tr id="insert_' . $fd['flag']['id'] . '">' .
 				'<td colspan="3" style="padding-left:5px" class="popout">' .
 				'<div style="float:right; width: 30px;"><h2><a href="javascript:collapseInsert(' . $fd['flag']['id'] . ')">[X]</a></h2></div>' . 
-				 $this->renderElement("admin/integraflag/admin_notes", $fd) . '</td></tr>');
+				 $this->element("admin/integraflag/admin_notes", $fd) . '</td></tr>');
 		    }
 			
 			$i++;

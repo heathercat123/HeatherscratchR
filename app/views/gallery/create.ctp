@@ -8,7 +8,7 @@
 <!-- |||||| Begin main content area ||||||| -->
 <div id="main">
 	<?php
-		echo $this->renderElement('gallery/create');
+		echo $this->element('gallery/create');
 	?>
 </div>
 <!-- ////// End main content ////// -->

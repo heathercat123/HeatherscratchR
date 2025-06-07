@@ -1,7 +1,7 @@
 <div class="fullcontent">
 	<h2>Manage Projects</h2>
 	<?php
-	e($this->renderElement('admin/admin_index', Array()));
+	e($this->element('admin/admin_index', Array()));
 	?>
 </div>
 <div class="fullcontent">
@@ -20,7 +20,7 @@
 		<div>
 	<?php
 		 e($ajax->div("admin_project_list"));
-         	e($this->renderElement('adminprojects', array('data' => $data)));
+         	e($this->element('adminprojects', array('data' => $data)));
          e($ajax->divEnd("admin_project_list"));
     ?>	 
     </div>	

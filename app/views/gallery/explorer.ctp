@@ -67,6 +67,6 @@
    </div>
 </div>
 <div id="pagination_page">
-	<?php e($this->renderElement('galleryexplorer', array('option' => $option, 'data' => $data))); ?>
+	<?php e($this->element('galleryexplorer', array('option' => $option, 'data' => $data))); ?>
 </div>
 </div>

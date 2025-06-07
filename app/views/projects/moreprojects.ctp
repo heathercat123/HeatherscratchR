@@ -1,3 +1,3 @@
 <?php
-    e($this->renderElement('moreprojects'));
+    e($this->element('moreprojects'));
 ?>

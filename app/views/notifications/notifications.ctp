@@ -62,7 +62,7 @@
 	<?php if($notify_count > 0): ?>
 	<?php
 		$pagination->setPaging($paging);
-		echo $this->renderElement('pagination');
+		echo $this->element('pagination');
 	?>
 	</div>
 	<?php endif; ?>
@@ -79,10 +79,10 @@
 	</div>
 	
     <div id="pnotifyDiv">
-		<?php e($this->renderElement("pnotify")); ?>
+		<?php e($this->element("pnotify")); ?>
     </div>
     <div id="gnotifyDiv">
-		<?php e($this->renderElement("gnotify")); ?>
+		<?php e($this->element("gnotify")); ?>
     </div>
 </div>
 </div>

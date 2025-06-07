@@ -1,3 +1,3 @@
 <?php
-	echo $this->renderElement('projects/comment_reply_form', Array('comment_id' => $comment_id, 'comment_level' => $comment_level));
+	echo $this->element('projects/comment_reply_form', Array('comment_id' => $comment_id, 'comment_level' => $comment_level));
 ?>

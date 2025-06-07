@@ -1,7 +1,7 @@
 <div class="fullcontent">
 <div id="ajax_pagination">
 				<?php
-					e($this->renderElement('thank_you_list', array('data'=> $data)));
+					e($this->element('thank_you_list', array('data'=> $data)));
 				?>
 			</div>
 

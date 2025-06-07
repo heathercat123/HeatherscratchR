@@ -17,7 +17,7 @@
 		<div>
 	<?php
 		 e($ajax->div("admin_project_list"));
-         	e($this->renderElement('admincomments', array('data'=> $data)));
+         	e($this->element('admincomments', array('data'=> $data)));
          e($ajax->divEnd("admin_project_list"));
     ?>	 
     </div>	

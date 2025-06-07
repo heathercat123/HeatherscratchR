@@ -39,10 +39,10 @@
   </div>
   <div class="signup_error_wrapper">
 	<?php
-		echo $this->renderElement('users/signup_error', Array("mode" => "password"));
+		echo $this->element('users/signup_error', Array("mode" => "password"));
 	?>
 	<?php
-		echo $this->renderElement('users/signup_info', Array("mode" => "password"));
+		echo $this->element('users/signup_info', Array("mode" => "password"));
 	?>
   </div>
   <div class="signup_row">
@@ -59,10 +59,10 @@
   </div>
   <div class="signup_error_wrapper">
 	<?php
-		echo $this->renderElement('users/signup_error', Array("mode" => "confirmation"));
+		echo $this->element('users/signup_error', Array("mode" => "confirmation"));
 	?>
 	<?php
-		echo $this->renderElement('users/signup_info', Array("mode" => "confirmation"));
+		echo $this->element('users/signup_info', Array("mode" => "confirmation"));
 	?>
   </div>
 

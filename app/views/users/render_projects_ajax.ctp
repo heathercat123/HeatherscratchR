@@ -10,10 +10,10 @@
 	<? endif; ?>
 	<?php
 		if ($option == "projects") {
-			e($this->renderElement('user_projects', array('isAdmin' => $isAdmin, 'user' => $user, 'isMe' => $isMe, 'data' => $data,'featureProlectList'=>$featureProlectList)));
+			e($this->element('user_projects', array('isAdmin' => $isAdmin, 'user' => $user, 'isMe' => $isMe, 'data' => $data,'featureProlectList'=>$featureProlectList)));
 		}
 		if ($option == "favorites") {
 		
-			e($this->renderElement('user_favorites', array('isAdmin' => $isAdmin, 'user' => $user, 'isMe' => $isMe, 'data' => $data)));
+			e($this->element('user_favorites', array('isAdmin' => $isAdmin, 'user' => $user, 'isMe' => $isMe, 'data' => $data)));
 		}
 ?>

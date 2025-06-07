@@ -1,5 +1,5 @@
 <?php
-	e($this->renderElement('admin/admin_index', Array()));
+	e($this->element('admin/admin_index', Array()));
 ?>
 <div class="fullcontent">
 	<div id="admin_project_header">
@@ -9,7 +9,7 @@
 		<p><h3>Admin Search: </h3> <textarea id='admin_search_textarea' name="admin_search_textarea" cols="60" rows="2"></textarea></p>
 		<?php 
 			$params = array('option' => $option);
-			e($this->renderElement('admin/admin_column_options', $params));
+			e($this->element('admin/admin_column_options', $params));
 		?>
 		<br>
 		</br>

@@ -1,6 +1,6 @@
 <?php			
 	$pagination->setPaging($paging);
-	echo $this->renderElement('pagination'); 
+	echo $this->element('pagination'); 
 	
 	foreach ($data as $project):
 		$project_name = $project['Project']['name'];

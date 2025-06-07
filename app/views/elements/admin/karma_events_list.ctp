@@ -17,7 +17,7 @@
 		
 	foreach($data as $event) {
 		echo "<div class='gallerythumb clearme'>\n";
-			echo $this->renderElement('admin/karma_event', Array('event'=> $event));
+			echo $this->element('admin/karma_event', Array('event'=> $event));
 		echo "</div>\n";
 	}
 ?>

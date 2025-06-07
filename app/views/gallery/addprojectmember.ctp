@@ -4,7 +4,7 @@
 <div class="fullcontent">
 	<?php
 	$pagination->setPaging($paging);
-	echo $this->renderElement('pagination'); 
+	echo $this->element('pagination'); 
 	
 	echo "<div>\n";
 	foreach ($data as $project):

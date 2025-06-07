@@ -1,3 +1,3 @@
 <?php
-    e($this->renderElement('favorite'));
+    e($this->element('favorite'));
 ?>

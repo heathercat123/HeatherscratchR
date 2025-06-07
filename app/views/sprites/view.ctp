@@ -39,7 +39,7 @@
 		<h4><?php ___('Tags');?></h4>
 	    <?php
             e($ajax->div("sprite_tag_list"));
-				e($this->renderElement('sprites/taglist', array('tags'=>$sprite_tags)));
+				e($this->element('sprites/taglist', array('tags'=>$sprite_tags)));
             e($ajax->divEnd("sprite_tag_list"));
         ?>
 	  <br>

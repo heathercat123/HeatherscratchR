@@ -13,7 +13,7 @@
 ?>
 <head>
 <?php
-	echo $this->renderElement('superheader');
+	echo $this->element('superheader');
 ?>
 <title>Scratch | <?php echo $isMe? "My Stuff | $urlname" : "$urlname's Stuff"; ?> </title>
 
@@ -130,12 +130,12 @@ if (isset($head)) echo $head->print_registered();
 <?php
 if ($isLoggedIn)
     if($style == 2008):
-		echo $this->renderElement('header_loggedin_2008');
+		echo $this->element('header_loggedin_2008');
 	else:
-		echo $this->renderElement('header_loggedin');
+		echo $this->element('header_loggedin');
 	endif;
 else {
-    echo $this->renderElement('header_default');
+    echo $this->element('header_default');
 }
 ?>
 <!-- ////// End header ////// -->
@@ -146,9 +146,9 @@ else {
 
 <!-- ||||| Footer |||| -->
 
-<?php echo $this->renderElement('footer'); ?>
+<?php echo $this->element('footer'); ?>
 <?php
-	echo $this->renderElement('ajax_indicator');
+	echo $this->element('ajax_indicator');
 ?>
 </body>
 </html>

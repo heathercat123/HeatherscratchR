@@ -1,1 +1,1 @@
- <?php e($this->renderElement('project_admin_actions'))?>
+ <?php e($this->element('project_admin_actions'))?>

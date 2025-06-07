@@ -1,5 +1,5 @@
 <?php
-	e($this->renderElement('admin/admin_index', Array()));
+	e($this->element('admin/admin_index', Array()));
 ?>
 <div class="fullcontent">
 	<div id="admin_project_header">
@@ -33,7 +33,7 @@
 	<div id="admin_banlist_results">
 		<div id='ajax_pagination'>
 			<?php
-				echo $this->renderElement('admin/banned_user_list', Array('data' => $data));
+				echo $this->element('admin/banned_user_list', Array('data' => $data));
 			?>
 		</div>
 	</div>

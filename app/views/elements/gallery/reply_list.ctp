@@ -128,7 +128,7 @@ $can_delete_comment = false;
 
     <?php if($is_comment_reply_enabled): ?>
     <div class="comment_reply_main" id="reply_to_<?= $comment_id; ?>">
-        <?= $this->renderElement('gallery/comment_reply_form', array('comment_id' => $comment_id, 'comment_level' => $comment_level)); ?>
+        <?= $this->element('gallery/comment_reply_form', array('comment_id' => $comment_id, 'comment_level' => $comment_level)); ?>
     </div>
     <?php endif; ?>
     <div class="comment_reply_main" id="reply_list_<?= $comment_id; ?>">

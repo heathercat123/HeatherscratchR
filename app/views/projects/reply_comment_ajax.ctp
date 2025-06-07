@@ -1,3 +1,3 @@
 <?php
-    e($this->renderElement('reply_comment'));
+    e($this->element('reply_comment'));
 ?>

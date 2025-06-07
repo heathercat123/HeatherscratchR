@@ -1,1 +1,1 @@
- <?php e($this->renderElement('theme_subscribe_action'))?>
+ <?php e($this->element('theme_subscribe_action'))?>

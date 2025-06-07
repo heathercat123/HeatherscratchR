@@ -1,3 +1,3 @@
 <?php
-	echo $this->renderElement('admin/ip_list', array('data' => $data));
+	echo $this->element('admin/ip_list', array('data' => $data));
 ?>

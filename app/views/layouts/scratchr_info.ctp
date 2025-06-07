@@ -16,7 +16,7 @@
 <head>
 
 <?php
-	echo $this->renderElement('superheader');
+	echo $this->element('superheader');
 ?>
 
 <?php if(!empty($rss_link)): ?>
@@ -56,16 +56,16 @@ endif;
 <div id="container">
 <!-- |||||| Begin header ||||||| -->
 <?php
-    echo $this->renderElement('header_info');
+    echo $this->element('header_info');
 ?>
 <!-- ////// End header ////// -->
 <?php echo $content_for_layout?>
-<?php echo $this->renderElement('footer_info'); ?>
+<?php echo $this->element('footer_info'); ?>
 <?php
-	echo $this->renderElement('ajax_indicator');
+	echo $this->element('ajax_indicator');
 ?>
 <?php
-   echo $this->renderElement('survey_prompt');
+   echo $this->element('survey_prompt');
 ?>
 </body>
 <!-- powered by ScratchR http://scratch.mit.edu/scratchr //-->

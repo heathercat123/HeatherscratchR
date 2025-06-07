@@ -1,3 +1,3 @@
 <?php
-e($this->renderElement('commentlist'));
+e($this->element('commentlist'));
 ?>

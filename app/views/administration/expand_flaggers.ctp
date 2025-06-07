@@ -1,5 +1,5 @@
 <?php
-	e($this->renderElement('admin/admin_index', Array()));
+	e($this->element('admin/admin_index', Array()));
 ?>
 <div class="fullcontent">
 <div id="admin_project_header">
@@ -14,7 +14,7 @@
 </div>
 <div id="admin_project_content">
 	<?php
-		echo $this->renderElement('admin/flagger_list', Array('data' => $data));
+		echo $this->element('admin/flagger_list', Array('data' => $data));
 	?>
     </div>
 </div>

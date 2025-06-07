@@ -13,7 +13,7 @@
 ?>
 <head>
 <?php
-	echo $this->renderElement('superheader');
+	echo $this->element('superheader');
 ?>
 
 <?php if(!empty($rss_link)): ?>
@@ -61,9 +61,9 @@ echo $html->css('languagemenu');
 <!-- |||||| Begin header ||||||| -->
 <?php
 if ($isLoggedIn)
-    echo $this->renderElement('header_loggedin');
+    echo $this->element('header_loggedin');
 else {
-    echo $this->renderElement('header_default');
+    echo $this->element('header_default');
 }
 
 ?>
@@ -71,9 +71,9 @@ else {
 
 <?php echo $content_for_layout?>
 
-<?php echo $this->renderElement('footer'); ?>
+<?php echo $this->element('footer'); ?>
 <?php
-	//echo $this->renderElement('ajax_indicator');
+	//echo $this->element('ajax_indicator');
 ?>
 </body>
 <!-- powered by ScratchR http://scratch.mit.edu/scratchr //-->

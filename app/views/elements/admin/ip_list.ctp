@@ -17,7 +17,7 @@
 <div>
 <?php		
 	$pagination->setPaging($paging);
-	echo $this->renderElement('pagination'); 
+	echo $this->element('pagination'); 
 	
 	foreach ($data as $ip) {
 		$ip_id = $ip['BlockedIp']['id'];

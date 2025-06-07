@@ -18,8 +18,8 @@
 
     e($ajax->form("/projects/$urlname/$pid/bookmark", "post",
         array("update"=>"BookmarkContainer","style"=>"display:none;", "name"=>"bookmarkForm")));
-    e($html->hidden("Bookmark/project_id", array("value"=>$pid)));
-    e($html->hidden("Bookmark/user_id", array("value"=>$loggedInUID)));
+    e($this->Form->hidden("Bookmark/project_id", array("value"=>$pid)));
+    e($this->Form->hidden("Bookmark/user_id", array("value"=>$loggedInUID)));
     e($html->submit("bookmark", array("name"=>"bookmark_submit","id"=>"bookmarkSubmit")));
     e("\n</form>\n");
 

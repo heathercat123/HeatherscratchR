@@ -28,7 +28,7 @@
 	</div>
 	<div id="comment_list_results">
 			<?php
-				echo $this->renderElement('users/comment_list', Array('data' => $final_comments, 'option' => $option));
+				echo $this->element('users/comment_list', Array('data' => $final_comments, 'option' => $option));
 			?>
 	</div>
 </div>

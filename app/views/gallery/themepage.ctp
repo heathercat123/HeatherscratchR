@@ -128,7 +128,7 @@
 		<div class="pagination">
 			<?php 
 				$pagination->setPaging($paging);
-				echo $this->renderElement('pagination');
+				echo $this->element('pagination');
 			?>
 		</div>
 	</div>
@@ -137,7 +137,7 @@
 
 <?php if ($isAdmin || isset($users_permission['galleries_view_permission']) || isset($users_permission['censor_galleries'])): ?>
 	<div id="adminActions"/>
-	  <?php e($this->renderElement('gallery/gallery_admin_actions', array('admin_name'=> $admin_name, 'flags' => $flags, 'gallery_id' => $gallery_id)));?>
+	  <?php e($this->element('gallery/gallery_admin_actions', array('admin_name'=> $admin_name, 'flags' => $flags, 'gallery_id' => $gallery_id)));?>
 	</div>
 <?php endif;?>
 	  
@@ -170,7 +170,7 @@
 	<div id="ajax_pagination_secondary">
 	<?php
 		e($ajax->div("theme_comment_list"));
-			e($this->renderElement('discusslist'));
+			e($this->element('discusslist'));
 		e($ajax->divEnd("theme_comment_list"));
 	?>
 	</div>
@@ -216,14 +216,14 @@
 	<!--- User's permissions action --->
     <?php if(isset($users_permission['feature_galleries'])):?>
     	<div id="users_permision_action">
-    	<?php e($this->renderElement('theme_admin_actions',array('user_permission_action'=>true)));?>
+    	<?php e($this->element('theme_admin_actions',array('user_permission_action'=>true)));?>
         </div>
     <?php endif;?>
     <!--- User's permissions action --->
 	<?php if ($isAdmin): ?>
 	<p>
 	<div id="adminActions_secondary"/>
-	<?php e($this->renderElement('theme_admin_actions',array('user_permission_action'=>false)));?>
+	<?php e($this->element('theme_admin_actions',array('user_permission_action'=>false)));?>
 	</div>
 	</p>
 	<br>
@@ -236,7 +236,7 @@
 	<div class="sidecontainer">
 		<div id="action_wrapper">
 			<?php
-				echo $this->renderElement('gallery/user_actions');
+				echo $this->element('gallery/user_actions');
 			?>
 		</div>
 	</div>

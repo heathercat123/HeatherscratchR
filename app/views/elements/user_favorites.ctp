@@ -56,7 +56,7 @@
 <div class="pagination_container">
 	<?php 
 		$pagination->setPaging($paging_secondary);
-		echo $this->renderElement('pagination_secondary'); 
+		echo $this->element('pagination_secondary'); 
 	?>
 </div>
 </div>

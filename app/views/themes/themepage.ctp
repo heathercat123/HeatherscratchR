@@ -85,7 +85,7 @@ $session->flash(FLASH_NOTICE_KEY);
   <h3>Comments <a href="#commentform">Add a Comment </a></h3>
 	<?php
 		e($ajax->div("theme_comment_list"));
-		e($this->renderElement('discusslist', array('comments'=>$theme_comments)));
+		e($this->element('discusslist', array('comments'=>$theme_comments)));
 		e($ajax->divEnd("theme_comment_list"));
 	?>	 
 	<h4>Add a Comment </h4>	  
@@ -136,7 +136,7 @@ $session->flash(FLASH_NOTICE_KEY);
 
 	<?php else: ?>	
 		<div id="subscribeAction">
-			<?php e($this->renderElement('theme_subscribe_action'))?>
+			<?php e($this->element('theme_subscribe_action'))?>
 		</div>
 	<?php endif; ?>
 	<p></p>
@@ -146,7 +146,7 @@ $session->flash(FLASH_NOTICE_KEY);
 	<?php if ($isAdmin): ?>
 	<p>
 	<div id="adminActions"/>
-	<?php e($this->renderElement('theme_admin_actions'));?>
+	<?php e($this->element('theme_admin_actions'));?>
 	</div>
 	<!-- <a href="/galleries/addmembers?gid=<?php e($theme['id'])?>">add members</a><br>
 	<a href="/galleries/delmembers?gid=<?php e($theme['id'])?>">remove members</a><br> //-->

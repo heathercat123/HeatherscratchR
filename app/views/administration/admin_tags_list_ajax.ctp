@@ -1,3 +1,3 @@
 <?php
-	echo $this->renderElement('admin/admin_tags_list');
+	echo $this->element('admin/admin_tags_list');
 ?>

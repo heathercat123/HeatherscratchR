@@ -6,7 +6,7 @@
 	}
 ?>
 <?php
-	e($this->renderElement('admin/admin_index', Array()));
+	e($this->element('admin/admin_index', Array()));
 ?>
 <div class="fullcontent">
 	<div id="admin_project_header">
@@ -60,7 +60,7 @@
 	<h5> Tags </h5>
 	<div id="admin_tags_list">
 		<?php
-			echo $this->renderElement('admin/admin_tags_list');
+			echo $this->element('admin/admin_tags_list');
 		?>
 	</div>
 </div>

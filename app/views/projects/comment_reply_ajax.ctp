@@ -1,5 +1,5 @@
 <?php if(!empty($replies)): ?>
-    <?= $this->renderElement('projects/reply_list',
+    <?= $this->element('projects/reply_list',
             array('comments' => $replies['comments'],
                 'ignored_commenters' => $replies['ignored_commenters'],
                 'ignored_comments' => $replies['ignored_comments'],

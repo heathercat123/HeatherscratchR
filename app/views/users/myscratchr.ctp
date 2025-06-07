@@ -169,7 +169,7 @@ function langList($countries) {
 	  </p>
         <!--Thank you mechanism-->
 
-        <!--<div id="thankDiv" class="flag"><?php //e($this->renderElement("thank_you",array('isLoggedIn'=>$isLoggedIn,'user_id'=>$user['id'], 'isMe'=>$isMe, 'thanked_count'=>$thanked_count, 'thanks_to_username'=>$thanks_to_username, 'thanks_reciever_id'=>$thanks_reciever_id, 'similar_ip_sender'=>$similar_ip_sender))); ?></div>-->
+        <!--<div id="thankDiv" class="flag"><?php //e($this->element("thank_you",array('isLoggedIn'=>$isLoggedIn,'user_id'=>$user['id'], 'isMe'=>$isMe, 'thanked_count'=>$thanked_count, 'thanks_to_username'=>$thanks_to_username, 'thanks_reciever_id'=>$thanks_reciever_id, 'similar_ip_sender'=>$similar_ip_sender))); ?></div>-->
 
         <!--Thank you mechanism-->
 			
@@ -415,14 +415,14 @@ function langList($countries) {
 	<?php 
 		if ($isMe || $isAdmin) {
 			$user_id = $user['id'];
-			echo $this->renderElement('users/comment_list_wrapper', Array('user_id' => $user_id, 'option' => 'projects', 'comment_count' => $comment_count)); 
+			echo $this->element('users/comment_list_wrapper', Array('user_id' => $user_id, 'option' => 'projects', 'comment_count' => $comment_count)); 
 		}
 	?>
 	
 	<?php 
 		if ($isMe || $isAdmin) {
 			$user_id = $user['id'];
-			echo $this->renderElement('users/ignore_list_wrapper', Array('user_id' => $user_id, 'ignore_count' => $ignore_count)); 
+			echo $this->element('users/ignore_list_wrapper', Array('user_id' => $user_id, 'ignore_count' => $ignore_count)); 
 		}
 	?>
 	
@@ -430,7 +430,7 @@ function langList($countries) {
 	<div class="sidecontainer">
 		<?php
 			$user_id = $user['id'];
-			e($this->renderElement('admin/admin_comment', array('karma_ratings' => $karma_ratings, 'comment' => $admin_comment, 'user_id' => $user_id)));
+			e($this->element('admin/admin_comment', array('karma_ratings' => $karma_ratings, 'comment' => $admin_comment, 'user_id' => $user_id)));
 		?>
 	</div>
     <div class="sidecontainer">
@@ -593,7 +593,7 @@ function langList($countries) {
 <!-- If this is the my stuff page of a new user with 0 projects, show welcome message-->
 	<?php
 	if($isMe && (count($projects)<1) && $welcome_option_number):
-		e($this->renderElement('user_welcome'.DS.'welcome_option'.intval($welcome_option_number)));
+		e($this->element('user_welcome'.DS.'welcome_option'.intval($welcome_option_number)));
 	endif;
 	?>
 
@@ -605,7 +605,7 @@ function langList($countries) {
 		</div>
 		<?php
 		if(!$isIgnored):
-			e($this->renderElement('user_projects', array('isAdmin' => $isAdmin, 'user' => $user, 'isMe' => $isMe, 'data' => $projects, 'feed_link'=>$feed_link,'featureProlectList'=>$featureProlectList)));
+			e($this->element('user_projects', array('isAdmin' => $isAdmin, 'user' => $user, 'isMe' => $isMe, 'data' => $projects, 'feed_link'=>$feed_link,'featureProlectList'=>$featureProlectList)));
 		endif;
 		?>
 	</div>
@@ -619,7 +619,7 @@ function langList($countries) {
 		</div>
 		<?php
 			if(!$isIgnored):
-			e($this->renderElement('user_favorites', array('isAdmin' => $isAdmin, 'user' => $user, 'isMe' => $isMe, 'data' => $favorites)));
+			e($this->element('user_favorites', array('isAdmin' => $isAdmin, 'user' => $user, 'isMe' => $isMe, 'data' => $favorites)));
 			endif;
 		?>
 	</div>

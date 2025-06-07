@@ -6,7 +6,7 @@
         <?php
 			$pagination->setPaging($paging);
 
-			echo $this->renderElement('pagination');
+			echo $this->element('pagination');
         ?>
 
 		<div id="side_results" class="exploreContent" name="side_results" onscroll="render_full_side()" >

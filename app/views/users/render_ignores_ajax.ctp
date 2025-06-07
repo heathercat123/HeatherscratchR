@@ -1,3 +1,3 @@
 <?php
-	echo $this->renderElement('users/ignore_user_content', array('data' => $data));
+	echo $this->element('users/ignore_user_content', array('data' => $data));
 ?>

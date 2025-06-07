@@ -8,7 +8,7 @@
 	echo "</div>\n";
 	
 	$pagination->setPaging($paging_secondary);
-	echo $this->renderElement('pagination_secondary'); 
+	echo $this->element('pagination_secondary'); 
 	
 	echo "<div id='gallery_projects'>\n";
 	foreach ($data as $project):

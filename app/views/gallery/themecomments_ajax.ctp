@@ -44,7 +44,7 @@ if(isset($comment) && $comment['Gcomment']['comment_visibility'] == 'visible'):
         </span>
 
         <div class="comment_reply_main" id="reply_to_<?= $comment_id; ?>">
-            <?= $this->renderElement('gallery/comment_reply_form', array('comment_id' => $comment_id, 'comment_level' => $comment_level)); ?>
+            <?= $this->element('gallery/comment_reply_form', array('comment_id' => $comment_id, 'comment_level' => $comment_level)); ?>
         </div>
         <div class="comment_reply_main_visible" id="reply_list_<?= $comment_id; ?>">
         </div>

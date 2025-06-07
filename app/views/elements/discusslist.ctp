@@ -126,13 +126,13 @@ $can_delete_comment = false;
 
     <?php if($is_comment_reply_enabled): ?>
     <div class="comment_reply_main" id="reply_to_<?= $comment_id; ?>">
-        <?= $this->renderElement('gallery/comment_reply_form', array('comment_id' => $comment_id, 'comment_level' => $comment_level)); ?>
+        <?= $this->element('gallery/comment_reply_form', array('comment_id' => $comment_id, 'comment_level' => $comment_level)); ?>
     </div>
     <?php endif; ?>
     </div>
     <div class="comment_reply_main_visible" id="reply_list_<?= $comment_id; ?>">
         <?php if(!empty($comment['Gcomment']['replylist'])): ?>
-            <?= $this->renderElement('gallery/reply_list',
+            <?= $this->element('gallery/reply_list',
                 array('comments' => $comment['Gcomment']['replylist'],
                     'ignored_commenters' => $ignored_commenters,
                     'ignored_comments' => $ignored_comments,
@@ -147,7 +147,7 @@ $can_delete_comment = false;
 <div class="gallery_pagination_container">
 	<?php
 		$pagination->setPaging($paging_secondary);
-		echo $this->renderElement('pagination_secondary');
+		echo $this->element('pagination_secondary');
 	?>
 </div>
 <?php endif; ?>

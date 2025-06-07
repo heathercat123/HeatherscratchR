@@ -53,10 +53,10 @@
   </div>
   <div class="signup_error_wrapper">
 	<?php
-		echo $this->renderElement('users/signup_error', Array("mode" => "name"));
+		echo $this->element('users/signup_error', Array("mode" => "name"));
 	?>
 	<?php
-		echo $this->renderElement('users/signup_info', Array("mode" => "name"));
+		echo $this->element('users/signup_info', Array("mode" => "name"));
 	?>
   </div>
   <div class="signup_row">
@@ -73,10 +73,10 @@
   </div>
   <div class="signup_error_wrapper">
 	<?php
-		echo $this->renderElement('users/signup_error', Array("mode" => "password"));
+		echo $this->element('users/signup_error', Array("mode" => "password"));
 	?>
 	<?php
-		echo $this->renderElement('users/signup_info', Array("mode" => "password"));
+		echo $this->element('users/signup_info', Array("mode" => "password"));
 	?>
   </div>
   <div class="signup_row">
@@ -93,10 +93,10 @@
   </div>
   <div class="signup_error_wrapper">
 	<?php
-		echo $this->renderElement('users/signup_error', Array("mode" => "confirmation"));
+		echo $this->element('users/signup_error', Array("mode" => "confirmation"));
 	?>
 	<?php
-		echo $this->renderElement('users/signup_info', Array("mode" => "confirmation"));
+		echo $this->element('users/signup_info', Array("mode" => "confirmation"));
 	?>
   </div>
   <div class="signup_row">
@@ -119,10 +119,10 @@
   </div>
   <div class="signup_error_wrapper">
 	<?php
-		echo $this->renderElement('users/signup_error', Array("mode" => "birthdate"));
+		echo $this->element('users/signup_error', Array("mode" => "birthdate"));
 	?>
 	<?php
-		echo $this->renderElement('users/signup_info', Array("mode" => "birthdate"));
+		echo $this->element('users/signup_info', Array("mode" => "birthdate"));
 	?>
   </div>
   <div class="signup_row">
@@ -136,10 +136,10 @@
   </div>
   <div class="signup_error_wrapper">
 	<?php
-		echo $this->renderElement('users/signup_error', Array("mode" => "email"));
+		echo $this->element('users/signup_error', Array("mode" => "email"));
 	?>
 	<?php
-		echo $this->renderElement('users/signup_info', Array("mode" => "email"));
+		echo $this->element('users/signup_info', Array("mode" => "email"));
 	?>
   </div>
   <div class="signup_row">
@@ -152,10 +152,10 @@
   </div>
   <div class="signup_error_wrapper">
 	<?php
-		echo $this->renderElement('users/signup_error', Array("mode" => "gender"));
+		echo $this->element('users/signup_error', Array("mode" => "gender"));
 	?>
 	<?php
-		echo $this->renderElement('users/signup_info', Array("mode" => "gender"));
+		echo $this->element('users/signup_info', Array("mode" => "gender"));
 	?>
   </div>
   <div class="signup_row">
@@ -170,10 +170,10 @@
   </div>
   <div class="signup_error_wrapper">
 	<?php
-		echo $this->renderElement('users/signup_error', Array("mode" => "country"));
+		echo $this->element('users/signup_error', Array("mode" => "country"));
 	?>
 	<?php
-		echo $this->renderElement('users/signup_info', Array("mode" => "country"));
+		echo $this->element('users/signup_info', Array("mode" => "country"));
 	?>
   </div>
   <div class="signup_row">
@@ -191,7 +191,7 @@
   </div>
   <div class="signup_error_wrapper">
 	<?php
-		echo $this->renderElement('users/signup_info', Array("mode" => "state"));
+		echo $this->element('users/signup_info', Array("mode" => "state"));
 	?>
   </div>
   	
@@ -207,7 +207,7 @@
   </div>
   <div class="signup_error_wrapper">
 	<?php
-		echo $this->renderElement('users/signup_info', Array("mode" => "city"));
+		echo $this->element('users/signup_info', Array("mode" => "city"));
 	?>
   </div>
   <div class="signup_row" style="height: auto; padding-left: 50px; padding-right: 50px; width: 566px; font-size: 16px;">

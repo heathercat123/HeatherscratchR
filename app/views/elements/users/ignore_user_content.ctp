@@ -31,7 +31,7 @@
 	</div>
 	<div id="ignore_user_results">
 		<?php
-			echo $this->renderElement('users/ignore_list', Array('data' => $data));
+			echo $this->element('users/ignore_list', Array('data' => $data));
 		?>
 	</div>
 </div>

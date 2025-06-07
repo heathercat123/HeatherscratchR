@@ -1,4 +1,4 @@
 <?php
     //$params = array();
-    e($this->renderElement('rating'));
+    e($this->element('rating'));
 ?>

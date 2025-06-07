@@ -1,3 +1,3 @@
 <?php
-    e($this->renderElement('taglist'));
+    e($this->element('taglist'));
 ?>

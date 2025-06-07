@@ -1,5 +1,5 @@
 <?php
-    e($this->renderElement('flag'));
+    e($this->element('flag'));
 ?>
 <?php if (!empty($just_flagged)):?>
 	<script>

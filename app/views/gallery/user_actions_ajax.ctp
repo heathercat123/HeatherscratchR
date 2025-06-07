@@ -1,3 +1,3 @@
 <?php
-	echo $this->renderElement('gallery/user_actions');
+	echo $this->element('gallery/user_actions');
 ?>

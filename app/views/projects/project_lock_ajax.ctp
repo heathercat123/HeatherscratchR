@@ -1,4 +1,4 @@
 <?php
 	$params = array('isLocked' => $isLocked, $pid => $pid);
-	e($this->renderElement('projects/project_lock', $params));
+	e($this->element('projects/project_lock', $params));
 ?>

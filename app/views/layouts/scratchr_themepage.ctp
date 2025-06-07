@@ -13,7 +13,7 @@
 ?>
 <head>
 <?php
-	echo $this->renderElement('superheader');
+	echo $this->element('superheader');
 ?>
 <title>Scratch | <?php ___('Gallery'); ?> | <?php echo htmlspecialchars($theme['name']) ?></title>
 <link rel="alternate" type="application/rss+xml" title="RSS" href="<?php echo $html->url('/feeds/getRecentGalleryProjects/')?><?php echo $gallery_id?>">
@@ -109,9 +109,9 @@ if (isset($head)) echo $head->print_registered();
 <!-- |||||| Begin header ||||||| -->
 <?php
 if ($isLoggedIn)
-    echo $this->renderElement('header_loggedin');
+    echo $this->element('header_loggedin');
 else {
-    echo $this->renderElement('header_default');
+    echo $this->element('header_default');
 }
 
 ?>
@@ -120,9 +120,9 @@ else {
 
 <?php echo $content_for_layout?>
 
-<?php echo $this->renderElement('footer'); ?>
+<?php echo $this->element('footer'); ?>
 <?php
-	echo $this->renderElement('ajax_indicator');
+	echo $this->element('ajax_indicator');
 ?>
 </body>
 </html>

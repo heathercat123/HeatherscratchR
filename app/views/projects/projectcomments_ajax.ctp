@@ -43,7 +43,7 @@ if(isset($comment) && $comment['Pcomment']['comment_visibility'] == 'visible'):
         </span>
         
         <div class="comment_reply_main" id="reply_to_<?php echo $comment_id; ?>">
-            <?php echo $this->renderElement('projects/comment_reply_form', array('comment_id' => $comment_id, 'comment_level' => $comment_level)); ?>
+            <?php echo $this->element('projects/comment_reply_form', array('comment_id' => $comment_id, 'comment_level' => $comment_level)); ?>
         </div>
         <div class="comment_reply_main_visible" id="reply_list_<?php echo $comment_id; ?>">
         </div>

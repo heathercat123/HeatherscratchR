@@ -21,6 +21,6 @@
 	<div class="project_pagination_container">
 		<?php 
 			$pagination->setPaging($paging);
-			e($this->renderElement('pagination')); 
+			e($this->element('pagination')); 
 		?>
 	</div>

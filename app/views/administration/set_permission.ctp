@@ -1,6 +1,6 @@
 <?php
 	
-	e($this->renderElement('admin/admin_index', Array()));
+	e($this->element('admin/admin_index', Array()));
 ?>
 <div class="fullcontent">
 	<div id="admin_project_header">
@@ -34,7 +34,7 @@
 	<div id="users_permissions_results">
 		
 			<?php
-				echo $this->renderElement('admin/users_permission_list', Array('data' => $user,'user_id'=>$user_id));
+				echo $this->element('admin/users_permission_list', Array('data' => $user,'user_id'=>$user_id));
 			?>
 		
 	</div>

@@ -1,5 +1,5 @@
 <?php
-	e($this->renderElement('admin/admin_index', Array()));
+	e($this->element('admin/admin_index', Array()));
 ?>
 	<div class="fullcontent">
 	<div id="admin_project_header">
@@ -231,7 +231,7 @@
 		<div id="admin_project_data">
 			<div id="ajax_pagination">
 				<?php
-					e($this->renderElement('admin/user_options', array('user_id' => $user_id, 'data'=> $data, 'option' => $option)));
+					e($this->element('admin/user_options', array('user_id' => $user_id, 'data'=> $data, 'option' => $option)));
 				?>
 			</div>
 		</div>

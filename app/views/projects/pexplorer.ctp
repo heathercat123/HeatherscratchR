@@ -1,3 +1,3 @@
 <?php
-	e($this->renderElement('projectexplorer'));
+	e($this->element('projectexplorer'));
 ?>
