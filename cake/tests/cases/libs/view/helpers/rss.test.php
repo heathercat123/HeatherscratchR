@@ -34,8 +34,8 @@ class RssHelperTest extends CakeTestCase {
  * @return void
  */
 	function setUp() {
-		$this->Rss =& new RssHelper();
-		$this->Rss->Time =& new TimeHelper();
+		$this->Rss = new RssHelper();
+		$this->Rss->Time = new TimeHelper();
 		$this->Rss->beforeRender();
 
 		$manager =& XmlManager::getInstance();
@@ -163,7 +163,7 @@ class RssHelperTest extends CakeTestCase {
 			'title',
 			'/title',
 			'<link',
-			RssHelper::url('/', true),
+			(new RssHelper)->url('/', true),
 			'/link',
 			'<description',
 			'content',
@@ -501,7 +501,7 @@ class RssHelperTest extends CakeTestCase {
 			'<description',
 			'<![CDATA[descriptive words]]',
 			'/description',
-			'enclosure' => array('url' => RssHelper::url('/test.flv', true)),
+			'enclosure' => array('url' => (new RssHelper)->url('/test.flv', true)),
 			'<pubDate',
 			date('r', strtotime('2008-05-31 12:00:00')),
 			'/pubDate',

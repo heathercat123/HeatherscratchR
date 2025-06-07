@@ -254,7 +254,7 @@ class CakeTestCase extends UnitTestCase {
 				$this->_actionFixtures = array();
 
 				foreach ($models as $model) {
-					$fixture =& new CakeTestFixture($this->db);
+					$fixture = new CakeTestFixture($this->db);
 
 					$fixture->name = $model['model'] . 'Test';
 					$fixture->table = $model['table'];
@@ -352,7 +352,7 @@ class CakeTestCase extends UnitTestCase {
 		$return = $params['return'];
 		$params = array_diff_key($params, array('data' => null, 'method' => null, 'return' => null));
 
-		$dispatcher =& new CakeTestDispatcher();
+		$dispatcher = new CakeTestDispatcher();
 		$dispatcher->testCase($this);
 
 		if ($return != 'result') {
@@ -592,7 +592,7 @@ class CakeTestCase extends UnitTestCase {
 				$tags = (string)$tags;
 			}
 			$i++;
-			if (is_string($tags) && $tags{0} == '<') {
+			if (is_string($tags) && $tags[0] == '<') {
 				$tags = array(substr($tags, 1) => array());
 			} elseif (is_string($tags)) {
 				$tagsTrimmed = preg_replace('/\s+/m', '', $tags);
@@ -690,7 +690,8 @@ class CakeTestCase extends UnitTestCase {
 				}
 			}
 			if (!$matches) {
-				$this->assert(new TrueExpectation(), false, sprintf('Item #%d / regex #%d failed: %s', $itemNum, $i, $description));
+			    $expectation = new TrueExpectation();
+				$this->assert($expectation, false, sprintf('Item #%d / regex #%d failed: %s', $itemNum, $i, $description));
 				if ($fullDebug) {
 					debug($string, true);
 					debug($regex, true);
@@ -698,7 +699,8 @@ class CakeTestCase extends UnitTestCase {
 				return false;
 			}
 		}
-		return $this->assert(new TrueExpectation(), true, '%s');
+		$trueExpectation = new TrueExpectation();
+		return $this->assert($trueExpectation, true, '%s');
 	}
 
 /**
@@ -795,7 +797,7 @@ class CakeTestCase extends UnitTestCase {
 			if (isset($fixtureFile)) {
 				require_once($fixtureFile);
 				$fixtureClass = Inflector::camelize($fixture) . 'Fixture';
-				$this->_fixtures[$this->fixtures[$index]] =& new $fixtureClass($this->db);
+				$this->_fixtures[$this->fixtures[$index]] = new $fixtureClass($this->db);
 				$this->_fixtureClassMap[Inflector::camelize($fixture)] = $this->fixtures[$index];
 			}
 		}

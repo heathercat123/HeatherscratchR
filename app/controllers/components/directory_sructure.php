@@ -1,5 +1,5 @@
 <?php
-Class DirectoryStructureComponent extends Object
+Class DirectoryStructureComponent extends CakeObject
 {
   var $dir;
   var $subdirs;

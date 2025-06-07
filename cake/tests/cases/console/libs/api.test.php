@@ -57,9 +57,9 @@ class ApiShellTest extends CakeTestCase {
  * @return void
  * @access public
  */
-	function startTest() {
-		$this->Dispatcher =& new ApiShellMockShellDispatcher();
-		$this->Shell =& new MockApiShell($this->Dispatcher);
+	function startTest($method) {
+		$this->Dispatcher = new ApiShellMockShellDispatcher();
+		$this->Shell = new MockApiShell($this->Dispatcher);
 		$this->Shell->Dispatch =& $this->Dispatcher;
 	}
 
@@ -69,7 +69,7 @@ class ApiShellTest extends CakeTestCase {
  * @return void
  * @access public
  */
-	function endTest() {
+	function endTest($method) {
 		ClassRegistry::flush();
 	}
 

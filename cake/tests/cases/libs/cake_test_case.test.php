@@ -20,6 +20,7 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 App::import('Core', 'CakeTestCase');
+include_once CAKE_TESTS_LIB . 'reporter' . DS . 'cake_html_reporter.php';
 
 if (!class_exists('AppController')) {
 	require_once LIBS . 'controller' . DS . 'app_controller.php';
@@ -79,8 +80,8 @@ class CakeTestCaseTest extends CakeTestCase {
  */
 	function setUp() {
 		$this->_debug = Configure::read('debug');
-		$this->Case =& new SubjectCakeTestCase();
-		$reporter =& new MockCakeHtmlReporter();
+		$this->Case = new SubjectCakeTestCase();
+		$reporter = new MockCakeHtmlReporter();
 		$this->Case->setReporter($reporter);
 		$this->Reporter = $reporter;
 	}
@@ -103,7 +104,7 @@ class CakeTestCaseTest extends CakeTestCase {
  * @access public
  * @return void
  */
-	function endTest() {
+	function endTest($method) {
 		App::build();
 	}
 
@@ -362,7 +363,7 @@ class CakeTestCaseTest extends CakeTestCase {
 		$this->assertEqual($result, array('var' => 'string'));
 
 		$db =& ConnectionManager::getDataSource('test_suite');
-		$fixture =& new PostFixture();
+		$fixture = new PostFixture();
 		$fixture->create($db);
 
 		$result = $this->Case->testAction('/tests_apps_posts/add', array('return' => 'vars'));
@@ -416,7 +417,7 @@ class CakeTestCaseTest extends CakeTestCase {
 		ConnectionManager::create('cake_test_case', $config);
 		$db2 =& ConnectionManager::getDataSource('cake_test_case');
 
-		$fixture =& new PostFixture($db2);
+		$fixture = new PostFixture($db2);
 		$fixture->create($db2);
 		$fixture->insert($db2);
 
@@ -444,7 +445,7 @@ class CakeTestCaseTest extends CakeTestCase {
 
 		ConnectionManager::create('cake_test_case', $config);
 		$db =& ConnectionManager::getDataSource('cake_test_case');
-		$fixture =& new PostFixture($db);
+		$fixture = new PostFixture($db);
 		$fixture->create($db);
 		$fixture->insert($db);
 
@@ -488,8 +489,8 @@ class CakeTestCaseTest extends CakeTestCase {
 			'controllers' => array(TEST_CAKE_CORE_INCLUDE_PATH . 'tests' . DS . 'test_app' . DS . 'controllers' . DS)
 		), true);
 
-		$Dispatcher =& new CakeTestDispatcher();
-		$Case =& new CakeDispatcherMockTestCase();
+		$Dispatcher = new CakeTestDispatcher();
+		$Case = new CakeDispatcherMockTestCase();
 
 		$Case->expectOnce('startController');
 		$Case->expectOnce('endController');

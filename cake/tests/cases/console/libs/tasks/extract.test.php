@@ -56,8 +56,8 @@ class ExtractTaskTest extends CakeTestCase {
  * @access public
  */
 	function setUp() {
-		$this->Dispatcher =& new TestExtractTaskMockShellDispatcher();
-		$this->Task =& new ExtractTask($this->Dispatcher);
+		$this->Dispatcher = new TestExtractTaskMockShellDispatcher();
+		$this->Task = new ExtractTask($this->Dispatcher);
 	}
 
 /**
@@ -135,7 +135,7 @@ class ExtractTaskTest extends CakeTestCase {
 		$this->assertPattern($pattern, $result);
 
 		$pattern = '/\#: (\\\\|\/)extract\.ctp:14\n';
-		$pattern .= '\#: (\\\\|\/)home\.ctp:77\n';
+		$pattern .= '\#: (\\\\|\/)home\.ctp:74\n';
 		$pattern .= 'msgid "Editing this Page"\nmsgstr ""/';
 		$this->assertPattern($pattern, $result);
 

@@ -59,9 +59,9 @@ class TemplateTaskTest extends CakeTestCase {
  * @return void
  * @access public
  */
-	function startTest() {
-		$this->Dispatcher =& new TestTemplateTaskMockShellDispatcher();
-		$this->Task =& new MockTemplateTask($this->Dispatcher);
+	function startTest($method) {
+		$this->Dispatcher = new TestTemplateTaskMockShellDispatcher();
+		$this->Task = new MockTemplateTask($this->Dispatcher);
 		$this->Task->Dispatch =& $this->Dispatcher;
 		$this->Task->Dispatch->shellPaths = App::path('shells');
 	}
@@ -72,7 +72,7 @@ class TemplateTaskTest extends CakeTestCase {
  * @return void
  * @access public
  */
-	function endTest() {
+	function endTest($method) {
 		unset($this->Task, $this->Dispatcher);
 		ClassRegistry::flush();
 	}

@@ -25,7 +25,7 @@
  * @package       cake
  * @subpackage    cake.cake.libs
  */
-class String {
+class CakeString {
 
 /**
  * Generate a random UUID
@@ -34,7 +34,7 @@ class String {
  * @return RFC 4122 UUID
  * @static
  */
-	function uuid() {
+	static function uuid() {
 		$node = env('SERVER_ADDR');
 		$pid = null;
 
@@ -114,7 +114,7 @@ class String {
  * @access public
  * @static
  */
-	function tokenize($data, $separator = ',', $leftBound = '(', $rightBound = ')') {
+	static function tokenize($data, $separator = ',', $leftBound = '(', $rightBound = ')') {
 		if (empty($data) || is_array($data)) {
 			return $data;
 		}
@@ -140,21 +140,21 @@ class String {
 			}
 			if ($tmpOffset !== -1) {
 				$buffer .= substr($data, $offset, ($tmpOffset - $offset));
-				if ($data{$tmpOffset} == $separator && $depth == 0) {
+				if ($data[$tmpOffset] == $separator && $depth == 0) {
 					$results[] = $buffer;
 					$buffer = '';
 				} else {
-					$buffer .= $data{$tmpOffset};
+					$buffer .= $data[$tmpOffset];
 				}
 				if ($leftBound != $rightBound) {
-					if ($data{$tmpOffset} == $leftBound) {
+					if ($data[$tmpOffset] == $leftBound) {
 						$depth++;
 					}
-					if ($data{$tmpOffset} == $rightBound) {
+					if ($data[$tmpOffset] == $rightBound) {
 						$depth--;
 					}
 				} else {
-					if ($data{$tmpOffset} == $leftBound) {
+					if ($data[$tmpOffset] == $leftBound) {
 						if (!$open) {
 							$depth++;
 							$open = true;
@@ -205,7 +205,7 @@ class String {
  * @access public
  * @static
  */
-	function insert($str, $data, $options = array()) {
+	static function insert($str, $data, $options = array()) {
 		$defaults = array(
 			'before' => ':', 'after' => null, 'escape' => '\\', 'format' => null, 'clean' => false
 		);
@@ -213,7 +213,7 @@ class String {
 		$format = $options['format'];
 		$data = (array)$data;
 		if (empty($data)) {
-			return ($options['clean']) ? String::cleanInsert($str, $options) : $str;
+			return ($options['clean']) ? CakeString::cleanInsert($str, $options) : $str;
 		}
 
 		if (!isset($format)) {
@@ -232,7 +232,7 @@ class String {
 				$offset = $pos + strlen($val);
 				$str = substr_replace($str, $val, $pos, 1);
 			}
-			return ($options['clean']) ? String::cleanInsert($str, $options) : $str;
+			return ($options['clean']) ? CakeString::cleanInsert($str, $options) : $str;
 		} else {
 			asort($data);
 
@@ -257,7 +257,7 @@ class String {
 		if (!isset($options['format']) && isset($options['before'])) {
 			$str = str_replace($options['escape'].$options['before'], $options['before'], $str);
 		}
-		return ($options['clean']) ? String::cleanInsert($str, $options) : $str;
+		return ($options['clean']) ? CakeString::cleanInsert($str, $options) : $str;
 	}
 
 /**
@@ -273,7 +273,7 @@ class String {
  * @static
  * @see String::insert()
  */
-	function cleanInsert($str, $options) {
+	static function cleanInsert($str, $options) {
 		$clean = $options['clean'];
 		if (!$clean) {
 			return $str;
@@ -300,7 +300,7 @@ class String {
 				$str = preg_replace($kleenex, $clean['replacement'], $str);
 				if ($clean['andText']) {
 					$options['clean'] = array('method' => 'text');
-					$str = String::cleanInsert($str, $options);
+					$str = CakeString::cleanInsert($str, $options);
 				}
 				break;
 			case 'text':

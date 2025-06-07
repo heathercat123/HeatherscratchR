@@ -30,7 +30,7 @@ if (!defined('CAKEPHP_UNIT_TEST_EXECUTION')) {
  * @package       cake
  * @subpackage    cake.tests.cases.libs
  */
-class BlueberryComponent extends Object {
+class BlueberryComponent extends CakeObject {
 
 /**
  * testName property
@@ -141,7 +141,7 @@ if (!class_exists('AppController')) {
 } elseif (!defined('APP_CONTROLLER_EXISTS')){
 	define('APP_CONTROLLER_EXISTS', true);
 }
-App::import('Core', array('Error', 'Controller'));
+App::import('Core', array('ErrorHandler', 'Controller'));
 
 /**
  * TestErrorController class
@@ -227,7 +227,7 @@ class MyCustomErrorHandler extends ErrorHandler {
  * @access public
  * @return void
  */
-	function _stop() {
+	function _stop($status = 0) {
 		return;
 	}
 }
@@ -246,7 +246,7 @@ class TestErrorHandler extends ErrorHandler {
  * @access public
  * @return void
  */
-	function _stop() {
+	function _stop($status = 0) {
 		return;
 	}
 }
@@ -279,19 +279,19 @@ class ErrorHandlerTest extends CakeTestCase {
 		$back = Configure::read('debug');
 		Configure::write('debug', 2);
 		ob_start();
-		$ErrorHandler =& new MyCustomErrorHandler('missingWidgetThing', array('message' => 'doh!'));
+		$ErrorHandler = new MyCustomErrorHandler('missingWidgetThing', array('message' => 'doh!'));
 		$result = ob_get_clean();
 		$this->assertEqual($result, 'widget thing is missing');
 
 		Configure::write('debug', 0);
 		ob_start();
-		$ErrorHandler =& new MyCustomErrorHandler('missingWidgetThing', array('message' => 'doh!'));
+		$ErrorHandler = new MyCustomErrorHandler('missingWidgetThing', array('message' => 'doh!'));
 		$result = ob_get_clean();
 		$this->assertEqual($result, 'widget thing is missing', 'Method declared in subclass converted to error404. %s');
 
 		Configure::write('debug', 0);
 		ob_start();
-		$ErrorHandler =& new MyCustomErrorHandler('missingController', array(
+		$ErrorHandler = new MyCustomErrorHandler('missingController', array(
 			'className' => 'Missing', 'message' => 'Page not found'
 		));
 		$result = ob_get_clean();
@@ -339,7 +339,7 @@ class ErrorHandlerTest extends CakeTestCase {
 	 	$this->assertPattern("/<strong>'\/test_error'<\/strong>/", $result);
 
 		ob_start();
-		$TestErrorHandler =& new TestErrorHandler('error404', array('message' => 'Page not found'));
+		$TestErrorHandler = new TestErrorHandler('error404', array('message' => 'Page not found'));
 		ob_get_clean();
 		ob_start();
 		$TestErrorHandler->error404(array(

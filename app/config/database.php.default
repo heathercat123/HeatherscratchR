@@ -11,7 +11,7 @@
 class DATABASE_CONFIG {
 
 	var $default = array(
-		'driver' => 'mysql', // Most of the time you can set it to mysqli, but always try using regular mysql first
+		'driver' => 'mysqli',
 		'persistent' => false,
 		'host' => 'localhost',
 		'login' => 'root',

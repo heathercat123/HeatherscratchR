@@ -482,7 +482,10 @@ function langList($countries) {
 	<div class="sidecontainer">
 	  <h4>
 	  <?php
-		$nf = count($friends) - 1;
+        if ($friends)
+            $nf = count($friends) - 1;
+        else
+            $nf = 0;
 		if ($nf == 0) {
 			___('No friends yet.');
 		}

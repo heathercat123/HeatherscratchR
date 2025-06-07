@@ -66,7 +66,7 @@ class CodeCoverageManagerTest extends CakeTestCase {
 		if ($this->skipIf(PHP_SAPI == 'cli', 'Is cli, cannot run this test %s')) {
 			return;
 		}
-		$reporter =& new CakeHtmlReporter(null, array('group' => false, 'app' => false, 'plugin' => false));
+		$reporter = new CakeHtmlReporter(null, array('group' => false, 'app' => false, 'plugin' => false));
 
 		CodeCoverageManager::init(substr(md5(microtime()), 0, 5), $reporter);
 		CodeCoverageManager::report(false);
@@ -86,7 +86,7 @@ class CodeCoverageManagerTest extends CakeTestCase {
 		if ($this->skipIf(PHP_SAPI == 'cli', 'Is cli, cannot run this test %s')) {
 			return;
 		}
-		$reporter =& new CakeHtmlReporter(null, array('group' => false, 'app' => false, 'plugin' => false));
+		$reporter = new CakeHtmlReporter(null, array('group' => false, 'app' => false, 'plugin' => false));
 		$path = LIBS;
 		if (strpos(LIBS, ROOT) === false) {
 			$path = ROOT.DS.LIBS;
@@ -408,7 +408,7 @@ PHP;
 		$result = explode("</div>", $report = $manager->reportCaseHtmlDiff($testObjectFile, $coverageData, $execCodeLines, 3));
 
 		foreach ($result as $line) {
-			preg_match('/<span class="line-num">(.*?)<\/span>/', $line, $matches);
+			preg_match('/\<span class="line-num"\>(.*?)\<\/span\>/', $line, $matches);
 			if (!isset($matches[1])) {
 				continue;
 			}
@@ -416,7 +416,7 @@ PHP;
 			$num = $matches[1];
 			$class = $expected[$num];
 			$pattern = '/<div class="code-line '.$class.'">/';
-			$this->assertPattern($pattern, $line, $num.': '.$line." fails");
+			$this->assertPattern($pattern, $line, $num.": fails");
 		}
 	}
 

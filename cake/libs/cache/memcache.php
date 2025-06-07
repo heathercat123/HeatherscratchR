@@ -80,7 +80,7 @@ class MemcacheEngine extends CacheEngine {
 		}
 		if (!isset($this->__Memcache)) {
 			$return = false;
-			$this->__Memcache =& new Memcache();
+			$this->__Memcache = new Memcache();
 			foreach ($this->settings['servers'] as $server) {
 				list($host, $port) = $this->_parseServerString($server);
 				if ($this->__Memcache->addServer($host, $port, $this->settings['persistent'])) {
@@ -199,7 +199,7 @@ class MemcacheEngine extends CacheEngine {
  * @return boolean True if the cache was succesfully cleared, false otherwise
  * @access public
  */
-	function clear() {
+	function clear($check) {
 		return $this->__Memcache->flush();
 	}
 

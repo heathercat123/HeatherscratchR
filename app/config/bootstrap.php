@@ -750,8 +750,8 @@ sucks","lemonparty","goatse","meatspin","tubgirl","hai2u","bottleguy","goregasm"
 
     $content = strtolower($content);
     
-    preg_match_all('/'.implode($blacklist, '|').'/', $content, $mb);
-    preg_match_all('/\b('.implode($whitelist, '|').')\b/', $content, $mw);
+    preg_match_all('/'.implode('|', $blacklist).'/', $content, $mb);
+    preg_match_all('/\b('.implode('|', $whitelist).')\b/', $content, $mw);
     $is_inappropriate = (count($mb[0]) > count($mw[0]));
     //found inappropriate
     if($is_inappropriate) {

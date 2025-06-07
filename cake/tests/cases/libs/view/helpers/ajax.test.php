@@ -70,7 +70,7 @@ class PostAjaxTest extends Model {
  * @access public
  * @return void
  */
-	function schema() {
+	function schema($field = false) {
 		return array(
 			'id' => array('type' => 'integer', 'null' => '', 'default' => '', 'length' => '8'),
 			'name' => array('type' => 'string', 'null' => '', 'default' => '', 'length' => '255'),
@@ -92,7 +92,7 @@ class TestAjaxHelper extends AjaxHelper {
  * @access public
  * @return void
  */
-	function _stop() {
+	function _stop($status = 0) {
 	}
 }
 /**
@@ -116,7 +116,7 @@ class TestJavascriptHelper extends JavascriptHelper {
  * @access public
  * @return void
  */
-	function codeBlock($parameter) {
+	function codeBlock($parameter = null, $options = array()) {
 		if (empty($this->codeBlocks)) {
 			$this->codeBlocks = array();
 		}
@@ -150,14 +150,16 @@ class AjaxHelperTest extends CakeTestCase {
  */
 	function setUp() {
 		Router::reload();
-		$this->Ajax =& new TestAjaxHelper();
-		$this->Ajax->Html =& new HtmlHelper();
-		$this->Ajax->Form =& new FormHelper();
-		$this->Ajax->Javascript =& new JavascriptHelper();
+		$this->Ajax = new TestAjaxHelper();
+		$this->Ajax->Html = new HtmlHelper();
+		$this->Ajax->Form = new FormHelper();
+		$this->Ajax->Javascript = new JavascriptHelper();
 		$this->Ajax->Form->Html =& $this->Ajax->Html;
-		$view =& new View(new AjaxTestController());
+		$controller = new AjaxTestController();
+		$view = new View($controller);
 		ClassRegistry::addObject('view', $view);
-		ClassRegistry::addObject('PostAjaxTest', new PostAjaxTest());
+		$object = new PostAjaxTest();
+		ClassRegistry::addObject('PostAjaxTest', $object);
 
 		$this->Ajax->Form->params = array(
 			'plugin' => null,
@@ -831,7 +833,7 @@ class AjaxHelperTest extends CakeTestCase {
 	function testAfterRender() {
 		ob_start();
 		$oldXUpdate = env('HTTP_X_UPDATE');
-		$this->Ajax->Javascript =& new TestJavascriptHelper();
+		$this->Ajax->Javascript = new TestJavascriptHelper();
 
 		$_SERVER['HTTP_X_UPDATE'] = 'secondDiv myDiv anotherDiv';
 		$result = $this->Ajax->div('myDiv');

@@ -145,7 +145,7 @@ Class Project extends AppModel
      * Callback before every save() operation
      * TODO: access controls / validation
      */
-    function beforeSave() {return true;}
+    function beforeSave($options = []) {return true;}
 
     /**
      * Returns the project version

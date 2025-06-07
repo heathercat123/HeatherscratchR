@@ -40,7 +40,7 @@ class MagicDbTest extends UnitTestCase {
  * @access public
  */
 	function setUp() {
-		$this->Db =& new MagicDb();
+		$this->Db = new MagicDb();
 	}
 /**
  * MagicDb::analyze should properly detect the file type and output additional info as requested.
@@ -158,7 +158,7 @@ class MagicDbTest extends UnitTestCase {
  * @package       cake
  * @subpackage    cake.tests.cases.libs
  */
-class MagicDbTestData extends Object {
+class MagicDbTestData extends CakeObject {
 /**
  * Base64 encoded data
  *
@@ -176,7 +176,7 @@ class MagicDbTestData extends Object {
  * @param string $key
  * @access public
  */
-	function get($key) {
+	static function get($key) {
 /**
  * data property
  *

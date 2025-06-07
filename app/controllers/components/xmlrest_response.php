@@ -11,7 +11,7 @@
  messages in rest/xml format.
  ***************************/
 
-class XmlrestResponseComponent extends Object
+class XmlrestResponseComponent extends CakeObject
 {
 	/**
 	 * TODO: finish

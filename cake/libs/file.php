@@ -22,8 +22,8 @@
  * Included libraries.
  *
  */
-if (!class_exists('Object')) {
-	require LIBS . 'object.php';
+if (!class_exists('CakeObject')) {
+	require LIBS . 'cake_object.php';
 }
 if (!class_exists('Folder')) {
 	require LIBS . 'folder.php';
@@ -35,7 +35,7 @@ if (!class_exists('Folder')) {
  * @package       cake
  * @subpackage    cake.cake.libs
  */
-class File extends Object {
+class File extends CakeObject {
 
 /**
  * Folder object of the File
@@ -96,7 +96,7 @@ class File extends Object {
  */
 	function __construct($path, $create = false, $mode = 0755) {
 		parent::__construct();
-		$this->Folder =& new Folder(dirname($path), $create, $mode);
+		$this->Folder = new Folder(dirname($path), $create, $mode);
 		if (!is_dir($path)) {
 			$this->name = basename($path);
 		}
@@ -149,7 +149,7 @@ class File extends Object {
 			}
 		}
 
-		$this->handle = fopen($this->path, $mode);
+		$this->handle = @fopen($this->path, $mode);
 		if (is_resource($this->handle)) {
 			return true;
 		}
@@ -221,7 +221,7 @@ class File extends Object {
  * @return string The with converted line endings.
  * @access public
  */
-	function prepare($data, $forceWindows = false) {
+	static function prepare($data, $forceWindows = false) {
 		$lineBreak = "\n";
 		if (DIRECTORY_SEPARATOR == '\\' || $forceWindows === true) {
 			$lineBreak = "\r\n";
@@ -295,7 +295,7 @@ class File extends Object {
 			$this->handle = null;
 		}
 		if ($this->exists()) {
-			return unlink($this->path);
+			return @unlink($this->path);
 		}
 		return false;
 	}

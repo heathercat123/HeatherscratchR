@@ -91,7 +91,7 @@
  * Turn off all caching application-wide.
  *
  */
-Configure::write('Cache.disable', true);
+	//Configure::write('Cache.disable', true);
 
 /**
  * Enable cache checking.
@@ -185,6 +185,12 @@ Configure::write('Cache.disable', true);
 	Configure::write('Session.checkAgent', true);
 
 /**
+ * Must be one of: None, Lax, Strict. Defaults to "Lax".
+ * "None" is only sent to compatible clients.
+ */
+	Configure::write('Session.cookie_samesite', 'Lax');
+
+/**
  * The level of CakePHP security. The session timeout time defined
  * in 'Session.timeout' is multiplied according to the settings here.
  * Valid values:
@@ -206,7 +212,7 @@ Configure::write('Cache.disable', true);
 /**
  * A random numeric string (digits only) used to encrypt/decrypt strings.
  */
-	Configure::write('Security.cipherSeed', '76859309657453542496749683645');
+	Configure::write('Security.cipherSeed', 768593096);
 
 /**
  * Apply timestamps with the last modified time to static assets (js, css, images).

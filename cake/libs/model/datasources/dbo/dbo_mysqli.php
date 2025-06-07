@@ -60,7 +60,11 @@ class DboMysqli extends DboMysqlBase {
 		$config = $this->config;
 		$this->connected = false;
 
-		$this->connection = mysqli_connect($config['host'], $config['login'], $config['password'], $config['database'], $config['port'], $config['socket']);
+		try {
+			$this->connection = mysqli_connect($config['host'], $config['login'], $config['password'], $config['database'], $config['port'], $config['socket']);
+		} catch (mysqli_sql_exception $e) {
+			return false;
+		}
 
 		if ($this->connection !== false) {
 			$this->connected = true;
@@ -108,7 +112,11 @@ class DboMysqli extends DboMysqlBase {
 		if (preg_match('/^\s*call/i', $sql)) {
 			return $this->_executeProcedure($sql);
 		}
-		return mysqli_query($this->connection, $sql);
+		try {
+			return mysqli_query($this->connection, $sql);
+		} catch (mysqli_sql_exception $e) {
+			return false;
+		}
 	}
 
 /**
@@ -134,7 +142,7 @@ class DboMysqli extends DboMysqlBase {
  *
  * @return array Array of tablenames in the database
  */
-	function listSources() {
+	function listSources($data = null) {
 		$cache = parent::listSources();
 		if ($cache !== null) {
 			return $cache;
@@ -222,7 +230,7 @@ class DboMysqli extends DboMysqlBase {
  *
  * @return integer Number of affected rows
  */
-	function lastAffected() {
+	function lastAffected($source = null) {
 		if ($this->_result) {
 			return mysqli_affected_rows($this->connection);
 		}
@@ -235,7 +243,7 @@ class DboMysqli extends DboMysqlBase {
  *
  * @return integer Number of rows in resultset
  */
-	function lastNumRows() {
+	function lastNumRows($source = null) {
 		if ($this->hasResult()) {
 			return mysqli_num_rows($this->_result);
 		}
@@ -307,7 +315,7 @@ class DboMysqli extends DboMysqlBase {
  * @return string The database encoding
  */
 	function getEncoding() {
-		return mysqli_client_encoding($this->connection);
+		return mysqli_character_set_name($this->connection);
 	}
 
 /**
@@ -335,3 +343,4 @@ class DboMysqli extends DboMysqlBase {
 		return is_object($this->_result);
 	}
 }
+

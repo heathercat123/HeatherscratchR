@@ -28,7 +28,7 @@ include_once CONFIGS . 'database.php';
  * @package       cake
  * @subpackage    cake.cake.libs.model
  */
-class ConnectionManager extends Object {
+class ConnectionManager extends CakeObject {
 
 /**
  * Holds a loaded instance of the Connections object
@@ -60,7 +60,7 @@ class ConnectionManager extends Object {
  */
 	function __construct() {
 		if (class_exists('DATABASE_CONFIG')) {
-			$this->config =& new DATABASE_CONFIG();
+			$this->config = new DATABASE_CONFIG();
 			$this->_getConnectionObjects();
 		}
 	}
@@ -72,11 +72,11 @@ class ConnectionManager extends Object {
  * @access public
  * @static
  */
-	function &getInstance() {
+	static function &getInstance() {
 		static $instance = array();
 
 		if (!$instance) {
-			$instance[0] =& new ConnectionManager();
+			$instance[0] = new ConnectionManager();
 		}
 
 		return $instance[0];
@@ -90,7 +90,7 @@ class ConnectionManager extends Object {
  * @access public
  * @static
  */
-	function &getDataSource($name) {
+	static function &getDataSource($name) {
 		$_this =& ConnectionManager::getInstance();
 
 		if (!empty($_this->_dataSources[$name])) {
@@ -111,7 +111,7 @@ class ConnectionManager extends Object {
 			$null = null;
 			return $null;
 		}
-		$_this->_dataSources[$name] =& new $class($_this->config->{$name});
+		$_this->_dataSources[$name] = new $class($_this->config->{$name});
 		$_this->_dataSources[$name]->configKeyName = $name;
 
 		$return =& $_this->_dataSources[$name];
@@ -125,7 +125,7 @@ class ConnectionManager extends Object {
  * @access public
  * @static
  */
-	function sourceList() {
+    static function sourceList() {
 		$_this =& ConnectionManager::getInstance();
 		return array_keys($_this->_dataSources);
 	}
@@ -141,7 +141,7 @@ class ConnectionManager extends Object {
  * @access public
  * @static
  */
-	function getSourceName(&$source) {
+	static function getSourceName(&$source) {
 		$_this =& ConnectionManager::getInstance();
 		foreach ($_this->_dataSources as $name => $ds) {
 			if ($ds == $source) {
@@ -161,7 +161,7 @@ class ConnectionManager extends Object {
  * @access public
  * @static
  */
-	function loadDataSource($connName) {
+	static function loadDataSource($connName) {
 		$_this =& ConnectionManager::getInstance();
 
 		if (is_array($connName)) {
@@ -196,7 +196,7 @@ class ConnectionManager extends Object {
  * @access public
  * @static
  */
-	function enumConnectionObjects() {
+    static function enumConnectionObjects() {
 		$_this =& ConnectionManager::getInstance();
 
 		return $_this->_connectionsEnum;
@@ -211,7 +211,7 @@ class ConnectionManager extends Object {
  * @access public
  * @static
  */
-	function &create($name = '', $config = array()) {
+	static function &create($name = '', $config = array()) {
 		$_this =& ConnectionManager::getInstance();
 
 		if (empty($name) || empty($config) || array_key_exists($name, $_this->_connectionsEnum)) {
@@ -229,7 +229,6 @@ class ConnectionManager extends Object {
  *
  * @return void
  * @access protected
- * @static
  */
 	function _getConnectionObjects() {
 		$connections = get_object_vars($this->config);

@@ -92,12 +92,12 @@ class AclShellTest extends CakeTestCase {
  * @return void
  * @access public
  */
-	function startTest() {
-		$this->Dispatcher =& new TestAclShellMockShellDispatcher();
-		$this->Task =& new MockAclShell($this->Dispatcher);
+	function startTest($method) {
+		$this->Dispatcher = new TestAclShellMockShellDispatcher();
+		$this->Task = new MockAclShell($this->Dispatcher);
 		$this->Task->Dispatch =& $this->Dispatcher;
 		$this->Task->params['datasource'] = 'test_suite';
-		$this->Task->Acl =& new AclComponent();
+		$this->Task->Acl = new AclComponent();
 		$controller = null;
 		$this->Task->Acl->startup($controller);
 	}
@@ -108,7 +108,7 @@ class AclShellTest extends CakeTestCase {
  * @return void
  * @access public
  */
-	function endTest() {
+	function endTest($method) {
 		ClassRegistry::flush();
 	}
 

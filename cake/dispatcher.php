@@ -35,7 +35,7 @@ App::import('Controller', 'Controller', false);
  * @package       cake
  * @subpackage    cake.cake
  */
-class Dispatcher extends Object {
+class Dispatcher extends CakeObject {
 
 /**
  * Base URL
@@ -241,7 +241,7 @@ class Dispatcher extends Object {
  * @return array Parameters found in POST and GET.
  * @access public
  */
-	function parseParams($fromUrl) {
+	static function parseParams($fromUrl) {
 		$params = array();
 
 		if (isset($_POST)) {
@@ -388,7 +388,7 @@ class Dispatcher extends Object {
 		}
 		$ctrlClass .= 'Controller';
 		if (class_exists($ctrlClass)) {
-			$controller =& new $ctrlClass();
+			$controller = new $ctrlClass();
 		}
 		return $controller;
 	}
@@ -508,7 +508,7 @@ class Dispatcher extends Object {
 		} else {
 			$url = $_GET['url'];
 		}
-		if ($url{0} == '/') {
+		if ($url[0] == '/') {
 			$url = substr($url, 1);
 		}
 		return $url;
@@ -539,7 +539,7 @@ class Dispatcher extends Object {
 					App::import('View', 'View', false);
 				}
 				$controller = null;
-				$view =& new View($controller);
+				$view = new View($controller);
 				$return = $view->renderCache($filename, getMicrotime());
 				if (!$return) {
 					ClassRegistry::removeObject('view');
@@ -582,7 +582,8 @@ class Dispatcher extends Object {
 			$this->_stop();
 		}
 		$controller = null;
-		$ext = array_pop(explode('.', $url));
+		$urlParts = explode('.', $url);
+		$ext = array_pop($urlParts);
 		$parts = explode('/', $url);
 		$assetFile = null;
 

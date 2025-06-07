@@ -17,7 +17,7 @@
  * @since         CakePHP(tm) v 0.10.0.1076
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
-App::import('Core', array('Set', 'String'));
+App::import('Core', array('Set', 'CakeString'));
 
 /**
  * DboSource
@@ -361,7 +361,7 @@ class DboSource extends DataSource {
 					$cache = true;
 				}
 				$args[1] = array_map(array(&$this, 'value'), $args[1]);
-				return $this->fetchAll(String::insert($args[0], $args[1]), $cache);
+				return $this->fetchAll(CakeString::insert($args[0], $args[1]), $cache);
 			}
 		}
 	}
@@ -542,7 +542,7 @@ class DboSource extends DataSource {
 			return $return;
 		}
 		$data = trim($data);
-		if (preg_match('/^[\w-]+(?:\.[^ \*]*)*$/', $data)) { // string, string.string
+		if (preg_match('/^[\w\-]+(?:\.[^ \*]*)*$/', $data)) { // string, string.string
 			if (strpos($data, '.') === false) { // string
 				return $this->cacheMethod(__FUNCTION__, $cacheKey, $this->startQuote . $data . $this->endQuote);
 			}
@@ -551,18 +551,18 @@ class DboSource extends DataSource {
 				$this->startQuote . implode($this->endQuote . '.' . $this->startQuote, $items) . $this->endQuote
 			);
 		}
-		if (preg_match('/^[\w-]+\.\*$/', $data)) { // string.*
+		if (preg_match('/^[\w\-]+\.\*$/', $data)) { // string.*
 			return $this->cacheMethod(__FUNCTION__, $cacheKey,
 				$this->startQuote . str_replace('.*', $this->endQuote . '.*', $data)
 			);
 		}
-		if (preg_match('/^([\w-]+)\((.*)\)$/', $data, $matches)) { // Functions
+		if (preg_match('/^([\w\-]+)\((.*)\)$/', $data, $matches)) { // Functions
 			return $this->cacheMethod(__FUNCTION__, $cacheKey,
 				 $matches[1] . '(' . $this->name($matches[2]) . ')'
 			);
 		}
 		if (
-			preg_match('/^([\w-]+(\.[\w-]+|\(.*\))*)\s+' . preg_quote($this->alias) . '\s*([\w-]+)$/i', $data, $matches
+			preg_match('/^([\w\-]+(\.[\w\-]+|\(.*\))*)\s+' . preg_quote($this->alias) . '\s*([\w\-]+)$/i', $data, $matches
 		)) {
 			return $this->cacheMethod(
 				__FUNCTION__, $cacheKey,
@@ -571,7 +571,7 @@ class DboSource extends DataSource {
 				)
 			);
 		}
-		if (preg_match('/^[\w-_\s]*[\w-_]+/', $data)) {
+		if (preg_match('/^[\w\-_\s]*[\w\-_]+/', $data)) {
 			return $this->cacheMethod(__FUNCTION__, $cacheKey, $this->startQuote . $data . $this->endQuote);
 		}
 		return $this->cacheMethod(__FUNCTION__, $cacheKey, $data);
@@ -631,7 +631,7 @@ class DboSource extends DataSource {
 		if (PHP_SAPI != 'cli') {
 			App::import('Core', 'View');
 			$controller = null;
-			$View =& new View($controller, false);
+			$View = new View($controller, false);
 			$View->set('logs', array($this->configKeyName => $log));
 			echo $View->element('sql_dump', array('_forced_from_dbo_' => true));
 		} else {
@@ -920,8 +920,9 @@ class DboSource extends DataSource {
  * @param integer $recursive Number of levels of association
  * @param array $stack
  */
-	function queryAssociation(&$model, &$linkModel, $type, $association, $assocData, &$queryData, $external = false, &$resultSet, $recursive, $stack) {
+	function queryAssociation(&$model, &$linkModel, $type, $association, $assocData, &$queryData, $external, &$resultSet, $recursive, $stack) {
 		if ($query = $this->generateAssociationQuery($model, $linkModel, $type, $association, $assocData, $queryData, $external, $resultSet)) {
+			$external = $external ?: false;
 			if (!isset($resultSet) || !is_array($resultSet)) {
 				if (Configure::read() > 0) {
 					echo '<div style = "font: Verdana bold 12px; color: #FF0000">' . sprintf(__('SQL Error in model %s:', true), $model->alias) . ' ';
@@ -1145,7 +1146,7 @@ class DboSource extends DataSource {
 			if (isset($merge[$association])) {
 				$data[$association] = $merge[$association][0];
 			} else {
-				if (count($merge[0][$association]) > 1) {
+				if ($merge[0][$association] !== false && count($merge[0][$association]) > 1) {
 					foreach ($merge[0] as $assoc => $data2) {
 						if ($assoc != $association) {
 							$merge[0][$association][$assoc] = $data2;
@@ -1222,7 +1223,7 @@ class DboSource extends DataSource {
  * @return mixed
  * @access public
  */
-	function generateAssociationQuery(&$model, &$linkModel, $type, $association = null, $assocData = array(), &$queryData, $external = false, &$resultSet) {
+	function generateAssociationQuery(&$model, &$linkModel, $type, $association = null, $assocData = array(), &$queryData = null, $external = false, &$resultSet = null) {
 		$queryData = $this->__scrubQueryData($queryData);
 		$assocData = $this->__scrubQueryData($assocData);
 
@@ -1900,7 +1901,7 @@ class DboSource extends DataSource {
  * @return string
  * @access public
  */
-	function resolveKey($model, $key, $assoc = null) {
+	function resolveKey(&$model, $key, $assoc = null) {
 		if (empty($assoc)) {
 			$assoc = $model->alias;
 		}
@@ -1979,7 +1980,7 @@ class DboSource extends DataSource {
 		if ($allFields) {
 			$fields = array_keys($model->schema());
 		} elseif (!is_array($fields)) {
-			$fields = String::tokenize($fields);
+			$fields = CakeString::tokenize($fields);
 		}
 		$fields = array_values(array_filter($fields));
 		$allFields = $allFields || in_array('*', $fields) || in_array($model->alias . '.*', $fields);
@@ -2293,7 +2294,7 @@ class DboSource extends DataSource {
 		}
 
 		if ($bound) {
-			return  String::insert($key . ' ' . trim($operator), $value);
+			return  CakeString::insert($key . ' ' . trim($operator), $value);
 		}
 
 		if (!preg_match($operatorMatch, trim($operator))) {
@@ -2399,7 +2400,7 @@ class DboSource extends DataSource {
 /**
  * Returns an ORDER BY clause as a string.
  *
- * @param string $key Field reference, as a key (i.e. Post.title)
+ * @param string $keys Field reference, as a key (i.e. Post.title)
  * @param string $direction Direction (ASC or DESC)
  * @param object $model model reference (used to look for virtual field)
  * @return string ORDER BY clause
@@ -2412,7 +2413,8 @@ class DboSource extends DataSource {
 		$keys = array_filter($keys);
 		$result = array();
 		while (!empty($keys)) {
-			list($key, $dir) = each($keys);
+            $key = key($keys);
+            $dir = current($keys);
 			array_shift($keys);
 
 			if (is_numeric($key)) {
@@ -2649,7 +2651,7 @@ class DboSource extends DataSource {
 		foreach ($schema->tables as $curTable => $columns) {
 			if (!$tableName || $tableName == $curTable) {
 				$cols = $colList = $indexes = $tableParameters = array();
-				$primary = null;
+                $primaries = array();
 				$table = $this->fullTableName($curTable);
 
 				foreach ($columns as $name => $col) {
@@ -2657,7 +2659,7 @@ class DboSource extends DataSource {
 						$col = array('type' => $col);
 					}
 					if (isset($col['key']) && $col['key'] == 'primary') {
-						$primary = $name;
+                        $primaries[] = $name;
 					}
 					if ($name !== 'indexes' && $name !== 'tableParameters') {
 						$col['name'] = $name;
@@ -2671,8 +2673,13 @@ class DboSource extends DataSource {
 						$tableParameters = array_merge($tableParameters, $this->buildTableParameters($col, $table));
 					}
 				}
-				if (empty($indexes) && !empty($primary)) {
-					$col = array('PRIMARY' => array('column' => $primary, 'unique' => 1));
+				if (empty($indexes) && !empty($primaries)) {
+                    $col = array('PRIMARY' => array());
+                    if (count($primaries) == 1) {
+                        $col['PRIMARY'] = array('column' => $primaries[0], 'unique' => 1);
+                    } else {
+                        $col['PRIMARY'] = array('column' => $primaries, 'unique' => 1);
+                    }
 					$indexes = array_merge($indexes, $this->buildIndex($col, $table));
 				}
 				$columns = $cols;

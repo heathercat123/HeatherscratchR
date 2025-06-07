@@ -7,7 +7,7 @@
 * @version 0.13
 */
 
-class CookieComponent extends Object
+class CookieComponent extends CakeObject
 {
 /**
 * If not null, then the cookies will be encrypted
@@ -22,7 +22,7 @@ function startup(&$controller)
 if ($this->crypt_key)
 {
 vendor('script' . DS . 'simple_crypt');
-$this->crypt=& new SimpleCrypt($this->crypt_engine);
+$this->crypt= new SimpleCrypt($this->crypt_engine);
 }
 }
 

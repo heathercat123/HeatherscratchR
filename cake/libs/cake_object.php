@@ -30,7 +30,7 @@
  * @package cake
  * @subpackage cake.cake.libs
  */
-class Object {
+class CakeObject {
 
 /**
  * A hack to support __construct() on PHP 4
@@ -104,22 +104,22 @@ class Object {
  * @return mixed  Returns the result of the method call
  * @access public
  */
-	function dispatchMethod($method, $params = array()) {
+	function dispatchMethod(&$model, $method, $params = array()) {
 		switch (count($params)) {
 			case 0:
-				return $this->{$method}();
+				return $model->{$method}();
 			case 1:
-				return $this->{$method}($params[0]);
+				return $model->{$method}($params[0]);
 			case 2:
-				return $this->{$method}($params[0], $params[1]);
+				return $model->{$method}($params[0], $params[1]);
 			case 3:
-				return $this->{$method}($params[0], $params[1], $params[2]);
+				return $model->{$method}($params[0], $params[1], $params[2]);
 			case 4:
-				return $this->{$method}($params[0], $params[1], $params[2], $params[3]);
+				return $model->{$method}($params[0], $params[1], $params[2], $params[3]);
 			case 5:
-				return $this->{$method}($params[0], $params[1], $params[2], $params[3], $params[4]);
+				return $model->{$method}($params[0], $params[1], $params[2], $params[3], $params[4]);
 			default:
-				return call_user_func_array(array(&$this, $method), $params);
+				return call_user_func_array(array(&$model, $method), $params);
 			break;
 		}
 	}
@@ -145,7 +145,7 @@ class Object {
  * @return boolean Success of log write
  * @access public
  */
-	function log($msg, $type = LOG_ERROR) {
+    static function log($msg, $type = LOG_ERROR) {
 		if (!class_exists('CakeLog')) {
 			require LIBS . 'cake_log.php';
 		}
@@ -186,7 +186,7 @@ class Object {
  */
 	function cakeError($method, $messages = array()) {
 		if (!class_exists('ErrorHandler')) {
-			App::import('Core', 'Error');
+			App::import('Core', 'ErrorHandler');
 
 			if (file_exists(APP . 'error.php')) {
 				include_once (APP . 'error.php');
@@ -215,7 +215,7 @@ class Object {
  * @access protected
  * @todo add examples to manual
  */
-	function _persist($name, $return = null, &$object, $type = null) {
+	function _persist($name, $return = null, &$object = null, $type = null) {
 		$file = CACHE . 'persistent' . DS . strtolower($name) . '.php';
 		if ($return === null) {
 			if (!file_exists($file)) {
@@ -225,7 +225,7 @@ class Object {
 			}
 		}
 
-		if (!file_exists($file)) {
+		if (!file_exists($file) && $object !== null) {
 			$this->_savePersistent($name, $object);
 			return false;
 		} else {

@@ -42,7 +42,7 @@ class UserEvent extends AppModel {
         register_shutdown_function(array(&$this, 'sendMultiRequest'));
     }
 
-    function find($user_id) {
+    function find($user_id = null, $fields = [], $order = null, $recursive = null) {
         $expression = "select * from {$this->domainName} where user_id = '{$user_id}'";
         return $this->sdb->select($expression);
     }

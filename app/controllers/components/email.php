@@ -1,5 +1,5 @@
 <?php
-class EmailComponent extends Object
+class EmailComponent extends CakeObject
 {
 	function email($email, $name, $message, $subject, $mailto, $mailfrom)	{
 	  if($mailto) {

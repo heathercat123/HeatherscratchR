@@ -98,17 +98,17 @@ class ControllerTaskTest extends CakeTestCase {
  * @return void
  * @access public
  */
-	function startTest() {
-		$this->Dispatcher =& new TestControllerTaskMockShellDispatcher();
-		$this->Task =& new MockControllerTask($this->Dispatcher);
+	function startTest($method) {
+		$this->Dispatcher = new TestControllerTaskMockShellDispatcher();
+		$this->Task = new MockControllerTask($this->Dispatcher);
 		$this->Task->name = 'ControllerTask';
 		$this->Task->Dispatch =& $this->Dispatcher;
 		$this->Task->Dispatch->shellPaths = App::path('shells');
-		$this->Task->Template =& new TemplateTask($this->Task->Dispatch);
+		$this->Task->Template = new TemplateTask($this->Task->Dispatch);
 		$this->Task->Template->params['theme'] = 'default';
-		$this->Task->Model =& new ControllerMockModelTask($this->Task->Dispatch);
-		$this->Task->Project =& new ControllerMockProjectTask($this->Task->Dispatch);
-		$this->Task->Test =& new ControllerMockTestTask();
+		$this->Task->Model = new ControllerMockModelTask($this->Task->Dispatch);
+		$this->Task->Project = new ControllerMockProjectTask($this->Task->Dispatch);
+		$this->Task->Test = new ControllerMockTestTask();
 	}
 
 /**
@@ -117,7 +117,7 @@ class ControllerTaskTest extends CakeTestCase {
  * @return void
  * @access public
  */
-	function endTest() {
+	function endTest($method) {
 		unset($this->Task, $this->Dispatcher);
 		ClassRegistry::flush();
 	}

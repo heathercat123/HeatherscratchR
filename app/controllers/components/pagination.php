@@ -2,7 +2,7 @@
 /**
  * Pagination Component, responsible for managing the DATA required for pagination.
  */
-class PaginationComponent extends Object
+class PaginationComponent extends CakeObject
 {
     // Configuration/Default variables
 /**
@@ -172,7 +172,7 @@ class PaginationComponent extends Object
     function init($criteria=NULL,$parameters=Array(),$options=Array(), $overload_count = -100)
     {
 		uses('sanitize');
-		$this->Sanitize = &new Sanitize;
+		$this->Sanitize = new Sanitize;
 
 		$this->_initFields($options);
 		$this->_checkAjax();

@@ -21,7 +21,7 @@ $thm->makeThumbContent($file);
  *
  */
 
-class ThumbnailGeneratorComponent extends Object
+class ThumbnailGeneratorComponent extends CakeObject
 {
 
   var $size,$R,$G,$B,$drawBorder,$drawImgBorder;

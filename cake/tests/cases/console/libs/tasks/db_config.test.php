@@ -79,9 +79,9 @@ class DbConfigTaskTest extends CakeTestCase {
  * @return void
  * @access public
  */
-	function startTest() {
-		$this->Dispatcher =& new TestDbConfigTaskMockShellDispatcher();
-		$this->Task =& new MockDbConfigTask($this->Dispatcher);
+	function startTest($method) {
+		$this->Dispatcher = new TestDbConfigTaskMockShellDispatcher();
+		$this->Task = new MockDbConfigTask($this->Dispatcher);
 		$this->Task->Dispatch =& $this->Dispatcher;
 		$this->Task->Dispatch->shellPaths = App::path('shells');
 
@@ -95,7 +95,7 @@ class DbConfigTaskTest extends CakeTestCase {
  * @return void
  * @access public
  */
-	function endTest() {
+	function endTest($method) {
 		unset($this->Task, $this->Dispatcher);
 		ClassRegistry::flush();
 	}

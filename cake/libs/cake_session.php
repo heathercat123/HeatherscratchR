@@ -22,6 +22,10 @@
  * @since         CakePHP(tm) v .0.10.0.1222
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
+
+require_once(LIBS .'same_site.php');
+use Skorp\Dissua\SameSite;
+
 if (!class_exists('Security')) {
 	App::import('Core', 'Security');
 }
@@ -35,7 +39,7 @@ if (!class_exists('Security')) {
  * @package       cake
  * @subpackage    cake.cake.libs
  */
-class CakeSession extends Object {
+class CakeSession extends CakeObject {
 
 /**
  * True if the Session is still valid
@@ -108,6 +112,14 @@ class CakeSession extends Object {
  * @var integer
  */
 	var $cookieLifeTime = false;
+
+/**
+ * Parameter to set for session.cookie_samesite.
+ * Should be one of: None, Lax, Strict
+ *
+ * @var string
+ */
+	var $cookieSameSite = 'Lax';
 
 /**
  * Keeps track of keys to watch for writes on
@@ -191,7 +203,7 @@ class CakeSession extends Object {
 			}
 			$this->host = env('HTTP_HOST');
 
-			if (strpos($this->host, ':') !== false) {
+			if (!is_null($this->host) && strpos($this->host, ':') !== false) {
 				$this->host = substr($this->host, 0, strpos($this->host, ':'));
 			}
 		}
@@ -256,7 +268,7 @@ class CakeSession extends Object {
  * @access public
  */
 	function id($id = null) {
-		if ($id) {
+		if ($id && (!function_exists('session_status') || session_status() !== PHP_SESSION_ACTIVE)) {
 			$this->id = $id;
 			session_id($this->id);
 		}
@@ -454,7 +466,7 @@ class CakeSession extends Object {
  * @access public
  */
 	function destroy() {
-		if ($this->started()) {
+		if ($this->started() && session_status() == PHP_SESSION_ACTIVE) {
 			session_destroy();
 		}
 		$_SESSION = null;
@@ -475,13 +487,31 @@ class CakeSession extends Object {
 			ini_set('session.cookie_secure', 1);
 		}
 		if ($iniSet && ($this->security === 'high' || $this->security === 'medium')) {
-			ini_set('session.referer_check', $this->host);
+		    ini_set('session.referer_check', $this->host);
 		}
+
+        if ($iniSet && !empty(Configure::read('Session.httpOnly'))) {
+            ini_set('session.cookie_httponly', 'On');
+        }
 
 		if ($this->security == 'high') {
 			$this->cookieLifeTime = 0;
 		} else {
 			$this->cookieLifeTime = Configure::read('Session.timeout') * (Security::inactiveMins() * 60);
+		}
+
+		if (Configure::read('Session.cookie_samesite') !== null) {
+			$this->cookieSameSite = Configure::read('Session.cookie_samesite');
+		}
+		if (empty($_SESSION) && $iniSet) {
+			if (strtolower(trim($this->cookieSameSite)) === 'none') {
+				$shouldSendSameSiteNone = SameSite::handle(env('HTTP_USER_AGENT'));
+				if ($shouldSendSameSiteNone) {
+					ini_set('session.cookie_samesite', $this->cookieSameSite);
+				}
+			} else {
+				ini_set('session.cookie_samesite', $this->cookieSameSite);
+			}
 		}
 
 		switch (Configure::read('Session.save')) {
@@ -509,7 +539,9 @@ class CakeSession extends Object {
 					if ($iniSet) {
 						ini_set('session.use_trans_sid', 0);
 						ini_set('url_rewriter.tags', '');
-						ini_set('session.save_handler', 'user');
+						if (version_compare(PHP_VERSION, '7.2.0', '<')) {
+								ini_set('session.save_handler', 'user');
+						}
 						ini_set('session.serialize_handler', 'php');
 						ini_set('session.use_cookies', 1);
 						ini_set('session.name', Configure::read('Session.cookie'));
@@ -545,7 +577,9 @@ class CakeSession extends Object {
 					if ($iniSet) {
 						ini_set('session.use_trans_sid', 0);
 						ini_set('url_rewriter.tags', '');
-						ini_set('session.save_handler', 'user');
+                                                if (version_compare(PHP_VERSION, '7.2.0', '<')) {
+                                                        ini_set('session.save_handler', 'user');
+                                                }
 						ini_set('session.use_cookies', 1);
 						ini_set('session.name', Configure::read('Session.cookie'));
 						ini_set('session.cookie_lifetime', $this->cookieLifeTime);
@@ -584,11 +618,11 @@ class CakeSession extends Object {
 			return true;
 		} elseif (!isset($_SESSION)) {
 			session_cache_limiter ("must-revalidate");
-			session_start();
+			@session_start();
 			header ('P3P: CP="NOI ADM DEV PSAi COM NAV OUR OTRo STP IND DEM"');
 			return true;
 		} else {
-			session_start();
+			@session_start();
 			return true;
 		}
 	}
@@ -696,7 +730,7 @@ class CakeSession extends Object {
  * @return boolean Success
  * @access private
  */
-	function __open() {
+	static function __open() {
 		return true;
 	}
 
@@ -706,7 +740,7 @@ class CakeSession extends Object {
  * @return boolean Success
  * @access private
  */
-	function __close() {
+	static function __close() {
 		$probability = mt_rand(1, 150);
 		if ($probability <= 3) {
 			switch (Configure::read('Session.save')) {
@@ -725,10 +759,10 @@ class CakeSession extends Object {
  * Method used to read from a database session.
  *
  * @param mixed $id The key of the value to read
- * @return mixed The value of the key or false if it does not exist
+ * @return string The value of the key or an empty string if the value does not exist
  * @access private
  */
-	function __read($id) {
+	static function __read($id) {
 		$model =& ClassRegistry::getObject('Session');
 
 		$row = $model->find('first', array(
@@ -736,7 +770,7 @@ class CakeSession extends Object {
 		));
 
 		if (empty($row[$model->alias]['data'])) {
-			return false;
+			return '';
 		}
 
 		return $row[$model->alias]['data'];
@@ -750,14 +784,14 @@ class CakeSession extends Object {
  * @return boolean True for successful write, false otherwise.
  * @access private
  */
-	function __write($id, $data) {
+	static function __write($id, $data) {
 		if (!$id) {
 			return false;
 		}
 		$expires = time() + Configure::read('Session.timeout') * Security::inactiveMins();
 		$model =& ClassRegistry::getObject('Session');
 		$return = $model->save(array($model->primaryKey => $id) + compact('data', 'expires'));
-		return $return;
+		return (bool) $return;
 	}
 
 /**
@@ -767,11 +801,13 @@ class CakeSession extends Object {
  * @return boolean True for successful delete, false otherwise.
  * @access private
  */
-	function __destroy($id) {
+	static function __destroy($id) {
 		$model =& ClassRegistry::getObject('Session');
-		$return = $model->delete($id);
+		$model->delete($id);
 
-		return $return;
+		// always return true, because the deletion might fail, if the session is not yet written and causes problems on
+                // calls to session_regenerate_id(true)
+		return true;
 	}
 
 /**
@@ -781,7 +817,7 @@ class CakeSession extends Object {
  * @return boolean Success
  * @access private
  */
-	function __gc($expires = null) {
+	static function __gc($expires = null) {
 		$model =& ClassRegistry::getObject('Session');
 
 		if (!$expires) {
@@ -789,6 +825,6 @@ class CakeSession extends Object {
 		}
 
 		$return = $model->deleteAll(array($model->alias . ".expires <" => $expires), false, false);
-		return $return;
+		return (bool) $return;
 	}
 }

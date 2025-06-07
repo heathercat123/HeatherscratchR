@@ -14,7 +14,7 @@
 	 *			    as a file repository component "out of the box".
 	 ***************************/	
 	
-	class FileHandlerComponent extends Object
+	class FileHandlerComponent extends CakeObject
 	{
 		/*
 			Probably the most important variable, this determines how the

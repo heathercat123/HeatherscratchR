@@ -97,7 +97,7 @@ class SecurityTestController extends Controller {
  * @access public
  * @return void
  */
-	function redirect($option, $code, $exit) {
+	function redirect($url, $code = NULL, $exit = true) {
 		return $code;
 	}
 
@@ -143,8 +143,8 @@ class SecurityComponentTest extends CakeTestCase {
  * @access public
  * @return void
  */
-	function startTest() {
-		$this->Controller =& new SecurityTestController();
+	function startTest($method) {
+		$this->Controller = new SecurityTestController();
 		$this->Controller->Component->init($this->Controller);
 		$this->Controller->Security =& $this->Controller->TestSecurity;
 		$this->Controller->Security->blackHoleCallback = 'fail';
@@ -158,7 +158,7 @@ class SecurityComponentTest extends CakeTestCase {
  * @access public
  * @return void
  */
-	function endTest() {
+	function endTest($method) {
 		Configure::write('Security.salt', $this->oldSalt);
 		$this->Controller->Session->delete('_Token');
 		unset($this->Controller->Security);
@@ -1071,7 +1071,7 @@ DIGEST;
 		$data = array(
 			'username' => 'Willy Smith',
 			'password' => 'password',
-			'nonce' => String::uuid(),
+			'nonce' => CakeString::uuid(),
 			'nc' => 1,
 			'cnonce' => 1,
 			'realm' => $realm,

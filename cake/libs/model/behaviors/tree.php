@@ -105,7 +105,7 @@ class TreeBehavior extends ModelBehavior {
  * @return boolean true to continue, false to abort the delete
  * @access public
  */
-	function beforeDelete(&$Model) {
+	function beforeDelete(&$Model, $cascade = true) {
 		extract($this->settings[$Model->alias]);
 		list($name, $data) = array($Model->alias, $Model->read());
 		$data = $data[$name];
@@ -290,7 +290,7 @@ class TreeBehavior extends ModelBehavior {
 				'recursive' => $recursive
 			)));
 
-			if (empty($result) || !isset($result[0])) {
+			if (empty($result) || !isset($result[0]) || !isset($result[0][$right]) || !isset($result[0][$left])) {
 				return array();
 			}
 			$conditions = array($scope,

@@ -64,7 +64,7 @@ class TestManager {
  * @return void
  * @access public
  */
-	function TestManager() {
+	function __construct() {
 		$this->_installSimpleTest();
 		if (isset($_GET['app'])) {
 			$this->appTest = true;
@@ -101,11 +101,11 @@ class TestManager {
 	function runAllTests(&$reporter, $testing = false) {
 		$testCases =& $this->_getTestFileList($this->_getTestsPath());
 		if ($this->appTest) {
-			$test =& new TestSuite(__('All App Tests', true));
+			$test = new TestSuite(__('All App Tests', true));
 		} else if ($this->pluginTest) {
-			$test =& new TestSuite(sprintf(__('All %s Plugin Tests', true), Inflector::humanize($this->pluginTest)));
+			$test = new TestSuite(sprintf(__('All %s Plugin Tests', true), Inflector::humanize($this->pluginTest)));
 		} else {
-			$test =& new TestSuite(__('All Core Tests', true));
+			$test = new TestSuite(__('All Core Tests', true));
 		}
 
 		if ($testing) {
@@ -143,7 +143,7 @@ class TestManager {
 			return true;
 		}
 
-		$test =& new TestSuite(sprintf(__('Individual test case: %s', true), $testCaseFile));
+		$test = new TestSuite(sprintf(__('Individual test case: %s', true), $testCaseFile));
 		$test->addTestFile($testCaseFileWithPath);
 		return $test->run($reporter);
 	}
@@ -170,7 +170,7 @@ class TestManager {
 		}
 
 		require_once $filePath;
-		$test =& new TestSuite(sprintf(__('%s group test', true), $groupTestName));
+		$test = new TestSuite(sprintf(__('%s group test', true), $groupTestName));
 		foreach ($this->_getGroupTestClassNames($filePath) as $groupTest) {
 			$testCase = new $groupTest();
 			$test->addTestCase($testCase);
@@ -190,8 +190,8 @@ class TestManager {
  * @access public
  * @static
  */
-	function addTestCasesFromDirectory(&$groupTest, $directory = '.') {
-		$manager =& new TestManager();
+	static function addTestCasesFromDirectory(&$groupTest, $directory = '.') {
+		$manager = new TestManager();
 		$testCases =& $manager->_getTestFileList($directory);
 		foreach ($testCases as $testCase) {
 			$groupTest->addTestFile($testCase);
@@ -207,8 +207,8 @@ class TestManager {
  * @access public
  * @static
  */
-	function addTestFile(&$groupTest, $file) {
-		$manager =& new TestManager();
+	static function addTestFile(&$groupTest, $file) {
+		$manager = new TestManager();
 
 		if (file_exists($file . $manager->_testExtension)) {
 			$file .= $manager->_testExtension;
@@ -224,8 +224,8 @@ class TestManager {
  * @access public
  * @static
  */
-	function &getTestCaseList() {
-		$manager =& new TestManager();
+	static function &getTestCaseList() {
+		$manager = new TestManager();
 		$return = $manager->_getTestCaseList($manager->_getTestsPath());
 		return $return;
 	}
@@ -262,8 +262,8 @@ class TestManager {
  * @access public
  * @static
  */
-	function &getGroupTestList() {
-		$manager =& new TestManager();
+	static function &getGroupTestList() {
+		$manager = new TestManager();
 		$return = $manager->_getTestGroupList($manager->_getTestsPath('groups'));
 		return $return;
 	}
@@ -333,7 +333,7 @@ class TestManager {
 		foreach ($files as $file) {
 			if (is_dir($file)) {
 				$fileList = array_merge($fileList, $this->_getRecursiveFileList($file, $fileTestFunction));
-			} elseif ($fileTestFunction[0]->$fileTestFunction[1]($file)) {
+			} elseif ($fileTestFunction[0]->{$fileTestFunction[1]}($file)) {
 				$fileList[] = $file;
 			}
 		}

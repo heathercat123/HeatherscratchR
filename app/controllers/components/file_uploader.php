@@ -1,6 +1,6 @@
 <?php
 
-class FileUploaderComponent extends Object {
+class FileUploaderComponent extends CakeObject {
 
   /**
    * Default validations

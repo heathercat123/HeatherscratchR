@@ -1,5 +1,5 @@
 <?php
-class GeoIpComponent extends Object {
+class GeoIpComponent extends CakeObject {
 
 	function lookupCountryCode($ip){
 		return null;

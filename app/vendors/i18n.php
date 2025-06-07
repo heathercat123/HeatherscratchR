@@ -39,7 +39,7 @@
  * @package		cake
  * @subpackage	cake.cake.libs
  */
-class I18n extends Object {
+class I18n extends CakeObject {
 /**
  * Instance of the I10n class for localization
  *
@@ -76,11 +76,11 @@ class I18n extends Object {
  * @return object I18n
  * @access public
  */
-	function &getInstance() {
+	static function &getInstance() {
 		static $instance = array();
 		if (!$instance) {
-			$instance[0] =& new I18n();
-			$instance[0]->l10n =& new L10n();
+			$instance[0] = new I18n();
+			$instance[0]->l10n = new L10n();
 
 			$language = Configure::read('Config.language');
 			if ($language === null && !empty($_SESSION['Config']['language'])) {
@@ -103,7 +103,7 @@ class I18n extends Object {
  * @return string translated strings.
  * @access public
  */
-	function translate($singular, $plural = null, $domain = null, $category = 5, $count = null, $directory = null) {
+	static function translate($singular, $plural = null, $domain = null, $category = 5, $count = null, $directory = null) {
 		$_this =& I18n::getInstance();
 		$_this->category = $_this->__categories[$category];
 

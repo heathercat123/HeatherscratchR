@@ -19,6 +19,7 @@
  * @since         CakePHP(tm) v 1.2.0.4206
  * @license       http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
  */
+include_once CAKE_TESTS_LIB . 'reporter' . DS . 'cake_html_reporter.php';
 
 /**
  * TestManagerTest class
@@ -35,8 +36,8 @@ class TestManagerTest extends CakeTestCase {
  * @access public
  */
 	function setUp() {
-		$this->TestManager =& new TestManager();
-		$this->Reporter =& new CakeHtmlReporter();
+		$this->TestManager = new TestManager();
+		$this->Reporter = new CakeHtmlReporter();
 	}
 
 /**
@@ -46,11 +47,11 @@ class TestManagerTest extends CakeTestCase {
  * @access public
  */
 	function testRunAllTests() {
-		$folder =& new Folder($this->TestManager->_getTestsPath());
+		$folder = new Folder($this->TestManager->_getTestsPath());
 		$extension = str_replace('.', '\.', $this->TestManager->getExtension('test'));
 		$out = $folder->findRecursive('.*' . $extension);
 
-		$reporter =& new CakeHtmlReporter();
+		$reporter = new CakeHtmlReporter();
 		$list = $this->TestManager->runAllTests($reporter, true);
 
 		$this->assertEqual(count($out), count($list));

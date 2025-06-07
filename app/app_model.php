@@ -17,7 +17,7 @@ class AppModel extends Model{
      * any custom validation methods have 
      * been declared of the form validate[FieldName]
      */
-    function beforeSave() {
+    function beforeSave($options = []) {
         /*
          $validateMethod = 'validate' . Inflector::camelize($field);
          if (method_exists(&$this, $validateMethod) {

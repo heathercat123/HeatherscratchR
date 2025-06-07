@@ -599,6 +599,7 @@ Class HomeController extends AppController {
     
 	function ___getCuratorName(){
     	$curator =$this->Curator->find(array('visibility'=>'visible'),array(),'Curator.id DESC');
+        if ($curator)
         return $curator['User']['urlname'];
 	}
 	

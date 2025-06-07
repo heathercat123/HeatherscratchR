@@ -41,8 +41,8 @@ class NumberHelperTest extends CakeTestCase {
  * @access public
  * @return void
  */
-	function startTest() {
-		$this->Number =& new NumberHelper();
+	function startTest($method) {
+		$this->Number = new NumberHelper();
 	}
 
 /**
@@ -51,7 +51,7 @@ class NumberHelperTest extends CakeTestCase {
  * @access public
  * @return void
  */
-	function endTest() {
+	function endTest($method) {
 		unset($this->Number);
 	}
 

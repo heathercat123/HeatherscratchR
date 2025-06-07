@@ -75,16 +75,16 @@ class ModelTaskTest extends CakeTestCase {
  * @return void
  * @access public
  */
-	function startTest() {
-		$this->Dispatcher =& new TestModelTaskMockShellDispatcher();
-		$this->Task =& new MockModelTask($this->Dispatcher);
+	function startTest($method) {
+		$this->Dispatcher = new TestModelTaskMockShellDispatcher();
+		$this->Task = new MockModelTask($this->Dispatcher);
 		$this->Task->name = 'ModelTask';
 		$this->Task->interactive = true;
 		$this->Task->Dispatch =& $this->Dispatcher;
 		$this->Task->Dispatch->shellPaths = App::path('shells');
-		$this->Task->Template =& new TemplateTask($this->Task->Dispatch);
-		$this->Task->Fixture =& new MockModelTaskFixtureTask();
-		$this->Task->Test =& new MockModelTaskFixtureTask();
+		$this->Task->Template = new TemplateTask($this->Task->Dispatch);
+		$this->Task->Fixture = new MockModelTaskFixtureTask();
+		$this->Task->Test = new MockModelTaskFixtureTask();
 	}
 
 /**
@@ -93,7 +93,7 @@ class ModelTaskTest extends CakeTestCase {
  * @return void
  * @access public
  */
-	function endTest() {
+	function endTest($method) {
 		unset($this->Task, $this->Dispatcher);
 		ClassRegistry::flush();
 	}
@@ -284,7 +284,7 @@ class ModelTaskTest extends CakeTestCase {
  * @access public
  */
 	function testNonInteractiveDoValidation() {
-		$Model =& new MockModelTaskModel();
+		$Model = new MockModelTaskModel();
 		$Model->primaryKey = 'id';
 		$Model->setReturnValue('schema', array(
 			'id' => array(
@@ -653,7 +653,7 @@ array(
 				//'message' => 'Your custom message here',
 				//'allowEmpty' => false,
 				//'required' => false,
-				//'last' => false, // Stop validation after this rule
+				//'last' => true, // Stop validation after this rule
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 STRINGEND;

@@ -203,7 +203,7 @@ class UsersController extends AppController {
 				$errors['name_length'] = ___('Username must be between 3 to 20 characters', true);
 			}
 
-			if (eregi("^[a-zA-Z0-9]+[a-zA-Z0-9_-]+$", $this->data['User']['username'])) {
+			if (mb_eregi("^[a-zA-Z0-9]+[a-zA-Z0-9_-]+$", $this->data['User']['username'])) {
 			} else {
 				$this->User->invalidate('username');
 				$errors['name_characters'] = ___('Username cannot contain special characters or spaces except _ and -', true);
@@ -253,7 +253,7 @@ class UsersController extends AppController {
 			$pattern ="^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.((AERO|ARPA|ASIA|BIZ|CAT|COM|COOP|EDU|GOV|INFO|INT|JOBS|MIL|MOBI|MUSEUM|NAME|NET|ORG|PRO|TEL|TRAVEL|A[C-GL-OQ-UWXZ]|B[ABD-JM-OR-TVWYZ]|C[ACDF-IK-ORUVX-Z]|D[EJKMOZ]|E[CEGR-U]|F[I-KMOR]|G[ABD-IL-NP-UWY]|H[KMNRTU]|I[DEL-OQ-T]|J[EMOP]|K[EG-IMNPRWYZ]|L[A-CIKR-VY]|M[AC-EGHK-Z]|N[ACE-GILOPRUZ]|OM|P[AE-HKL-NR-TWY]|QA|R[EOSUW]|S[A-EG-ORT-VYZ]|T[CDF-HJ-PRTVWZ]|U[AGKMSYZ]|V[ACEGINU]|W[FS]|XN|Y[ETU]|Z[AMW]))$";
 			
 			
-			if (eregi($pattern, $email)) {
+			if (mb_eregi($pattern, $email)) {
 			} else {
 				$this->User->invalidate('email');
 				$errors['email_invalid'] =  ___('Invalid email address', true);
@@ -1132,6 +1132,7 @@ class UsersController extends AppController {
 		
 		$this->set('projects', $final_projects);
 		$this->set('user_id', $user_id);
+        if($myProjects)
 		$this->set('num_project', count($myProjects));
 		
 		$this->PaginationSecondary->show = 15;
@@ -1259,12 +1260,13 @@ class UsersController extends AppController {
 		
 		$num_friends = $this->Relationship->findAll("user_id = $user_id");
 		$num_galleries = $this->GalleryMembership->findCount("GalleryMembership.user_id = $user_id");
-		
-		if (count($num_friends) > 5) {
-			$this->set('showmorefriends' , true);
-		} else {
-			$this->set('showmorefriends' , false);
-		}
+		if($num_friends) {
+            if (count($num_friends) > 5) {
+                $this->set('showmorefriends' , true);
+            } else {
+                $this->set('showmorefriends' , false);
+            }
+        }
 		
 		if ($num_galleries > 5) {
 			$this->set('showmoregalleries' , true);
@@ -1651,7 +1653,7 @@ class UsersController extends AppController {
 	/**
 	* sends notification to specified user
 	*/
-	function notify($user_id) {
+	function notify($user_id, $to_user_id, $data, $extra = [], $flashit = false) {
 		$this->exitOnInvalidArgCount(1);
 		$session_user_id = $this->getLoggedInUserID();
 		if (!$session_user_id)

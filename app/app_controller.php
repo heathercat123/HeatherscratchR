@@ -15,7 +15,7 @@ class AppController extends Controller {
 
     function __construct() {
         uses('sanitize');
-        $this->Sanitize = &new Sanitize;
+        $this->Sanitize = new Sanitize;
         parent::__construct();
     }
 

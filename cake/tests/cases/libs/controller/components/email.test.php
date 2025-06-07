@@ -243,14 +243,15 @@ class EmailComponentTest extends CakeTestCase {
 		$this->_appEncoding = Configure::read('App.encoding');
 		Configure::write('App.encoding', 'UTF-8');
 
-		$this->Controller =& new EmailTestController();
+		$this->Controller = new EmailTestController();
 
 		restore_error_handler();
 		@$this->Controller->Component->init($this->Controller);
 		set_error_handler('simpleTestErrorHandler');
 
 		$this->Controller->EmailTest->initialize($this->Controller, array());
-		ClassRegistry::addObject('view', new View($this->Controller));
+		$object = new View($this->Controller);
+		ClassRegistry::addObject('view', $object);
 
 		App::build(array(
 			'views' => array(TEST_CAKE_CORE_INCLUDE_PATH . 'tests' . DS . 'test_app' . DS . 'views'. DS)
@@ -384,7 +385,7 @@ TEMPDOC;
 			return;
 		}
 
-		$connection =& new CakeSocket(array('protocol'=>'smtp', 'host' => 'localhost', 'port' => 25));
+		$connection = new CakeSocket(array('protocol'=>'smtp', 'host' => 'localhost', 'port' => 25));
 		$this->Controller->EmailTest->setConnectionSocket($connection);
 		$this->Controller->EmailTest->smtpOptions['timeout'] = 10;
 		$this->assertTrue($connection->connect());
@@ -741,7 +742,7 @@ HTMLBLOC;
 		}
 
 		$this->Controller->EmailTest->smtpOptions['timeout'] = 10;
-		$socket =& new CakeSocket(array_merge(array('protocol'=>'smtp'), $this->Controller->EmailTest->smtpOptions));
+		$socket = new CakeSocket(array_merge(array('protocol'=>'smtp'), $this->Controller->EmailTest->smtpOptions));
 		$this->Controller->EmailTest->setConnectionSocket($socket);
 
 		$this->assertTrue($this->Controller->EmailTest->getConnectionSocket());
