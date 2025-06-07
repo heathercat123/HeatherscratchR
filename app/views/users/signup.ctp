@@ -2,7 +2,7 @@
 
 <?php $head->register_jsblock("
   window.onload = function() {
-    setupDependencies('downform'); //name of form(s). Seperate each with a comma (ie: 'weboptions', 'myotherform' )
+    setupDependencies('UserSignupForm'); //name of form(s). Seperate each with a comma (ie: 'weboptions', 'myotherform' )
 	document.getElementsByTagName('input')[2].focus();
 	changeEmailVis();
   };
@@ -33,7 +33,8 @@
 
 ?>
 <?php }else{?>
-  <form action="signup" method="POST" accept-charset="UTF-8" name="downform" id="downform">
+  <!--<form action="signup" method="POST" accept-charset="UTF-8" name="downform" id="downform">-->
+  <?php echo $form->create('User', array('action' => 'signup')); ?>
   <div class="signup_header">
 	<h3><?php ___('Create an account'); ?></h3>
 
@@ -45,7 +46,7 @@
 		<div class="signup_input">
 			<?php
 				echo $form->text
-					('User/username_botck', array('type'=>'text', 'size'=>'30',
+					('username_botck', array('type'=>'text', 'size'=>'30',
 					'onkeyup'=> '',
 					'onblur'=> '', 'maxlength' => '20'));
 			?>
@@ -65,7 +66,7 @@
 		</div>
 		<div class="signup_input">
 			<?php
-				echo $form->text('User/password',
+				echo $form->text('password',
 					array('type'=>'password', 'size'=>'30',
 					'onkeyup'=>''));
 			?>
@@ -85,7 +86,7 @@
 		</div>
 		<div class="signup_input">
 			<?php
-				echo $form->text('User/password2',
+				echo $form->text('password2',
 					array('type'=>'password', 'size'=>'30',
 					'onkeyup'=>''));
 			?>
@@ -108,11 +109,11 @@
 			<?php echo "<input name='curryear' type='hidden' "  . " value='" . date('Y') . "'>"; ?>
 
 			<?php
-				echo $form->select('User/bmonth',
+				echo $form->select('bmonth',
 					$months, null, array('onChange'=>'changeEmailVis(); return false;'), null, false) ;
 			?>
 			<?php
-				echo $form->select('User/byear',
+				echo $form->select('byear',
 					$years, null, array('onChange' => 'changeEmailVis(); return false;'), null, false);
 			?>
 		</div>
@@ -131,7 +132,7 @@
 			<label id="email_under_13" for="data[User][email]" style='display:none'><?php ___('Email of Parent or Guardian');?>*</label>
 		</div>
 		<div class="signup_input">
-			<?php echo $form->text('User/email', array('type'=>'text', 'size'=>'40')); ?>
+			<?php echo $form->text('email', array('type'=>'text', 'size'=>'40')); ?>
 		</div>
   </div>
   <div class="signup_error_wrapper">
@@ -147,7 +148,7 @@
 			<label for="data[User][gender]"><?php ___('Gender');?>*</label>
 		</div>
 		<div class="signup_input">
-			<?php echo $form->select('User/gender', $genders); ?>
+			<?php echo $form->select('gender', $genders); ?>
 		</div>
   </div>
   <div class="signup_error_wrapper">
@@ -164,7 +165,7 @@
 		</div>
 		<div class="signup_input">
 			<?php
-				echo $form->select('User/country', $countries, null, array('id' => 'UserCountry'), null, false);
+				echo $form->select('country', $countries, null, array('id' => 'UserCountry'), null, false);
 			?>
 		</div>
   </div>
@@ -182,9 +183,9 @@
 		</div>
 		<div class="signup_input">
 			<?php
-				echo $form->select('User/state', $states, null,
+				echo $form->select('state', $states, null,
 					array("class" =>"DEPENDS ON UserCountry BEING United States"), null, false);
-				echo $form->text('User/province', array('type'=>'text', "size" =>"30",
+				echo $form->text('province', array('type'=>'text', "size" =>"30",
 					"class" => "CONFLICTS WITH UserCountry BEING United States"));
 			?>
 		</div>
@@ -201,7 +202,7 @@
 		</div>
 		<div class="signup_input">
 			<?php
-				echo $form->text('User/city', array('type'=>'text', 'size'=>'30'));
+				echo $form->text('city', array('type'=>'text', 'size'=>'30'));
 			?>
 		</div>
   </div>

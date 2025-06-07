@@ -1260,6 +1260,16 @@ label {
 	margin-left: 280px;
 }
 
+#UserSignupForm label {
+	width: 200px;
+	margin-left: 40px;
+	display: inline;
+}
+
+#UserSignupForm .inputgroup {
+	margin-left: 280px;
+}
+
 .twocolumn {
 	float: left;
 	margin: 10px 0 10px 10px;

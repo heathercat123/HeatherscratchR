@@ -86,6 +86,8 @@ function setupDependencies() {
 	this.disabled = false;
     if(this.parentNode.tagName.toLowerCase() == "label")
       this.parentNode.style.display = "";
+    if(this.parentNode.tagName.toLowerCase() == "fieldset") // heatherscratch hack
+      this.parentNode.style.display = "none";
   };
   var hideEl = function() {
     this.style.display = "none";
