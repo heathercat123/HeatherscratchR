@@ -1132,7 +1132,6 @@ class UsersController extends AppController {
 		
 		$this->set('projects', $final_projects);
 		$this->set('user_id', $user_id);
-        if($myProjects)
 		$this->set('num_project', count($myProjects));
 		
 		$this->PaginationSecondary->show = 15;
@@ -1363,17 +1362,19 @@ class UsersController extends AppController {
 			$this->loadModel('UserWelcome');
 
 			$wcProject = $this->getRandomProjectFromGallery($wcGallery_id);
-			$pid = $wcProject['Project']['id'];
-			$owner = $wcProject['User']['urlname'];
+            if($wcProject != null) {
+                $pid = $wcProject['Project']['id'];
+                $owner = $wcProject['User']['urlname'];
 
 			// This would just set the URL to the random project
 		//	$wcProjectURL = "/projects/".$owner."/".$pid; 
 		//	$this->set('wcProjectURL', $wcProjectURL);
 
-			// This passes the info to the redirect controller, which counts
-			// the clicks, and then forwards the new user to the WC project.
-			$wcProjectURL = "/redirect/recordWCclicks?p_user_name=".$owner."&p_id=".$pid;
-			$this->set('wcProjectURL', $wcProjectURL);
+                // This passes the info to the redirect controller, which counts
+                // the clicks, and then forwards the new user to the WC project.
+                $wcProjectURL = "/redirect/recordWCclicks?p_user_name=".$owner."&p_id=".$pid;
+                $this->set('wcProjectURL', $wcProjectURL);
+            }
 
 		}
 	 	

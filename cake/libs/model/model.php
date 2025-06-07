@@ -492,6 +492,25 @@ class Model extends Overloadable {
 		$this->Behaviors->init($this->alias, $this->actsAs);
 	}
 
+// heatherscratch hack: function from cake 1.2
+/**
+ * @deprecated
+ * @see Model::find('all')
+ */
+	function findAll($conditions = null, $fields = null, $order = null, $limit = null, $page = 1, $recursive = null) {
+		//trigger_error(__('(Model::findAll) Deprecated, use Model::find("all")', true), E_USER_WARNING);
+		return $this->find('all', compact('conditions', 'fields', 'order', 'limit', 'page', 'recursive'));
+	}
+// heatherscratch hack: function from cake 1.2
+/**
+ * @deprecated
+ * @see Model::find('count')
+ */
+	function findCount($conditions = null, $recursive = 0) {
+		//trigger_error(__('(Model::findCount) Deprecated, use Model::find("count")', true), E_USER_WARNING);
+		return $this->find('count', compact('conditions', 'recursive'));
+	}
+
 /**
  * Handles custom method calls, like findBy<field> for DB models,
  * and custom RPC calls for remote data sources.

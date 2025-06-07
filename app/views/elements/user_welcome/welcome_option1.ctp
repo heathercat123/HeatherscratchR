@@ -95,7 +95,7 @@
                       <h3><?php e(__('EXPLORE')); ?></h3>
               </div>
             </a>
-	       <a href='<?php echo $wcProjectURL ?>'>
+	       <a href='<?php if(isset($wcProjectUrl)) echo $wcProjectURL ?>'>
                <div class='thumb tb_w' id='wb3'>
                       <h3><?php e(__('CONNECT')); ?></h3>
               </div>
