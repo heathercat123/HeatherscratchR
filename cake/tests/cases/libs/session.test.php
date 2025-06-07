@@ -1,5 +1,5 @@
 <?php
-/* SVN FILE: $Id: session.test.php 7296 2008-06-27 09:09:03Z gwoo $ */
+/* SVN FILE: $Id$ */
 /**
  * Short description for file.
  *
@@ -21,12 +21,14 @@
  * @package			cake.tests
  * @subpackage		cake.tests.cases.libs
  * @since			CakePHP(tm) v 1.2.0.4206
- * @version			$Revision: 7296 $
- * @modifiedby		$LastChangedBy: gwoo $
- * @lastmodified	$Date: 2008-06-27 02:09:03 -0700 (Fri, 27 Jun 2008) $
+ * @version			$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
  * @license			http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
  */
-App::import('Core', 'Session');
+if (!class_exists('CakeSession')) {
+	App::import('Core', 'Session');
+}
 /**
  * Short description for class.
  *
@@ -80,6 +82,10 @@ class SessionTest extends CakeTestCase {
 		$this->assertTrue(isset($result['testing']));
 		$this->assertTrue(isset($result['Config']));
 		$this->assertTrue(isset($result['Config']['userAgent']));
+		
+		$this->Session->write('This.is.a.deep.array.my.friend', 'value');
+		$result = $this->Session->read('This.is.a.deep.array.my.friend');
+		$this->assertEqual('value', $result);
 	}
 /**
  * testId method

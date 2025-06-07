@@ -1,5 +1,5 @@
 <?php
-/* SVN FILE: $Id: test_plugin_other_helper.php 6311 2008-01-02 06:33:52Z phpnut $ */
+/* SVN FILE: $Id$ */
 /**
  * Short description for file.
  *
@@ -21,10 +21,12 @@
  * @package			cake.tests
  * @subpackage		cake.tests.test_app.plugins.test_plugin.views.helpers
  * @since			CakePHP(tm) v 1.2.0.4206
- * @version			$Revision: 6311 $
- * @modifiedby		$LastChangedBy: phpnut $
- * @lastmodified	$Date: 2008-01-01 22:33:52 -0800 (Tue, 01 Jan 2008) $
+ * @version			$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
  * @license			http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
  */
-class TestPluginOtherHelperHelper extends AppHelper{}
+class OtherComponentComponent extends Object {
+
+}
 ?>

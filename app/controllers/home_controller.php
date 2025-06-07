@@ -149,15 +149,22 @@ Class HomeController extends AppController {
             //$topdownloaded  = $home_projects['topdownloaded'];
 			$clubedprojects   = $home_projects['clubedprojects'];
         }
-        shuffle($topviewed);
-        shuffle($toploved);
-        shuffle($topremixed);
-        $topviewed = array_slice($topviewed, 0, NUM_TOP_VIEWED);
-        $toploved  = array_slice($toploved, 0, NUM_TOP_RATED);
-        $topremixed = array_slice($topremixed, 0, NUM_TOP_REMIXED);
-		
-	shuffle($clubedprojects); 
- 	$clubedprojects = array_slice($clubedprojects,0,NUM_DESIGN_STUDIO_PROJECT); 
+        if(!empty($topviewed)) {
+            shuffle($topviewed);
+            $topviewed = array_slice($topviewed, 0, NUM_TOP_VIEWED);
+        }
+        if (!empty($toploved)) {
+            shuffle($toploved);
+            $toploved  = array_slice($toploved, 0, NUM_TOP_RATED);
+        }
+        if (!empty($topremixed)) {
+            shuffle($topremixed);
+            $topremixed = array_slice($topremixed, 0, NUM_TOP_REMIXED);
+        }
+		if (!empty($clubedprojects)) {
+            shuffle($clubedprojects); 
+            $clubedprojects = array_slice($clubedprojects,0,NUM_DESIGN_STUDIO_PROJECT); 
+        }
 
 
         $this->set('featuredprojects', $featured);

@@ -145,7 +145,7 @@ Class RelationshipsController extends AppController {
 				
 				if ($delete)
 				{
-					$this->Relationship->del($relationship_id);
+					$this->Relationship->delete($relationship_id);
 				}
 			}
 		}

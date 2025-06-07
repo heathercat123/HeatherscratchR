@@ -163,7 +163,7 @@ class Sitemap extends AppModel
 		$pages_dir = VIEWS.'pages'.DS;
 		uses('Folder');
 		$Folder =& new Folder($pages_dir);
-		$files = $Folder->ls();
+		$files = $Folder->read();
 		$files = $files[1];
 		$filenames = array();
 		foreach($files as $index=>$file) {

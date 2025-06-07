@@ -57,19 +57,20 @@ width:245px;
 		/**
 		 * Populate featured projects
 		 */
-		foreach ($featuredprojects as $featured):
-		$pid = $featured['Project']['id'];
-		$ribbon_image = (isset($featured['Project']['ribbon_name'])) ? $featured['Project']['ribbon_name']:null;
-		$owner = $featured['User']['urlname'];
-		$owner_role = $featured['User']['role'];
-		$project_link = "/projects/".$owner."/".$pid;
-		$thumbnail_src = getThumbnailImg($owner, $pid);
-		$user_link = "/users/".$owner;
-		$project_name = htmlspecialchars($featured['Project']['name']);
-		$project_name_s = $project_name;
-		if (strlen($project_name) > MAX_LENGTH_PNAME_HOME) {
-			$project_name_s = substr($project_name,0,15) . "&#0133;";
-		}
+        if (!empty($featuredprojects)):
+        foreach ($featuredprojects as $featured):
+        $pid = $featured['Project']['id'];
+        $ribbon_image = (isset($featured['Project']['ribbon_name'])) ? $featured['Project']['ribbon_name']:null;
+        $owner = $featured['User']['urlname'];
+        $owner_role = $featured['User']['role'];
+        $project_link = "/projects/".$owner."/".$pid;
+        $thumbnail_src = getThumbnailImg($owner, $pid);
+        $user_link = "/users/".$owner;
+        $project_name = htmlspecialchars($featured['Project']['name']);
+        $project_name_s = $project_name;
+        if (strlen($project_name) > MAX_LENGTH_PNAME_HOME) {
+            $project_name_s = substr($project_name,0,15) . "&#0133;";
+        }
 		?>
 		<div class="thumb">
 		<?php if(SHOW_RIBBON ==1 && $ribbon_image):?>
@@ -84,6 +85,7 @@ width:245px;
 		  </p>
 		</div>
 		<?php endforeach; ?>
+		<?php endif; ?>
       <p class="more"><a href="/channel/featured"><?php ___('See more');?></a> </p>
     </div>
 	
@@ -368,8 +370,10 @@ width:245px;
 
     <div  id="club" class="sidecontainer">
     <h4><?php ___('Scratch Design Studio');?></h4>
+      <?php if (!empty($clubname)): ?>
       <h5><a href="/galleries/view/<?php e($scratch_club['id']) ?>"><?php e($club_name_s)?></a></h5>
       <p><a href="/galleries/view/<?php e($scratch_club['id']) ?>"><img src="<?php e($scratch_club['icon_src']); ?>" title="<?php e($club_name)?>" alt="<?php e($club_name)?>" width="90" height="68"></a><?php e($gallery_desc)?></p>
+      <?php endif; ?>
       <p class="more"><a href="/galleries/browse/clubbed"><?php ___('See more');?></a> </p>
     </div>
 
@@ -399,6 +403,7 @@ width:245px;
 		/**
 		 * Populate featured themes
 		 */
+        if (!empty($featuredthemes)):
 		foreach ($featuredthemes as $theme):
 		$theme_id = $theme['Gallery']['id'];
 		$theme_icon = $theme['Gallery']['icon_src'];
@@ -408,6 +413,7 @@ width:245px;
 		?>
 		<li><img src="<?php e($theme_icon)?>" title="<?php e($theme_name)?>" alt="<?php e($theme_name)?>" width="43" height="32"><a href="<?php e($theme_url)?>"><?php e($theme_name_s)?></a></li>
         <?php endforeach;?>
+        <?php endif;?>
         <li><a href="#"></a></li>
       </ul>
       <p class="more"><a href="/galleries/browse/feature"><?php ___('See more');?></a> </p>

@@ -44,7 +44,7 @@ Class RequestsController extends AppController {
 			if ($to_id !== $session_UID)
 				exit;
 			
-			if ($this->ThemeRequest->del())
+			if ($this->ThemeRequest->delete())
 			{
 				$this->ThemeMembership->create();
 				$this->ThemeMembership->save(array("ThemeMembership"=>array("user_id"=>$session_UID, "theme_id"=>$theme_id)));
@@ -66,7 +66,7 @@ Class RequestsController extends AppController {
 				
 			if (!empty($relType)) 
 			{
-				if ($this->FriendRequest->del())
+				if ($this->FriendRequest->delete())
 				{
 					$relTypeID = $relType['RelationshipType']['id'];
 					$this->Relationship->create();

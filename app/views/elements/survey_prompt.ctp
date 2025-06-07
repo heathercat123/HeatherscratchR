@@ -52,7 +52,6 @@ var Survey = {
 <?php
 $survey_key = false;
 $survey_url = false;
-
 if ($isLogged && in_array($loggedInUID, explode(',', $special_survey_users)) && !$_COOKIE[SPECIAL_USER_SURVEY_KEY]) {
 	$survey_key = SPECIAL_USER_SURVEY_KEY;
 	$survey_url = SPECIAL_USER_SURVEY_URL;

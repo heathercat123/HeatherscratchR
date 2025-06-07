@@ -147,7 +147,7 @@
 			<label for="data[User][gender]"><?php ___('Gender');?>*</label>
 		</div>
 		<div class="signup_input">
-			<?php echo $form->select('User/gender', $genders, null, null, null, false ); ?>
+			<?php echo $form->select('User/gender', $genders); ?>
 		</div>
   </div>
   <div class="signup_error_wrapper">

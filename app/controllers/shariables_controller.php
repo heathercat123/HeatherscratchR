@@ -18,7 +18,7 @@ class ShariablesController extends AppController {
 			$isAdmin = $this->isAdmin();
 			if($isMine || $isAdmin)
 			{
-				$this->Shariable->del($sid);
+				$this->Shariable->delete($sid);
 			}
 		}
 	}

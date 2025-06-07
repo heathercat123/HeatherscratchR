@@ -1,5 +1,5 @@
 <?php
-/* SVN FILE: $Id: core.php 7296 2008-06-27 09:09:03Z gwoo $ */
+/* SVN FILE: $Id$ */
 /**
  * This is core configuration file.
  *
@@ -21,9 +21,9 @@
  * @package			cake
  * @subpackage		cake.app.config
  * @since			CakePHP(tm) v 0.2.9
- * @version			$Revision: 7296 $
- * @modifiedby		$LastChangedBy: gwoo $
- * @lastmodified	$Date: 2008-06-27 02:09:03 -0700 (Fri, 27 Jun 2008) $
+ * @version			$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
  * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 /**
@@ -40,7 +40,7 @@
  * In production mode, flash messages redirect after a time interval.
  * In development mode, you need to click the flash message to continue.
  */
-	Configure::write('debug', 0);
+	Configure::write('debug', 2);
 /**
  * Application wide charset encoding
  */
@@ -72,7 +72,7 @@
  * Turn off all caching application-wide.
  *
  */
-	//Configure::write('Cache.disable', true);
+	Configure::write('Cache.disable', true);
 /**
  * Enable cache checking.
  *
@@ -119,12 +119,12 @@
 /**
  * The name of CakePHP's session cookie.
  */
-	Configure::write('Session.cookie', 'PHPSESSID');
+	Configure::write('Session.cookie', 'CAKEPHP');
 /**
  * Session time out time (in seconds).
  * Actual value depends on 'Security.level' setting.
  */
-	Configure::write('Session.timeout', '1209600');
+	Configure::write('Session.timeout', '120');
 /**
  * If set to false, sessions are not automatically started.
  */
@@ -146,7 +146,7 @@
  * CakePHP session IDs are also regenerated between requests if
  * 'Security.level' is set to 'high'.
  */
-	Configure::write('Security.level', 'low');
+	Configure::write('Security.level', 'high');
 /**
  * A random string used in security hashing methods.
  */
@@ -209,18 +209,21 @@
  *		'user' => 'user', //user from xcache.admin.user settings
  *      'password' => 'password', //plaintext password (xcache.admin.pass)
  *	));
+ *
+ *
+ * Memcache (http://www.danga.com/memcached/)
+ *
+ * 	 Cache::config('default', array(
+ *		'engine' => 'Memcache', //[required]
+ *		'duration'=> 3600, //[optional]
+ *		'probability'=> 100, //[optional]
+ * 		'prefix' => Inflector::slug(APP_DIR) . '_', //[optional]  prefix every cache file with this string
+ * 		'servers' => array(
+ * 			'127.0.0.1:11211' // localhost, default port 11211
+ * 		), //[optional]
+ * 		'compress' => false, // [optional] compress data in Memcache (slower, but uses less memory)
+ *	));
+ *
  */
- //Memcache (http://www.danga.com/memcached/)
-	/*Cache::config('default', array(
-		'engine' => 'Memcache', //[required]
-		'duration'=> 3600, //[optional]
-		'probability'=> 100, //[optional]
-		'prefix' => 'scratch_', //[optional]  prefix every cache file with this string
-		'servers' => array(
-			'localhost.1:11211' // localhost, default port 11211
-		), //[optional]
-		'compress' => false, // [optional] compress data in Memcache (slower, but uses less memory)
-	));*/
-  
 	Cache::config('default', array('engine' => 'File'));
 ?>

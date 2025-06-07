@@ -156,7 +156,7 @@ Class ThemesController extends AppController {
 
 		if (!empty($featured_theme))
 		{
-			if ($this->FeaturedTheme->del($featured_theme["FeaturedTheme"]["id"]))
+			if ($this->FeaturedTheme->delete($featured_theme["FeaturedTheme"]["id"]))
 			{
 				$this->set('theme_id', $theme_id);
 				$this->set("isFeatured", false);
@@ -199,7 +199,7 @@ Class ThemesController extends AppController {
 
 		if (!empty($clubbed_theme))
 		{
-			if ($this->ClubbedTheme->del($clubbed_theme["ClubbedTheme"]["id"]))
+			if ($this->ClubbedTheme->delete($clubbed_theme["ClubbedTheme"]["id"]))
 			{
 				$this->set('theme_id', $theme_id);
 				$this->set("isClubbed", false);
@@ -286,7 +286,7 @@ Class ThemesController extends AppController {
 				if ($uid !== $session_UID && $uid !== $theme['Theme']['user_id'])
 				{
 					$tm = $this->ThemeMembership->find("theme_id = $theme_id AND user_id = $uid");
-					$this->ThemeMembership->del($tm['ThemeMembership']['id']);
+					$this->ThemeMembership->delete($tm['ThemeMembership']['id']);
 				}
 			}
 
@@ -556,7 +556,7 @@ Class ThemesController extends AppController {
 				echo "You own this theme. <br> You must delete theme";
 			else
 			{
-				$this->ThemeMembership->del($member_data['ThemeMembership']['id']);
+				$this->ThemeMembership->delete($member_data['ThemeMembership']['id']);
 				if (!$from_myscratchrpage)
 				{
 					$this->set('theme_id', $theme_id);
@@ -759,7 +759,7 @@ Class ThemesController extends AppController {
 							if (!empty($theme_project['ThemeProject']))
 							{
 								$this->ThemeProject->id = $theme_project['ThemeProject']['id'];
-								$this->ThemeProject->del();
+								$this->ThemeProject->delete();
 							}
 						}
 					}

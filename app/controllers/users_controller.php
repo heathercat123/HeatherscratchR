@@ -85,6 +85,8 @@ class UsersController extends AppController {
 	}
 	
 	function multiaccountwarn() {
+        $this->redirect('/signup');
+        exit;
 		$this->pageTitle = ___("Scratch | Signup", true);
         $client_ip = $this->RequestHandler->getClientIP();
 		
@@ -643,21 +645,21 @@ class UsersController extends AppController {
 				$action = array('/','/multiaccountwarn',$ban_url);
 				//Now, let's figure out where to redirect this person to.
 				if ($this->Session->read('uservoiceRedirect')=='uservoice'){
-					$this->Session->del('uservoiceRedirect');
+					$this->Session->delete('uservoiceRedirect');
 					if ((time()-$this->Session->read('uservoiceRedirectTime')) <120){
-						$this->Session->del('uservoiceRedirectTime');
+						$this->Session->delete('uservoiceRedirectTime');
 						$this->redirect('/uservoice/index');
 					}
-					$this->Session->del('uservoiceRedirectTime');
+					$this->Session->delete('uservoiceRedirectTime');
 				}
                                 if ($this->Session->read('experimentalviewerRedirect')=='TRUE'){
-                                    $this->Session->del('experimentalviewerRedirect');
+                                    $this->Session->delete('experimentalviewerRedirect');
                                     if ((time()-$this->Session->read('experimentalviewerRedirectTime')) < 120) {
-                                        $this->Session->del('experimentalviewerRedirectTime');
+                                        $this->Session->delete('experimentalviewerRedirectTime');
                                         $this->redirect('/experimental');
                                     }
                                     else {
-                                        $this->Session->del('experimentalviewerRedirectTime');
+                                        $this->Session->delete('experimentalviewerRedirectTime');
                                     }
                                 }
 				if($user_record['User']['email']=="" || $user_record['User']['email']=="rather-not-say@scratchr.org"){
@@ -1334,7 +1336,7 @@ class UsersController extends AppController {
         $upload_error = $this->Session->read('upload_error');
 		if(!empty($upload_error)) {
 			$this->set('upload_error', $upload_error);
-			$this->Session->del('upload_error');
+			$this->Session->delete('upload_error');
 		}
 		
 		// Welcoming committee area on my stuff page
@@ -1705,7 +1707,7 @@ class UsersController extends AppController {
 				$favoriteID = trim($favorite_id_vals[2]);
 				if ($favoriteID !== "") {
 					// remove favorite record
-					$this->Favorite->del($favoriteID);
+					$this->Favorite->delete($favoriteID);
 					// update project record
 					$this->Project->id=$PID;
 					$num_favoriters = (int)$this->Project->field('num_favoriters') - 1;
@@ -1745,7 +1747,7 @@ class UsersController extends AppController {
 				
 			} else {
 				$record_id = $record['Relationship']['id'];
-				$this->Relationship->del($record_id);
+				$this->Relationship->delete($record_id);
 				$this->redirect('/users/showfriends/' . $user_id);
 			}
 		}
@@ -1776,7 +1778,7 @@ class UsersController extends AppController {
 				if ($isOwner) {
 					$this->hide_gallery($gallery_id);
 				} else {
-					$this->GalleryMembership->del($membership_id);
+					$this->GalleryMembership->delete($membership_id);
 				}
 				$this->redirect('/users/showgalleries/' . $user_id . "/" . $option);
 			}
@@ -2114,7 +2116,7 @@ class UsersController extends AppController {
 		$this->autoRender = false;
 		$user_id = $this->getLoggedInUserID();
 		$this->Pagination->show = 20;
-		$this->IgnoredUser->del($ignore_id);
+		$this->IgnoredUser->delete($ignore_id);
 		
 		$this->modelClass = "IgnoredUser";
 		$options = Array("sortBy"=>"id", "sortByClass" => "IgnoredUser", 

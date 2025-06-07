@@ -50,7 +50,7 @@ class ThanksController extends AppController {
 		$session_user_id = $this->getLoggedInUserID();
 		if($session_user_id !=$user_id)
 		$this->cakeError('error404');
-		$this->Thank->del($thank_id);
+		$this->Thank->delete($thank_id);
 		exit;
 		
 		}

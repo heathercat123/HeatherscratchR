@@ -116,7 +116,7 @@
 	function remove_users_permission($permission_id=null,$user_id=null)
 	{
 		$this->autoRender = false;
-		$this->PermissionUser->del($permission_id);
+		$this->PermissionUser->delete($permission_id);
 		$this->User->bindPermission();
 		$users_permissions = $this->User->find('id='.$user_id);
 		$this->set('data',$users_permissions);
@@ -176,7 +176,7 @@
 			$target = $this->Gallery->find("Gallery.id = $gallery_id");
 			
 			if (empty($target)) {
-				$this->FeaturedGallery->del($id);
+				$this->FeaturedGallery->delete($id);
 			}
 		}
 	}
@@ -193,13 +193,13 @@
 			$current_membership_id = $current_membership['GalleryMembership']['id'];
 			$current_membership_user = $current_membership['GalleryMembership']['user_id'];
 			if ($owner_id != $current_membership_user) {
-				$this->GalleryMembership->del($current_membership_id);
+				$this->GalleryMembership->delete($current_membership_id);
 			}
 		}
 		$redundant_memberships = $this->GalleryMembership->findAll("GalleryMembership.gallery_id = $gallery_id AND GalleryMembership.type != 0 AND GalleryMembership.user_id = $owner_id");
 		foreach ($redundant_memberships as $current_membership) {
 			$current_membership_id = $current_membership['GalleryMembership']['id'];
-			$this->GalleryMembership->del($current_membership_id);
+			$this->GalleryMembership->delete($current_membership_id);
 		}
 	}
 	
@@ -213,11 +213,11 @@
 			$gallery_id = $gallery['Gallery']['id'];
 			$owner_id = $gallery['User']['id'];
 			if ($owner_id == null || $owner_id == 0) {
-				$this->Gallery->del($gallery_id);
+				$this->Gallery->delete($gallery_id);
 			} else {
 				$owner_record = $this->User->find("User.id = $owner_id");
 				if (empty($owner_record)) {
-					//$this->Gallery->del($gallery_id);
+					//$this->Gallery->delete($gallery_id);
 				} else {
 					$this->repair_gallerymembership($owner_id, $gallery_id);
 				}
@@ -236,7 +236,7 @@
 			$gallery_id = $membership['GalleryMembership']['gallery_id'];
 			$gallery = $this->Gallery->find("Gallery.id = $gallery_id");
 			if (empty($gallery)) {
-				$this->GalleryMembership->del($membership_id);
+				$this->GalleryMembership->delete($membership_id);
 			}
 		}
 	}
@@ -1563,7 +1563,7 @@
 	else{
 			$data = $this->BlockedIp->find("BlockedIp.ip=$ip");
 			$ip_id = $data['BlockedIp']['id'];
-			$this->BlockedIp->del($ip_id);
+			$this->BlockedIp->delete($ip_id);
 			$this->redirect('/administration/search');
 		}
 	
@@ -1584,7 +1584,7 @@
 	function remove_whitelisted_ip($ip){
 			$data = $this->WhitelistedIpAddress->find("WhitelistedIpAddress.ipaddress = $ip");
 			$ip_id = $data['WhitelistedIpAddress']['id'];
-			$this->WhitelistedIpAddress->del($ip_id);
+			$this->WhitelistedIpAddress->delete($ip_id);
 			$this->redirect('/administration/search');
 	}
  
@@ -2000,7 +2000,7 @@
 		$this->autoRender = false;
 		$user_id = $this->getLoggedInUserID();
 		$this->Pagination->show = 20;
-		$this->BlockedIp->del($ip_id);
+		$this->BlockedIp->delete($ip_id);
 		
 		$this->modelClass = "BlockedIp";
 		$options = Array("sortBy"=>"timestamp", "sortByClass" => "BlockedIp", 
@@ -2138,7 +2138,7 @@
 		$this->User->id = $banned_id;
 		$banned_user = $this->User->read();
 		$this->User->saveField("status", 'normal');
-		$this->BlockedUser->del($ban_id);
+		$this->BlockedUser->delete($ban_id);
 		
 		$banned_users = $this->set_banned_users();
 		
@@ -2206,7 +2206,7 @@
 		$this->User->saveField("status", 'normal');
 		$ban_record = $this->BlockedUser->find("BlockedUser.user_id = $banned_id");
 		$ban_id = $ban_record['BlockedUser']['id'];
-		$this->BlockedUser->del($ban_id);
+		$this->BlockedUser->delete($ban_id);
 		$this->redirect('/administration/viewuser/'.$banned_id);
 	}
 	
@@ -2366,7 +2366,7 @@
 		$ban_record = $this->BlockedUserFrontpage->find("BlockedUserFrontpage.user_id = $banned_id");
 		$ban_id = $ban_record['BlockedUserFrontpage']['id'];
 		
-		$this->BlockedUserFrontpage->del($ban_id);
+		$this->BlockedUserFrontpage->delete($ban_id);
         $this->BlockedUserFrontpage->mc_connect();
 		$this->BlockedUserFrontpage->mc_delete('home_projects');
         $this->BlockedUserFrontpage->mc_close();
@@ -2416,7 +2416,7 @@
 	
 	function remove_connected_ban_ip($ip_id,$user_id) {
 		$this->autoRender = false;
-		$this->BlockedIp->del($ip_id);
+		$this->BlockedIp->delete($ip_id);
 		
 		$stats = $this->ViewStat->findAll("ViewStat.user_id = $user_id", "DISTINCT user_id, ipaddress");
 		$ips_array = Array();
@@ -2542,7 +2542,7 @@
 	function remove_admin_tag($mode, $tag_id) {
 		$this->autoRender = false;
 		$errors = Array();
-		$this->AdminTag->del($tag_id);
+		$this->AdminTag->delete($tag_id);
 		
 		$this->set_admin_tags($mode);
 		$this->set('errors', $errors);

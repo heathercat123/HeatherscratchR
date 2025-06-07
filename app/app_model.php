@@ -34,26 +34,29 @@ class AppModel extends Model{
 	
 	
 	function mc_connect() {
+        // No memcache patch
+        /*
 		$this->memcache = new Memcache();
 		$this->memcache->pconnect(MEMCACHE_SERVER, MEMCACHE_PORT) or die ("OMG. Scratch could not connect to memcached. Please try again later.");
+        */
 	}
 	
 	function mc_get($str, $postfix = false) {
-		return $this->memcache->get($this->__get_mc_key($str, $postfix));
+		// return $this->memcache->get($this->__get_mc_key($str, $postfix));
 	}
 	
 	//$ttl = mins
 	function mc_set($str, $value, $postfix = false, $ttl = 0) {
 		$ttl = $ttl * 60;
-		return $this->memcache->set($this->__get_mc_key($str, $postfix), $value, false, $ttl) or die ("Oops, failed to save to memcached. Please try again later.");
+		// return $this->memcache->set($this->__get_mc_key($str, $postfix), $value, false, $ttl) or die ("Oops, failed to save to memcached. Please try again later.");
 	}
 	
 	function mc_delete($str, $postfix = false) {
-        $this->memcache->delete($this->__get_mc_key($str, $postfix));
+        // $this->memcache->delete($this->__get_mc_key($str, $postfix));
 	}
 
     function mc_close() {
-		return $this->memcache->close();
+		// return $this->memcache->close();
 	}
 
     function __get_mc_key($str, $postfix) {

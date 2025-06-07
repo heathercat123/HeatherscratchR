@@ -139,7 +139,7 @@ class ProjectsController extends AppController {
 		
 		$featured_project = $this->FeaturedProject->find("project_id = $project_id", NULL, "FeaturedProject.id DESC");
 		if (!empty($featured_project))
-			$this->FeaturedProject->del($featured_project["FeaturedProject"]["id"]);
+			$this->FeaturedProject->delete($featured_project["FeaturedProject"]["id"]);
 
 		$this->check_project_flag($user_id, $project_id);
 	
@@ -886,7 +886,7 @@ class ProjectsController extends AppController {
             //if the user loved this project before
             if (!empty($lover)) {
                 //delete the record from lovers
-                $this->Lover->del($lover['Lover']['id']);
+                $this->Lover->delete($lover['Lover']['id']);
                 //update loveits and loveitsuniqueip in the database
                 $this->Project->update_loveits($pid);
 				$this->set('pid', $pid);
@@ -1209,7 +1209,7 @@ class ProjectsController extends AppController {
 		$removed = false;
 		if ($project_owner_id == $user_id) {
 			$removed = true;
-			$this->ProjectTag->del($project_tag_id);
+			$this->ProjectTag->delete($project_tag_id);
 			$subject = "Attention: the owner of the project '$project_name' has flagged the tag '$tag_name'";
 			$msg = "'$tag_name' has been removed because it was flagged by project owner $user_name of \n".TOPLEVEL_URL."/projects/$project_creator/$project_id";
 		} else {
@@ -1222,7 +1222,7 @@ class ProjectsController extends AppController {
 				
 				foreach ($project_tags as $current_tag) {
 					$current_id = $current_tag['ProjectTag']['id'];
-					$this->ProjectTag->del($current_id);
+					$this->ProjectTag->delete($current_id);
 				}
 				
 				$allflaggers = $this->TagFlag->findAll("tag_id = $tag_id");
@@ -1427,7 +1427,7 @@ class ProjectsController extends AppController {
             $this->Favorite->recursive = -1;
 			$favorite = $this->Favorite->find("Favorite.project_id = $pid AND Favorite.user_id = $user_id");
 			if (!empty($favorite)) {
-				$this->Favorite->del($favorite['Favorite']['id']);
+				$this->Favorite->delete($favorite['Favorite']['id']);
 				$prev_favoriters_count = (int)$project['Project']['num_favoriters'];
 				$new_favoriters_count = $prev_favoriters_count - 1;
 				$this->Project->saveField("num_favoriters", ($new_favoriters_count == 0 ? null : $new_favoriters_count));
@@ -1647,7 +1647,7 @@ class ProjectsController extends AppController {
 			if (!$this->activeSession($project['User']['id']))
 				$this->cakeError('error404');
 
-		$this->ProjectTag->del($project_tag_id);
+		$this->ProjectTag->delete($project_tag_id);
 		exit;
 	}
 

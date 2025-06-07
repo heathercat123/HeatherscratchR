@@ -241,7 +241,7 @@ Class GalleriesController extends AppController {
 		
 		if (!($featured_gallery == null))
 		{
-			if ($this->FeaturedGallery->del($featured_gallery['FeaturedGallery']['id']))
+			if ($this->FeaturedGallery->delete($featured_gallery['FeaturedGallery']['id']))
 			{
 				$this->set('theme_id', $gallery_id);
 				$this->set("isFeatured", false);
@@ -296,7 +296,7 @@ Class GalleriesController extends AppController {
 
 		if (!empty($clubbed_gallery))
 		{
-			if ($this->ClubbedGallery->del($clubbed_gallery["ClubbedGallery"]["id"]))
+			if ($this->ClubbedGallery->delete($clubbed_gallery["ClubbedGallery"]["id"]))
 			{
 				$this->set('theme_id', $gallery_id);
 				$this->set("isClubbed", false);
@@ -1169,7 +1169,7 @@ Class GalleriesController extends AppController {
 		$upload_error = $this->Session->read('upload_error');
 		if(!empty($upload_error)) {
 			$this->set('upload_error', $upload_error);
-			$this->Session->del('upload_error');
+			$this->Session->delete('upload_error');
 		}
 
 		$this->set('sessionUID', $user_id);
@@ -1578,7 +1578,7 @@ Class GalleriesController extends AppController {
 			$duplicate = $this->GalleryProject->find("gallery_id = $gallery_id AND project_id = $project_id");
 			$galleryproject_id = $duplicate['GalleryProject']['id'];
 			$this->Gallery->saveField("total_projects", $project_count - 1);
-			$this->GalleryProject->del($galleryproject_id);
+			$this->GalleryProject->delete($galleryproject_id);
 			$this->updateGallery($gallery_id);
 			//$this->setFlash("$project_name" . ___('successful removed from', true) . " $gallery_name", FLASH_NOTICE_KEY);
 			$this->redirect('/galleries/'.'addprojectmember' ."/". $gallery_id . '/' . $current_page);
@@ -1605,7 +1605,7 @@ Class GalleriesController extends AppController {
 		
 		if ($galleryproject) {
 			$galleryproject_id = $galleryproject['GalleryProject']['id'];
-			$this->GalleryProject->del($galleryproject_id);
+			$this->GalleryProject->delete($galleryproject_id);
 			$this->updateGallery($gallery_id);
 			//$this->setFlash("$project_name" . ___('successful removed from', true) . " $gallery_name", FLASH_NOTICE_KEY);
 			$this->redirect('/galleries/'.'removeprojectmember'.'/'.$gallery_id);
@@ -1662,7 +1662,7 @@ Class GalleriesController extends AppController {
 												  
 			$this->redirect('/galleries/'.'addtogallery' ."/". $project_id . "/" . $option);
 		} else {
-			$this->GalleryProject->del($projects['GalleryProject']['id']);
+			$this->GalleryProject->delete($projects['GalleryProject']['id']);
 			$this->updateGallery($gallery_id);
 			$this->Gallery->saveField("total_projects", $project_count - 1);
 			//$this->setFlash(___("This gallery already contains", true) . " $project_name", FLASH_NOTICE_KEY);
@@ -1701,7 +1701,7 @@ Class GalleriesController extends AppController {
 			$this->redirect('/galleries/view/'.$gallery_id . "/" . $option);
 		} else {
 			$this->Gallery->remove_project($gallery_id);
-			$this->GalleryProject->del($galleryproject['GalleryProject']['id']);
+			$this->GalleryProject->delete($galleryproject['GalleryProject']['id']);
 			$this->updateGallery($gallery_id);
 			$this->redirect('/galleries/view/'.$gallery_id . "/" . $option);
 		}
@@ -1740,7 +1740,7 @@ Class GalleriesController extends AppController {
 				if ($member['GalleryMembership']['user_id'] == $owner_id) {
 
 				} else {
-					$this->GalleryMembership->del($member['GalleryMembership']['id']);
+					$this->GalleryMembership->delete($member['GalleryMembership']['id']);
 				}
 			}
 		} elseif ($option == "everyone") {
@@ -1751,7 +1751,7 @@ Class GalleriesController extends AppController {
 				if ($member['GalleryMembership']['user_id'] == $owner_id) {
 
 				} else {
-					$this->GalleryMembership->del($member['GalleryMembership']['id']);
+					$this->GalleryMembership->delete($member['GalleryMembership']['id']);
 				}
 			}
 		} elseif ($option == "friends") {
@@ -1997,7 +1997,7 @@ Class GalleriesController extends AppController {
 			}
 		}
 
-		$this->GalleryMembership->del($membership_record['GalleryMembership']['id']);
+		$this->GalleryMembership->delete($membership_record['GalleryMembership']['id']);
 
 		$gallery_type = $gallery['Gallery']['type'];
 		$this->set('gallery_type', 3);
@@ -2119,7 +2119,7 @@ Class GalleriesController extends AppController {
 				$isGalleryMember = true;
 			}
 			elseif ($membership_record['GalleryMembership']['type'] == 3){
-				$this->GalleryMembership->del($membership_record['GalleryMembership']['id']);
+				$this->GalleryMembership->delete($membership_record['GalleryMembership']['id']);
 			}
 			if ($gallery['Gallery']['usage'] == 'public') {
 				$isPublic = true;
@@ -2274,7 +2274,7 @@ Class GalleriesController extends AppController {
 				$this->cakeError('error404');
 
 
-		$this->GalleryTag->del($gallery_tag_id);
+		$this->GalleryTag->delete($gallery_tag_id);
 		exit;
 	}
 
@@ -2597,7 +2597,7 @@ Class GalleriesController extends AppController {
 		$removed = false;
 		if ($gallery_owner_id == $user_id) {
 			$removed = true;
-			$this->GalleryTag->del($gallery_tag_id);
+			$this->GalleryTag->delete($gallery_tag_id);
 			$subject = "Attention: the owner of the gallery '$gallery_name' has flagged the tag '$tag_name'";
 			$msg = "$tag_name has been removed because it was flagged by gallery owner $user_name on \n". TOPLEVEL_URL."/galleries/view/$gallery_id";
 		} else {
@@ -2610,7 +2610,7 @@ Class GalleriesController extends AppController {
 				
 				foreach ($gallery_tags as $current_tag) {
 					$current_id = $current_tag['GalleryTag']['id'];
-					$this->GalleryTag->del($current_id);
+					$this->GalleryTag->delete($current_id);
 				}
 				
 				$allflaggers = $this->TagFlag->findAll("tag_id = $tag_id");

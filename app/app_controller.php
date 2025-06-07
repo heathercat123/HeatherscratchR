@@ -94,7 +94,9 @@ class AppController extends Controller {
 		}
 		$this->set('announcement', $announcement);
 		$this->set('isAnnouncementOn', $isAnnouncementOn);
-		$this->set('showToLoggedInUser', $visibility);
+        if (!empty($visibility)) {
+            $this->set('showToLoggedInUser', $visibility);
+        }
 		
 		
 		if (isset($this->params['controller'])) {
@@ -845,7 +847,7 @@ ini_restore ("memory_limit");
 		
 		foreach ($friends as $friend) {
 			$friend_id = $friend['Relationship']['id'];
-			$this->Relationship->del($friend_id);
+			$this->Relationship->delete($friend_id);
 		}
 		
 		foreach ($pcomments as $pcomment) {

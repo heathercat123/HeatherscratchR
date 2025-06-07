@@ -323,7 +323,7 @@
 				// Remove db record if using db
 				if($this->handlerType == 'db')
 				{
-					$this->{$this->dbModel}->del($file_id);
+					$this->{$this->dbModel}->delete($file_id);
 				}
 				
 				// Set the error and return false
@@ -337,7 +337,7 @@
 				// Remove db record if using db
 				if($this->handlerType == 'db')
 				{
-					$this->{$this->dbModel}->del($file_id);
+					$this->{$this->dbModel}->delete($file_id);
 				}
 				
 				// Set the error and return false
