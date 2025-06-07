@@ -23,6 +23,7 @@
 		/**
 		 * Populate new projects
 		 */
+        if ($newprojects):
 		foreach ($newprojects as $new):
 		$pid = $new['Project']['id'];
 		$owner = htmlspecialchars($new['User']['urlname']);
@@ -38,6 +39,7 @@
 		  <p><?php ___('by'); ?><a href="<?php e($user_link)?>"> <?php e($owner)?></a></p>
 		</div>
 		<?php endforeach; ?>
+        <?php endif; ?>
       <p class="more"><a href="/channel/recent"><?php ___('See more');?></a> </p>
     </div>
 
@@ -47,6 +49,7 @@
 		/**
 		 * Populate featured projects
 		 */
+        if (isset($featuredprojects)):
 		foreach ($featuredprojects as $featured):
 		$pid = $featured['Project']['id'];
 		$ribbon_image = (isset($featured['Project']['ribbon_name'])) ? $featured['Project']['ribbon_name']:null;
@@ -69,6 +72,7 @@
 		  </p>
 		</div>
 		<?php endforeach; ?>
+        <?php endif; ?>
       <p class="more"><a href="/channel/featured"><?php ___('See more');?></a> </p>
     </div>
 
@@ -78,6 +82,7 @@
 		/**
 		 * Populate top remixed projects
 		 */
+        if (isset($topremixed)):
 		foreach ($topremixed as $topremix):
 		$pid = $topremix['Project']['id'];
 		$owner = $topremix['User']['urlname'];
@@ -93,6 +98,7 @@
 		  <p><?php ___('by'); ?><a href="<?php e($user_link)?>"> <?php e($owner)?></a></p>
 		</div>
 		<?php endforeach; ?>
+        <?php endif; ?>
       <p class="more"><a href="/channel/remixed"><?php ___('See more');?></a> </p>
     </div>
 
@@ -102,6 +108,7 @@
 		/**
 		 * Populate random projects
 		 */
+        if (isset($toprandoms)):
 		foreach ($toprandoms as $toprandom):
 		$pid = $toprandom['Project']['id'];
 		$owner = $toprandom['User']['urlname'];
@@ -117,6 +124,7 @@
 		  <p><?php ___('by'); ?><a href="<?php e($user_link)?>"> <?php e($owner)?></a></p>
 		</div>
 		<?php endforeach; ?>
+        <?php endif; ?>
       <p class="more"><a href="/channel/recent"><?php ___('See more');?></a> </p>
     </div>
 
@@ -126,6 +134,7 @@
 		/**
 		 * Populate top loved projects
 		 */
+        if (isset($toploved)):
 		foreach ($toploved as $toplove):
 		$pid = $toplove['Project']['id'];
 		$owner = $toplove['User']['urlname'];
@@ -141,6 +150,7 @@
 		  <p><?php ___('by'); ?><a href="<?php e($user_link)?>"> <?php e($owner)?></a></p>
 		</div>
 		<?php endforeach; ?>
+        <?php endif; ?>
       <p class="more"><a href="/channel/toploved"><?php ___('See more');?></a> </p>
     </div>
 
@@ -150,6 +160,7 @@
 		/**
 		 * Populate top loved projects
 		 */
+        if (isset($topdownloaded)):
 		foreach ($topdownloaded as $topdownload):
 			$pid = $topdownload['Project']['id'];
 			$owner = $topdownload['User']['urlname'];
@@ -165,6 +176,7 @@
 			  <p><?php ___('by'); ?><a href="<?php e($user_link)?>"> <?php e($owner)?></a></p>
 			</div>
 		<?php endforeach; ?>
+        <?php endif; ?>
     </div>
 
     <div id="TopViewedLately" class="container">
@@ -173,6 +185,7 @@
 		/**
 		 * Populate top viewed projects
 		 */
+        if (isset($topviewed)):
 		foreach ($topviewed as $topview):
 		$pid = $topview['Project']['id'];
 		$owner = $topview['User']['urlname'];
@@ -188,6 +201,7 @@
 		  <p><?php ___('by'); ?><a href="<?php e($user_link)?>"> <?php e($owner)?></a></p>
 		</div>
 		<?php endforeach; ?>
+        <?php endif; ?>
       <p class="more"><a href="/channel/topviewed"><?php ___('See more');?></a> </p>
     </div>
 
@@ -231,6 +245,7 @@
 		/**
 		 * Populate featured themes
 		 */
+        if (isset($featuredthemes)):
 		foreach ($featuredthemes as $theme):
 		$theme_id = $theme['Gallery']['id'];
 		$theme_icon = $theme['Gallery']['icon_src'];
@@ -240,6 +255,7 @@
 		?>
 		<li><img src="<?php e($theme_icon)?>" title="<?php e($theme_name)?>" alt="<?php e($theme_name)?>" width="43" height="32"><a href="<?php e($theme_url)?>"><?php e($theme_name_s)?></a></li>
         <?php endforeach;?>
+        <?php endif; ?>
         <li><a href="#"></a></li>
       </ul>
       <p class="more"><a href="/galleries"><?php ___('See more');?></a> </p>
@@ -267,6 +283,7 @@ e($tagcloud->getTagCloud($tags, '/tags/view', null, 7, 'scratch_tag',', ', null,
 		/**
 		 * Populate recent visitors
 		 */
+        if (isset($recentvisitors)):
 		foreach ($recentvisitors as $visitor):
 		$username = $visitor['User']['urlname'];
 		$user_id = $visitor['User']['id'];
@@ -276,6 +293,7 @@ e($tagcloud->getTagCloud($tags, '/tags/view', null, 7, 'scratch_tag',', ', null,
 		?>
 		<li><a href="<?php e($user_link)?>"><img src="<?php e($buddy_icon)?>" title="<?php e($username)?>" alt="<?php e($username)?>" width="28" height="28"><?php e($username)?></a></li>
         <?php endforeach;?>
+        <?php endif; ?>
       </ul>
     </div>
 
@@ -291,6 +309,7 @@ e($tagcloud->getTagCloud($tags, '/tags/view', null, 7, 'scratch_tag',', ', null,
 		/**
 		 * Populate newest members
 		 */
+        if (isset($newmembers)):
 		foreach ($newmembers as $member):
 		$username = $member['User']['urlname'];
 		$user_id = $member['User']['id'];
@@ -300,6 +319,7 @@ e($tagcloud->getTagCloud($tags, '/tags/view', null, 7, 'scratch_tag',', ', null,
 		?>
 		<li><a href="<?php e($user_link)?>"><img src="<?php e($buddy_icon)?>" title="<?php e($username)?>" alt="<?php e($username)?>" width="28" height="28"><?php e($username)?></a></li>
 		<?php endforeach;?>
+        <?php endif; ?>
       </ul>
     </div>
 

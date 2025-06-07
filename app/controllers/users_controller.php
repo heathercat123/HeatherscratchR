@@ -1394,7 +1394,8 @@ class UsersController extends AppController {
 	
 		$condition = '`gallery_id` = '. $gallery_id         .' AND `projects`.`id` = `gallery_projects`.`project_id`';
 		$project = $this->Project->getTopProjects('', 'RAND()', null, null,null, 1, $condition, '`gallery_projects`');
-		return $project[0];
+        if ($project)
+            return $project[0];
 	
 	}//function
 
