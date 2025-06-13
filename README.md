@@ -14,9 +14,11 @@ Differences over the original ScratchR:
 For an exact list of modified file, see [here](https://github.com/heathercat123/HeatherscratchR/compare/cd6146e..master).
 
 ## Installation
-There are currently two installation guides. One is made by Andrés (andresmh), one is by me.
-- [ScratchR Setup Guides guide](https://heathercat123.github.io/ScratchR-setup-guides/heatherscratchr/xampp/). It's the best one yet, use this one. It's still a WIP and the end was kind of rushed, but the guide mostly has images. You can contribute to it [here](https://github.com/heathercat123/ScratchR-setup-guides).
-- [Incomplete guide by me](https://github.com/heathercat123/HeatherscratchR/blob/master/how%20to%20scratchr.txt). Used to be the best guide, but not anymore.
-- [Old INSTALL.TXT by Andrés](https://github.com/heathercat123/HeatherscratchR/blob/master/INSTALL.txt). One step is mentionned in the guide above, but other than that, don't use this guide.
+Follow [this guide](https://github.com/heathercat123/HeatherscratchR/discussions/3), but:
+- Skip to the *Install MariaDB* step
+- To install MariaDB: `sudo apt install mariadb-server-10.1 mariadb-client-10.1`
+- To install PHP: `sudo apt install php php-mysql php-gd php-memcache php-mbstring`
+- Remove `extension=mysql.so` from php.ini
+- To clone ScratchR: `git clone --single-branch -b php7 https://github.com/heathercat123/HeatherscratchR.git scratchr`
 
-For now, the installation instructions don't include how to get the forums, the tbg forums, the wiki or the stats.
+For now, the installation instructions don't include how to get the forums, the tbg forums, the wiki or the statistics site.
